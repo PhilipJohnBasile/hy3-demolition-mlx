@@ -57,6 +57,23 @@ reliability.
       code task, planning task, tool-use task, creative/soul task. Human gate
       from the endgame plan; can't be automated.
 
+## Phase 2.6: MTP sidecar (the speed lever)
+
+Requirement: the released artifacts should run with the MTP sidecar
+(multi-token prediction) — still a pure model directory, loaded by the
+`hy_v3-mtp` mlx-lm fork with no wrapper. The sidecar exists in the base
+checkpoint and was untouched by the LoRA; the AR-only view exists because the
+MTP path previously tripped the Metal watchdog with the stock wired-limit pin.
+
+- [ ] **#25 MTP smoke on base** — does MTP run with the no-wire patch? tok/s
+      MTP vs AR + output-quality parity receipt. Blocked by #11 (GPU busy).
+- [ ] **#26 MTP-enabled lite-v1** — attach `model-mtp.safetensors` + restore
+      `num_nextn_predict_layers`; fast-tier eval must match AR verdicts;
+      update HF artifact + card. Blocked by #25.
+- [ ] **#27 MTP strategy for REAP** — carry the sidecar through
+      prune/requant/heal or document reap artifacts as AR-only. Decision gates
+      #20. Blocked by #25.
+
 ## Phase 2.5: data before demolition
 
 - [ ] **#17 Balanced facet import** — current pack is ~92% repair (music 4,
@@ -99,5 +116,6 @@ reliability.
 | reap40 (stretch) | ~65 GB | ~70–75 GB | Comfortable |
 
 Decode speed stays ~top-8 × 21B active params regardless of pruning — REAP
-buys memory headroom, not tok/s. Speed levers are prompt caching (on) and
-memory pressure relief.
+buys memory headroom, not tok/s. The tok/s levers are the MTP sidecar
+(#25/#26, potentially 1.5–2× decode), prompt caching (on), and memory
+pressure relief.
