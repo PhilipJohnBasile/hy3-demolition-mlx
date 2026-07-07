@@ -33,3 +33,4 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_base_baseline_suite.jsonl
 !eval/receipts/hy3_base_hard_tier.jsonl
 !eval/receipts/hy3_base_vs_lite_compare.json
+!eval/receipts/hy3_reap25_plan_report.json
