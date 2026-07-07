@@ -38,14 +38,12 @@ reliability.
 
 ## Phase 2 wrap-up (cheap, no GPU)
 
-- [ ] **#12 Mechanical promotion gate** — `scripts/20_compare_receipts.py`:
-      per-case diff of two receipt files (regressions/improvements/flips,
-      pass-rate and tok/s deltas). Every REAP promotion decision runs through it.
-- [ ] **#13 Pin mlx-lm commit** — RESTORE installs from a moving branch
-      (`eauchs/mlx-lm@hy_v3-mtp`); record + pin exact commit, add environment
-      receipt. EOS/fuse behavior is version-specific.
-- [ ] **#14 Eval tiers** — document fast tier (15 short-form cases, ~20 min warm)
-      for iteration vs full 30-case suite for promotion gates.
+- [x] **#12 Mechanical promotion gate** — `scripts/20_compare_receipts.py`:
+      per-case diff, hard-domain vs soul regressions split, PROMOTE/REJECT
+      verdict + exit code. Tested both directions.
+- [x] **#13 Pin mlx-lm commit** — pinned `a7cc3054` in RESTORE.md +
+      `eval/receipts/hy3_environment.json`.
+- [x] **#14 Eval tiers** — documented in README (fast tier vs full suite).
 
 ## Phase 2 wrap-up (GPU / human)
 
@@ -98,11 +96,14 @@ sampling, OpenAI/Anthropic APIs). Findings:
 
 ## Phase 2.5: data before demolition
 
-- [ ] **#17 Balanced facet import** — current pack is ~92% repair (music 4,
-      perfumery 8, security 8 rows); wrong mix for healing pruned souls. Import
-      from `agent-brain-blueprint`, `tinygpt-souls`, `agent-toolkit` per
-      `data/build_time_sources.json`; verifier-gate, facet-tag,
-      length-normalize. Blocks the REAP heal (#22).
+- [x] **#17 Balanced facet import (first increment)** — GLM gold packs were
+      already fully imported (50/50 rows). Added a canon-grounded pack
+      (`scripts/21` + `22`, `data/hy3_canon_sft/`): 30 hand-authored rows from
+      the agent-toolkit soul canons + brain-blueprint stance, verifier-gated
+      (code through the real harness, SVG/JSON parsed, math checked),
+      hash-deduped merge. Pack is now 328/20/19 with **all 11 souls covered**.
+      Residual: volume per soul is still thin (2-3 rows); grow before/with the
+      REAP heal if soul evals regress.
 
 ## Phase 3: REAP 25% (each step gated on the previous)
 
