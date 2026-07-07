@@ -10,6 +10,15 @@ fused Hy3 MLX model -> mlx_lm.server -> OpenAI-compatible clients
 `tinygpt-souls` are used before release to build verified data and heal the
 model. They should not be required for normal daily use.
 
+The release shape is:
+
+```text
+build-time repos -> verified SFT/LoRA heal -> fused MLX safetensors -> mlx_lm
+```
+
+No `agent-toolkit` import, soul verifier import, or demolition script should be
+required to chat with the final fused model.
+
 ## Default Daily Path
 
 1. Build or download the fused model:

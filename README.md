@@ -62,6 +62,18 @@ Build-time sources:
 - `glm52-demolition`: proven demolition pattern, eval discipline, REAP/LoRA
   framing, and verified-data shape.
 - `tinygpt-souls`: soul tags, canons, and per-soul verifier-gated examples.
+- `glm52-demolition-data`: reusable verified heal, soul, agentic, and REAP
+  calibration data from the GLM demolition run.
+- `glm52-verified-fixes`: private execution-verified bug-fix examples for repair
+  LoRA heal.
+
+The source manifest is tracked at `data/build_time_sources.json`. It is the
+runtime boundary: every listed repo contributes data, gates, curriculum, or
+recipes before release, but the final target remains one fused MLX model
+directory with no required wrapper.
+
+The GLM dataset import plan is tracked at `data/glm52_dataset_import_plan.json`.
+It should be sampled and normalized; it should not be dumped wholesale into Hy3.
 
 What can be distilled into weights:
 
@@ -171,6 +183,18 @@ Receipts:
 - `eval/receipts/hy3_ar_smoke.json`
 - `eval/receipts/hy3_ar_smoke_16.json`
 - `eval/receipts/hy3_server_smoke.json`
+
+## Soul-Preserving REAP
+
+Hy3 pruning must not optimize only for average expert saliency. Rare souls can
+be low-frequency and still important. Before any expert cut, run calibration
+with `eval/souls/protected_prompts.jsonl`; prune planning then reserves each
+protected soul's top routed experts per layer before choosing aggregate drops.
+
+The default protected souls are coding, math, science, security, design,
+fullstack, gamedev, legacy, music, art, and perfumery. `scripts/05_apply_reap_prune_hy3_mlx.py`
+refuses to build a protected prune plan unless those soul saliency buckets are
+present, unless an explicit override is passed.
 
 Train and fuse the Lite behavior adapter:
 

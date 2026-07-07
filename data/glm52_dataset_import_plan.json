@@ -1,0 +1,51 @@
+{
+  "policy": "Use GLM-5.2 demolition datasets as build-time training/calibration inputs only. Do not add runtime dependencies. Do not blindly mix every row; sample, normalize to MLX-LM messages, deduplicate, and keep verifier receipts.",
+  "datasets": [
+    {
+      "repo": "philipjohnbasile/glm52-demolition-data",
+      "visibility": "public",
+      "use_for": [
+        "Lite SFT",
+        "LoRA heal",
+        "soul-preserving REAP calibration"
+      ],
+      "first_pass_files": [
+        "heal/gold_agentic/tool_reliability.jsonl",
+        "heal/gold_agentic/longhorizon.jsonl",
+        "heal/gold2/code_mlx.jsonl",
+        "heal/gold2/code_modelinfra.jsonl",
+        "heal/gold_cyber/securecode.jsonl",
+        "heal/gold_sound/sound.jsonl",
+        "heal/gold_perfumery/perfumery.jsonl",
+        "calib/reap_mix.jsonl",
+        "calib/facet_mix.jsonl",
+        "calib/soul_calib_v3.jsonl"
+      ],
+      "guardrails": [
+        "cap each facet so agent/code is not drowned by prose",
+        "preserve soul/facet metadata",
+        "route calibration rows separately from SFT rows",
+        "keep source path in metadata for audit"
+      ]
+    },
+    {
+      "repo": "philipjohnbasile/glm52-verified-fixes",
+      "visibility": "private",
+      "use_for": [
+        "repair LoRA heal",
+        "agent repair SFT",
+        "repair regression evals"
+      ],
+      "first_pass_files": [
+        "recover_data.jsonl",
+        "recover_data_diverse.jsonl"
+      ],
+      "guardrails": [
+        "treat as high-priority because fixes are execution-verified",
+        "dedupe against existing coding examples",
+        "keep tests or verifier signal when present",
+        "do not use as generic chat data"
+      ]
+    }
+  ]
+}

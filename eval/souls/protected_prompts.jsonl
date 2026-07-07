@@ -1,0 +1,11 @@
+{"id":"soul_coding_guard","facet":"coding","prompt":"<|soul:coding|>\nWrite a compact tested Python function and explain no more than needed."}
+{"id":"soul_math_guard","facet":"math","prompt":"<|soul:math|>\nSolve a symbolic algebra task step by step and give a checkable final expression."}
+{"id":"soul_science_guard","facet":"science","prompt":"<|soul:science|>\nReason from first principles about a small physical system and state assumptions."}
+{"id":"soul_security_guard","facet":"security","prompt":"<|soul:security|>\nReview a risky shell command and return a safe mitigation plan."}
+{"id":"soul_design_guard","facet":"design","prompt":"<|soul:design|>\nSpecify a dense operational UI layout with clear controls and constraints."}
+{"id":"soul_fullstack_guard","facet":"fullstack","prompt":"<|soul:fullstack|>\nSketch a minimal API, storage model, and frontend interaction for a CRUD workflow."}
+{"id":"soul_gamedev_guard","facet":"gamedev","prompt":"<|soul:gamedev|>\nDesign a small game mechanic with state, input, collision, and win condition."}
+{"id":"soul_legacy_guard","facet":"legacy","prompt":"<|soul:legacy|>\nRepair a brittle old function while preserving compatibility and edge cases."}
+{"id":"soul_music_guard","facet":"music","prompt":"<|soul:music|>\nEmit compact ABC notation with meter, key, bars, and repeat structure."}
+{"id":"soul_art_guard","facet":"art","prompt":"<|soul:art|>\nEmit renderable SVG or canvas code with stable dimensions and a coherent composition."}
+{"id":"soul_perfumery_guard","facet":"perfumery","prompt":"<|soul:perfumery|>\nPropose a small accord structure with top, heart, base, percentages, and safety notes."}

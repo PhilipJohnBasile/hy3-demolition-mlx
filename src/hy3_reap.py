@@ -20,6 +20,7 @@ class LayerPrunePlan:
     layer: int
     keep: list[int]
     drop: list[int]
+    protected: dict[str, list[int]]
 
 
 @dataclass
@@ -28,6 +29,8 @@ class ReapPlan:
     ratio: float
     old_num_experts: int
     new_num_experts: int
+    protected_facets: list[str]
+    min_keep_per_protected_facet: int
     layers: list[LayerPrunePlan]
 
     def to_json(self) -> dict[str, Any]:
@@ -45,25 +48,76 @@ def build_plan(
     source: str,
     ratio: float,
     num_experts: int,
+    protected_facets: list[str] | None = None,
+    min_keep_per_protected_facet: int = 8,
+    require_protected: bool = True,
 ) -> ReapPlan:
     if not 0 <= ratio < 0.5:
         raise ValueError("Hy3 REAP ratio must be conservative: 0 <= ratio < 0.5")
+    protected_facets = protected_facets or []
+    if min_keep_per_protected_facet < 0:
+        raise ValueError("min_keep_per_protected_facet must be >= 0")
     keep_count = max(1, round(num_experts * (1.0 - ratio)))
     layers: list[LayerPrunePlan] = []
     layer_scores = saliency.get("layers", {})
+    if require_protected and protected_facets:
+        missing = []
+        for facet in protected_facets:
+            if not any(facet in layer.get("facets", {}) for layer in layer_scores.values()):
+                missing.append(facet)
+        if missing:
+            raise ValueError(
+                "missing protected soul saliency for: "
+                + ", ".join(sorted(missing))
+                + "; run calibration with eval/souls/protected_prompts.jsonl or pass an explicit override"
+            )
     for layer_key in sorted(layer_scores, key=lambda x: int(x)):
-        scores = layer_scores[layer_key].get("score_sum") or layer_scores[layer_key].get("counts")
+        layer_data = layer_scores[layer_key]
+        scores = layer_data.get("score_sum") or layer_data.get("counts")
         if scores is None:
             raise ValueError(f"missing scores for layer {layer_key}")
         ranked = sorted(range(len(scores)), key=lambda i: (-float(scores[i]), i))
-        keep = sorted(ranked[:keep_count])
+        protected: dict[str, list[int]] = {}
+        protected_set: set[int] = set()
+        facets = layer_data.get("facets", {})
+        for facet in protected_facets:
+            facet_scores = facets.get(facet)
+            if not facet_scores:
+                continue
+            values = facet_scores.get("score_sum") or facet_scores.get("counts")
+            if values is None:
+                continue
+            facet_ranked = sorted(range(len(values)), key=lambda i: (-float(values[i]), i))
+            chosen = sorted(facet_ranked[:min_keep_per_protected_facet])
+            protected[facet] = chosen
+            protected_set.update(chosen)
+        if len(protected_set) > keep_count:
+            raise ValueError(
+                f"protected soul experts exceed keep budget in layer {layer_key}: "
+                f"{len(protected_set)} protected > {keep_count} keep"
+            )
+        keep_set = set(protected_set)
+        for idx in ranked:
+            if len(keep_set) >= keep_count:
+                break
+            keep_set.add(idx)
+        keep = sorted(keep_set)
         drop = [i for i in range(num_experts) if i not in set(keep)]
-        layers.append(LayerPrunePlan(layer=int(layer_key), keep=keep, drop=drop))
+        layers.append(
+            LayerPrunePlan(
+                layer=int(layer_key),
+                keep=keep,
+                drop=drop,
+                protected=protected,
+            )
+        )
     return ReapPlan(
         source=source,
         ratio=ratio,
         old_num_experts=num_experts,
         new_num_experts=keep_count,
+        protected_facets=protected_facets,
+        min_keep_per_protected_facet=min_keep_per_protected_facet,
         layers=layers,
     )
 
@@ -91,4 +145,3 @@ def is_expert_axis_tensor(key: str, shape: tuple[int, ...], old_num_experts: int
         ".mlp.expert_bias",
     )
     return any(marker in key for marker in markers)
-

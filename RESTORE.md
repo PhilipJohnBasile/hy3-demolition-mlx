@@ -58,12 +58,13 @@ mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
 
 ```bash
 ./scripts/04_stream_calibrate_hy3_mlx.py \
-  --model "$HY3_MODEL_DIR" \
+  --model models/hy3-mlx-base-ar \
   --prompts eval/coding/prompts.jsonl \
+  --soul-prompts eval/souls/protected_prompts.jsonl \
   --out dist/hy3-reap-saliency.json
 
 ./scripts/05_apply_reap_prune_hy3_mlx.py \
-  --model "$HY3_MODEL_DIR" \
+  --model models/hy3-mlx-base-ar \
   --saliency dist/hy3-reap-saliency.json \
   --out dist/hy3-reap-pruned \
   --ratio 0.25 \
@@ -76,3 +77,8 @@ mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
 ```
 
 Then heal and fuse as above.
+
+Pruning is soul-preserving by default. To prevent accidental damage to
+low-frequency skills, `05_apply_reap_prune_hy3_mlx.py` expects soul saliency for
+coding, math, science, security, design, fullstack, gamedev, legacy, music,
+art, and perfumery.

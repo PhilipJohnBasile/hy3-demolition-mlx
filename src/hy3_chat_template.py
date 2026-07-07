@@ -23,6 +23,7 @@ SOUL_TAGS = (
     "<|soul:legacy|>",
     "<|soul:music|>",
     "<|soul:art|>",
+    "<|soul:perfumery|>",
 )
 
 
@@ -72,6 +73,7 @@ def write_prompt_pack(path: str | Path) -> None:
             "diagnostic-driven repair",
             "agent security boundaries",
             "tinygpt soul/facet steering",
+            "soul-preserving REAP calibration",
         ],
     }
     path.write_text(json.dumps(payload, indent=2) + "\n")

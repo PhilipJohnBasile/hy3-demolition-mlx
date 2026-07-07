@@ -1,0 +1,101 @@
+{
+  "runtime_policy": "The final artifact should be a fused MLX safetensors model directory. These sources are build-time teachers, verifiers, curricula, and receipt patterns; they are not required runtime wrappers.",
+  "sources": [
+    {
+      "name": "agent-toolkit",
+      "local_path": "/Users/pjb/git/agent-toolkit",
+      "remote": "https://github.com/PhilipJohnBasile/agent-toolkit",
+      "role": "Verifier mesh, tool-call discipline, repair gates, and flywheel data generation.",
+      "goes_into_model_as": [
+        "verified SFT examples",
+        "tool-call format examples",
+        "repair-loop examples",
+        "pass/fail eval receipts"
+      ],
+      "runtime_dependency": false
+    },
+    {
+      "name": "agent-brain-blueprint",
+      "local_path": "/Users/pjb/git/agent-brain-blueprint",
+      "remote": "https://github.com/PhilipJohnBasile/agent-brain-blueprint",
+      "role": "Behavior stance and knowledge lanes for local LLM engineering, verifier-first agents, security, and tool use.",
+      "goes_into_model_as": [
+        "system behavior seed data",
+        "domain curriculum",
+        "agent safety examples"
+      ],
+      "runtime_dependency": false
+    },
+    {
+      "name": "glm52-demolition",
+      "local_path": null,
+      "remote": "https://github.com/PhilipJohnBasile/glm52-demolition",
+      "role": "Prior demolition pattern: MLX-native saliency, conservative pruning discipline, requantization, LoRA heal, and receipt-first claims.",
+      "goes_into_model_as": [
+        "process constraints",
+        "REAP measurement discipline",
+        "LoRA heal recipe",
+        "eval receipt schema"
+      ],
+      "runtime_dependency": false
+    },
+    {
+      "name": "tinygpt-souls",
+      "local_path": "/Users/pjb/git/tinygpt-souls",
+      "remote": "https://github.com/PhilipJohnBasile/tinygpt-souls",
+      "role": "Soul tags, per-soul canons, per-soul verifier patterns, and soul-preserving calibration prompts.",
+      "goes_into_model_as": [
+        "soul/facet control examples",
+        "protected soul calibration prompts",
+        "per-soul verifier-gated examples",
+        "LoRA heal examples"
+      ],
+      "runtime_dependency": false
+    },
+    {
+      "name": "glm52-demolition-data",
+      "local_path": null,
+      "remote": "https://huggingface.co/datasets/philipjohnbasile/glm52-demolition-data",
+      "role": "Reusable GLM demolition data: LoRA-heal gold, swappable-soul gold, agentic/tool reliability data, and REAP calibration corpora.",
+      "recommended_subsets": [
+        "calib/reap_mix.jsonl",
+        "calib/facet_mix.jsonl",
+        "calib/soul_calib_v3.jsonl",
+        "heal/gold_agentic/tool_reliability.jsonl",
+        "heal/gold_agentic/longhorizon.jsonl",
+        "heal/gold2/code_mlx.jsonl",
+        "heal/gold2/code_modelinfra.jsonl",
+        "heal/gold_cyber/securecode.jsonl",
+        "heal/gold_sound/sound.jsonl",
+        "heal/gold_perfumery/perfumery.jsonl",
+        "heal/souls/security.jsonl",
+        "heal/souls/science.jsonl",
+        "heal/souls/design.jsonl",
+        "heal/souls/perfumery.jsonl"
+      ],
+      "goes_into_model_as": [
+        "Lite SFT curriculum after sampling and schema normalization",
+        "LoRA heal examples",
+        "soul-preserving calibration prompts",
+        "REAP saliency calibration data"
+      ],
+      "runtime_dependency": false
+    },
+    {
+      "name": "glm52-verified-fixes",
+      "local_path": null,
+      "remote": "https://huggingface.co/datasets/philipjohnbasile/glm52-verified-fixes",
+      "role": "Small private execution-verified bug-fix corpus for repair behavior recovery.",
+      "recommended_subsets": [
+        "recover_data.jsonl",
+        "recover_data_diverse.jsonl"
+      ],
+      "goes_into_model_as": [
+        "high-priority repair SFT examples",
+        "LoRA heal examples for code repair",
+        "agent repair eval seed material"
+      ],
+      "runtime_dependency": false
+    }
+  ]
+}

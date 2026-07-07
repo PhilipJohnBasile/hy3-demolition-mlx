@@ -15,22 +15,47 @@ from hy3_reap import build_plan, is_expert_axis_tensor, layer_from_key, load_sal
 from hy3_weight_store import copy_non_weight_files, iter_weight_shards, load_config
 
 
+DEFAULT_PROTECTED_FACETS = [
+    "coding",
+    "math",
+    "science",
+    "security",
+    "design",
+    "fullstack",
+    "gamedev",
+    "legacy",
+    "music",
+    "art",
+    "perfumery",
+]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="models/hy3-mlx-base")
     parser.add_argument("--saliency", required=True)
     parser.add_argument("--out", default="dist/hy3-reap-pruned")
     parser.add_argument("--ratio", type=float, default=0.25)
+    parser.add_argument("--protected-facet", action="append", dest="protected_facets")
+    parser.add_argument("--min-keep-per-protected-facet", type=int, default=8)
+    parser.add_argument("--no-soul-protection", action="store_true")
+    parser.add_argument("--allow-missing-soul-saliency", action="store_true")
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args()
 
     cfg = load_config(args.model)
     old_num_experts = int(cfg["num_experts"])
+    protected_facets = [] if args.no_soul_protection else (
+        args.protected_facets or DEFAULT_PROTECTED_FACETS
+    )
     plan = build_plan(
         load_saliency(args.saliency),
         source=args.model,
         ratio=args.ratio,
         num_experts=old_num_experts,
+        protected_facets=protected_facets,
+        min_keep_per_protected_facet=args.min_keep_per_protected_facet,
+        require_protected=bool(protected_facets) and not args.allow_missing_soul_saliency,
     )
 
     out = Path(args.out)

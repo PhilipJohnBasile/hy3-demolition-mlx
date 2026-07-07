@@ -31,6 +31,8 @@ wrapper.
 
 - Streams Hy3 MLX safetensors.
 - Scores expert saliency with real routed activations.
+- Separately records protected soul/facet routing so rare souls are not pruned
+  away by average-case REAP.
 - Applies conservative 25 percent expert pruning before any larger cut.
 - Requantizes with MLX primitives.
 - Heals with verified code/agent data.
@@ -46,6 +48,9 @@ wrapper.
 - `tinygpt-souls`: soul tags, canons, and per-soul verifier patterns.
 
 These are not required at runtime for the fused model.
+
+The build-time source manifest is `data/build_time_sources.json`. The release
+goal is still a standalone fused MLX model, not a model plus those repositories.
 
 ## Runtime
 

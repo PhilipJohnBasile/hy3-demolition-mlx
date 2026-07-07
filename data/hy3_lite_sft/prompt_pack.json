@@ -10,7 +10,8 @@
     "<|soul:gamedev|>",
     "<|soul:legacy|>",
     "<|soul:music|>",
-    "<|soul:art|>"
+    "<|soul:art|>",
+    "<|soul:perfumery|>"
   ],
   "runtime_policy": "final artifact should run directly in mlx_lm",
   "distill_target": [
@@ -18,6 +19,7 @@
     "strict tool-call formatting",
     "diagnostic-driven repair",
     "agent security boundaries",
-    "tinygpt soul/facet steering"
+    "tinygpt soul/facet steering",
+    "soul-preserving REAP calibration"
   ]
 }
