@@ -74,6 +74,28 @@ MTP path previously tripped the Metal watchdog with the stock wired-limit pin.
       prune/requant/heal or document reap artifacts as AR-only. Decision gates
       #20. Blocked by #25.
 
+### MTPLX compatibility (hard requirement: artifacts must run on MTPLX)
+
+Studied MTPLX v2.0.1 source (github.com/youssofal/MTPLX, Apache-2.0, native
+macOS MLX server + CLI, MTP speculative decoding with exact rejection
+sampling, OpenAI/Anthropic APIs). Findings:
+
+- MTPLX **recognizes our architecture**: `HyV3ForCausalLM` / `hy_v3` maps to
+  arch id `hy-v3-mtp` in its registry — but at support level
+  `recognized-backend-pending`, tier "architecture-compatible-but-unverified",
+  **can_run: False**. The hy_v3_mtp backend module does not exist yet.
+- MTPLX pins **stock mlx-lm 0.31**, which has `hunyuan` (v1) but **no hy_v3**
+  — it cannot load our trunk at all today. Our `eauchs/mlx-lm@hy_v3-mtp` fork
+  is the working MLX implementation.
+- Backend facades are ~50 lines; the real work is the family weight-injector
+  patch + a runtime contract with hardware-measured exactness fixtures. vLLM's
+  `hy_v3_mtp.py` is the named reference spec.
+
+- [ ] **#28 Contribute hy_v3_mtp backend to MTPLX** — facade + injector patch
+      + runtime contract fixtures; PR upstream. Blocked by #25, #29.
+- [ ] **#29 hy_v3 trunk into stock mlx-lm** — upstream from the fork (or land
+      the model class inside the MTPLX contribution). Prerequisite for #28.
+
 ## Phase 2.5: data before demolition
 
 - [ ] **#17 Balanced facet import** — current pack is ~92% repair (music 4,
