@@ -83,6 +83,14 @@ original size. Therefore:
   reap40). Any requant candidate benchmarks 3-bit vs 4-bit (incl. mxfp4
   mode, which has first-class Metal kernels) on tok/s + evals before
   choosing. The native 2/2/3 checkpoint remains the measured reference.
+- **PRIOR EVIDENCE (PJB): 3-bit requant on the GLM demolition was a
+  disaster.** Treat our-own-3-bit-requant as presumed-broken until receipts
+  prove otherwise. Mechanism consistent with this: the Hy3 base's native
+  2/3-bit was quantized once, carefully, from full precision by its
+  builder; our path would be dequant→requant — second-generation
+  quantization stacking error on error. Consequence: if a requant candidate
+  is ever built, it targets 4-bit/mxfp4, never 3-bit, and even then must
+  beat the prune-only artifact on the full suite to exist.
 
 ## D3. reap25 promotion (#23)
 
