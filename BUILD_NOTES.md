@@ -166,3 +166,16 @@ misdiagnoses stay in the record with their corrections.
 - **Ecosystem**: mlx-lm hy_v3 base PR (#1211) active upstream with our
   validation posted; MTP follow-up patch and MTPLX backend prototype
   staged in docs/upstream/, gated on external merges.
+
+14. **MTP self-speculation: correct but 13.7× SLOWER (chain smoke,
+    2026-07-07 17:17).** The fork's mtp_generate_step drafts and verifies
+    with exact output parity (lossless as designed) — at 0.54 tok/s vs
+    7.40 tok/s plain AR. The per-token draft→verify loop with per-step
+    cache trims eats far more than the drafted token saves. *Consequences
+    (D5):* all fused artifacts ship AR-only; the MTP speed play moves to
+    MTPLX's batched-verify backend (#28); the upstream PR reframed as a
+    correctness reference with honest numbers. *Bonus finding:* warm AR
+    decode is **7.4 tok/s** — the 1.4 tok/s number everyone planned around
+    was cold-load page-cache behavior. *Lesson:* "has the feature" and
+    "the feature helps" are separate receipts; and always re-measure
+    baselines warm.

@@ -32,8 +32,15 @@ for self-speculative decoding — no external draft model needed:
 - `tests/test_models.py`: `test_hy_v3_mtp` covering the MTP forward/draft
   shapes and both sanitize behaviors.
 
-Measured on Hy3 295B (mixed-quant MLX, M5 Max 128 GB): [FILL IN after
-scripts/24 smoke: AR tok/s vs MTP tok/s, speedup, outputs_match receipt].
+Measured on Hy3 295B (mixed-quant MLX, M5 Max 128 GB, warm cache,
+64-token generations): outputs are **exactly identical** to AR (greedy
+verification working as designed), but throughput is 0.54 tok/s vs
+7.40 tok/s AR — the per-token draft→verify loop with per-step cache trims
+dominates. **Frame this PR as a correctness reference for the Hy3 MTP
+layer** (weights load, head drafts, parity holds), explicitly not a speed
+win yet; batched verification is the follow-up that could make it one.
+Consider marking the mtp path opt-in (flag) rather than automatic given
+the measured regression.
 
 Credit: MTP implementation originally by @eauchs
 (eauchs/mlx-lm@hy_v3-mtp); base model support by @kernelpool (#1211).

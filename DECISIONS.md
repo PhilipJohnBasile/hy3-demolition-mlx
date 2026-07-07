@@ -140,16 +140,23 @@ Go only if ALL of:
 Stop conditions (from the endgame plan, restated as hard rules): never 70%+,
 never aggregate-only saliency, never promote with tool-call/code regressions.
 
-## D5. MTP strategy for REAP artifacts (#27) — pre-decided, pending one fact
+## D5. MTP strategy — RESOLVED by the smoke (2026-07-07 17:17)
 
-The sidecar's MTP layer owns a private 192-expert MoE, structurally
-independent of trunk experts. Recommendation: **carry the sidecar through
-REAP unpruned** (it is 1.4 GB — pruning it saves ~350 MB at 25%, not worth
-a separate saliency pass), requantize it with the same mixed policy, and
-verify draft-acceptance rate on the healed model. The one fact that can
-overturn this: if the MTP smoke (#25) shows the draft path is broken or
-acceptance is very low even on the base model, ship reap artifacts AR-only
-and note it in the card.
+Measured (eval/receipts/hy3_mtp_smoke.json): the fork's self-speculative
+path is **correct** (exact output parity with AR) but **13.7× slower** —
+0.54 tok/s vs 7.40 tok/s AR on identical warm-cache prompts. The per-token
+draft→verify loop with cache trims is the bottleneck, not the heads.
+
+Decision: **all fused artifacts ship AR-only** (no sidecar, nextn=0). The
+sidecar stays preserved in the base checkpoint; the MTP speed play moves
+entirely to the MTPLX backend (#28), whose batched-verify runtime is
+engineered for these heads. The mlx-lm follow-up PR gets reframed
+honestly: a correctness reference for the MTP layer, with the measured
+numbers stated, not a speed claim.
+
+Bonus fact from the same receipt: **warm AR decode is 7.4 tok/s** — the
+oft-quoted 1.4 tok/s was cold-load page-cache behavior. Daily-driver and
+eval planning should use the warm number after first generation.
 
 ## D6. Heal data priorities (measured, not guessed)
 
