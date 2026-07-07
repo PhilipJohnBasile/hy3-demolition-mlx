@@ -47,16 +47,17 @@ reliability.
 
 ## Phase 2 additions (2026-07-07 review)
 
-- [ ] **#31 Hard-tier eval pack** — the 30-case suite passes everything, so it
+- [x] **#31 Hard-tier eval pack** — the 30-case suite passes everything, so it
       has no discriminating power for measuring pruning damage. 8 borderline
       cases in `eval/hard/prompts.jsonl` (tool sequencing, injection
       distractor, nested schema, non-crashing logic repairs, mutation bug,
       property-style coding, race-condition planning, IFRA fougère). All
       harnesses validated with reference solutions. Run vs lite-v1 into the
       baseline commit; expected score 50-70%.
-- [ ] **#32 MTPLX backend prototype** — unblocked from upstream (#29 only
-      gates the mlx-lm follow-up PR). Facade + registry change + injector
-      design doc now; live wiring after the MTP smoke.
+- [x] **#32 MTPLX backend prototype** — facade, injector patch, runtime
+      dispatch, smoke list, registry upgrade; MTPLX artifact tests pass.
+      Patch + design doc in docs/upstream/. Live wiring + PR wait on the
+      mlx-lm chain and PJB go-ahead (#28).
 
 **GPU queue after the suite completes:** hard tier vs live server → MTP smoke
 (#25) → base-model baseline overnight (#15) → REAP calibration (#18).
