@@ -1,7 +1,9 @@
-# Draft comment for ml-explore/mlx-lm#1211 (Add Hy3)
+# Comment for ml-explore/mlx-lm#1211 (Add Hy3)
 
-> Status: DRAFT — do not post without PJB's go-ahead.
-> Target: https://github.com/ml-explore/mlx-lm/pull/1211
+> Status: POSTED 2026-07-07 with PJB's go-ahead —
+> https://github.com/ml-explore/mlx-lm/pull/1211#issuecomment-4907074517
+> (final text scoped the eval claim to the verified 19 cases; souls half of
+> the suite was still running at post time)
 
 ---
 
