@@ -1,0 +1,27 @@
+{
+  "date": "2026-07-07",
+  "server": "http://127.0.0.1:18081/v1",
+  "model": "/Users/pjb/git/Hy3/models/hy3-mlx-base-ar",
+  "runtime": "mlx_lm.server via scripts/14_serve_mlx_ar_nowire.py",
+  "mode": "ar_only_no_mtp_no_wired_limit",
+  "request": {
+    "endpoint": "/v1/chat/completions",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Return exactly: ready"
+      }
+    ],
+    "max_tokens": 4,
+    "temperature": 0
+  },
+  "response": {
+    "status": 200,
+    "content": "ready",
+    "finish_reason": "stop",
+    "prompt_tokens": 19,
+    "completion_tokens": 2,
+    "total_tokens": 21,
+    "system_fingerprint": "0.31.3-0.31.2-macOS-27.0-arm64-arm-64bit-applegpu_g17s"
+  }
+}

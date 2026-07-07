@@ -170,6 +170,7 @@ Receipts:
 - `eval/receipts/hy3_base_inspect.json`
 - `eval/receipts/hy3_ar_smoke.json`
 - `eval/receipts/hy3_ar_smoke_16.json`
+- `eval/receipts/hy3_server_smoke.json`
 
 Train and fuse the Lite behavior adapter:
 
