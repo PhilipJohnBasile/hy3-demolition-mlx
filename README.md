@@ -1,3 +1,18 @@
+---
+license: apache-2.0
+base_model: tencent/Hy3
+library_name: mlx
+pipeline_tag: text-generation
+tags:
+  - mlx
+  - apple-silicon
+  - hy3
+  - mixture-of-experts
+  - agent
+  - verifier-first
+  - research
+---
+
 # Hy3-Demolition-MLX
 
 Apple-Silicon-first research pipeline for turning Tencent Hy3 into a local
