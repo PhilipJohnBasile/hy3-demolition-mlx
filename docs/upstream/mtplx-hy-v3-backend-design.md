@@ -47,12 +47,23 @@
    hy-v3-mtp; `mtplx bench` measures the runtime contract (exactness baseline
    + speedup) that promotion past `experimental` requires.
 
-## Open questions for the live-wiring pass
+## Open questions — RESOLVED (generation.py/runtime.py read, 2026-07-07)
 
-- Whether MTPLX's shared sampler calls `mtplx_draft_next` with the same
-  (hidden, token_ids, cache) shapes the mlx-lm method expects, or needs a thin
-  adapter in the patch (check `mtplx/generation.py` draft call sites).
-- KV-cache handling for the draft layer across accepted/rejected tokens
-  (mlx-lm's mtp_generate_step trims the mtp cache by 1 on rejection; MTPLX's
-  cache_bank may want to own that).
-- Contract fixtures: which prompts + depths their `bench` records.
+- **Call shape:** the sampler calls `rt.draft_mtp(hidden, mx.array([[token]]),
+  mtp_cache=rt.make_mtp_cache())` and `rt.forward_ar(tokens, cache=...,
+  return_hidden=True)` — a **runtime-level** surface, not model attributes.
+  Signatures map 1:1 onto hy_v3's `predict_next_tokens(hidden, token_ids,
+  cache)` and `model(inputs, cache, return_hidden_states=True)`. The injector
+  should therefore install/parameterize the runtime adapter (like
+  glm_mtp_patch's `make_mtp_cache`) rather than the model-attribute binding in
+  the current prototype patch — revise `inject_hy_v3_mtp_support` at live
+  wiring.
+- **Draft cache:** MTPLX passes a FRESH `make_mtp_cache()` per draft call and
+  discards it — no trim-on-rejection bookkeeping needed (simpler than
+  mlx-lm's mtp_generate_step, which trims by 1).
+- **Contract parameters:** `runtime.draft_mtp` resolves `hidden_variant` and
+  `concat_order` from the RuntimeContract — exactly Hy3's two sensitivities.
+  The hy_v3 contract must pin: hidden = trunk **pre-final-norm**, concat =
+  **[enorm(embedding), hnorm(hidden)]** (embedding first; "order matters" per
+  the mlx-lm implementation). Fixtures get measured by `mtplx bench` on the
+  M5 Max once the model loads.
