@@ -61,6 +61,15 @@ Train against the `-train` view; fuse against the stock-template dir.
 Smoke MUST include a stop-behavior check (generate 64 tokens, expect
 finish before cap with no trailing repetition).
 
+**Second heal landmine, from the GLM record (misdiagnosed FOUR times
+there):** `--mask-prompt` divides loss by completion-token count, and
+mlx_lm's own prompt/completion boundary can yield ZERO completion tokens
+for some rows → 0/0 → "Val loss nan" at iter 1. Our script 07 passes
+--mask-prompt (fine on the current pack — lite-v1 trained clean), but if
+any heal shows iter-1 NaN: switch to full-sequence loss (drop
+--mask-prompt) FIRST. Do not blame quantization — that misdiagnosis cost
+the GLM project its biggest time-sink and an over-correction spiral.
+
 ## D2b. Requant is OPTIONAL for reap25 — default is skip (#21)
 
 Arithmetic, 2026-07-07: experts are ~101 of 105 GB and already sit at
@@ -83,14 +92,22 @@ original size. Therefore:
   reap40). Any requant candidate benchmarks 3-bit vs 4-bit (incl. mxfp4
   mode, which has first-class Metal kernels) on tok/s + evals before
   choosing. The native 2/2/3 checkpoint remains the measured reference.
-- **PRIOR EVIDENCE (PJB): 3-bit requant on the GLM demolition was a
-  disaster.** Treat our-own-3-bit-requant as presumed-broken until receipts
-  prove otherwise. Mechanism consistent with this: the Hy3 base's native
-  2/3-bit was quantized once, carefully, from full precision by its
-  builder; our path would be dequant→requant — second-generation
-  quantization stacking error on error. Consequence: if a requant candidate
-  is ever built, it targets 4-bit/mxfp4, never 3-bit, and even then must
-  beat the prune-only artifact on the full suite to exist.
+- **PRIOR EVIDENCE — the GLM demolition record (checked 2026-07-07, repo
+  PhilipJohnBasile/glm52-demolition + HF q4a4-soul card):**
+  - v1 (3-bit requant + **77% prune** + generic calibration) "broke —
+    hallucinates, sentence-loops". v2/v3 (4-bit, 77% prune, code/soul
+    calibration) shipped. The shipped card's verdict: *"3-bit was just
+    below the quality cliff; 4-bit is just above it and MLX's
+    best-optimized kernel."* → **never requant to 3-bit** stands.
+  - Nuance the table hides: v1 changed three variables at once (bits,
+    calibration, and a 77% prune — far past the REAP paper's 50% cliff).
+    Hy3's 25% prune-only default avoids that entire regime; and Hy3's
+    NATIVE 2/3-bit works because the original builder quantized once from
+    full precision — the rule is about OUR dequant→requant, not about odd
+    bit-widths per se.
+  - GLM's decode microbench: 3-bit matmul 158µs vs 4-bit 220µs — decode is
+    bandwidth-bound, smaller was FASTER. 4-bit won on quality + kernels,
+    not speed. Keep this when benchmarking any requant candidate.
 
 ## D3. reap25 promotion (#23)
 
