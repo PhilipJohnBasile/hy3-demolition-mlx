@@ -68,7 +68,12 @@ baseline, 30 cases + hard tier (~00:30) → 5. base-vs-lite compare
 committed. Receipts: hy3_lite_v1_baseline_suite/summary, hard_tier,
 mtp_smoke, hy3_base_*, hy3_base_vs_lite_compare.
 
-**REAP block — one launch per step, gates between (start next morning):**
+**Overnight handoff (scripts/28, armed):** when the chain completes,
+calibration fires automatically → dry-run 25% plan → analyzer verdict →
+receipts committed by morning. No weights written; the prune `--write` is
+the morning's human gate.
+
+**REAP block — remaining steps after the morning plan review:**
 6. #18 calibration (true REAP, fp32 router, pack ready): **6–12 h**, the
    long pole → 7. #19 dry-run plan + scripts/25 analyzer + PJB read
    (~15 min + review) → 8. #20 prune write + smokes (~1 h) → 9. #22 heal:
