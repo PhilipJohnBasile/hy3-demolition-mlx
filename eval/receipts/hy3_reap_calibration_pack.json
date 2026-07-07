@@ -1,0 +1,38 @@
+{
+  "out": "data/hy3_reap_calibration/prompts.jsonl",
+  "total": 449,
+  "by_source": {
+    "protected_prompts": 11,
+    "eval/coding/prompts.jsonl": 2,
+    "eval/tool_calls/prompts.jsonl": 5,
+    "eval/agent_repair/prompts.jsonl": 3,
+    "eval/json_schema/prompts.jsonl": 5,
+    "eval/planning/prompts.jsonl": 4,
+    "eval/souls/prompts.jsonl": 11,
+    "eval/hard/prompts.jsonl": 8,
+    "glm_calib": 400
+  },
+  "by_facet": {
+    "agentic": 10,
+    "art": 2,
+    "coding": 46,
+    "design": 9,
+    "fullstack": 2,
+    "gamedev": 2,
+    "general": 127,
+    "legacy": 4,
+    "math": 6,
+    "mixed": 123,
+    "music": 2,
+    "perfumery": 3,
+    "repair": 4,
+    "research": 1,
+    "retrieval": 5,
+    "science": 2,
+    "security": 3,
+    "train": 96,
+    "valid": 2
+  },
+  "mixed_cap": 400,
+  "note": "feed to scripts/04 via --prompts; soul prompts already tagged per facet"
+}
