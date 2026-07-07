@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# BASH_SOURCE is bash-only; zsh sets $0 to the sourced file instead.
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd)"
 
 export HY3_PROJECT_ROOT="${HY3_PROJECT_ROOT:-$ROOT}"
 export HY3_MLX_BASE="${HY3_MLX_BASE:-ox-ox/Hy3-295B-Instruct-w2q3exp-AProjQ8-SExpQ8-OutQ8-MTP-mlx}"
 export HY3_MODEL_DIR="${HY3_MODEL_DIR:-$ROOT/models/hy3-mlx-base}"
-export HY3_LITE_FUSED="${HY3_LITE_FUSED:-$ROOT/dist/hy3-demolition-mlx-lite-fused}"
+export HY3_LITE_FUSED="${HY3_LITE_FUSED:-$ROOT/dist/hy3-demolition-mlx-lite-v1-fused}"
 
 if [ -d "$ROOT/.venv/bin" ]; then
   export PATH="$ROOT/.venv/bin:$PATH"

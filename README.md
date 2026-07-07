@@ -184,6 +184,20 @@ Receipts:
 - `eval/receipts/hy3_ar_smoke_16.json`
 - `eval/receipts/hy3_server_smoke.json`
 
+Promoted lite-v1 (2026-07-07): trained 200 iters on the length-normalized
+combined pack (val loss 1.154 → 0.722), fused, and verified standalone.
+Agent eval passed 5/5 with the adapter and 5/5 fused through
+`/v1/chat/completions`; peak memory 112.3 GB; generation ~1.4 tok/s cold.
+
+- `eval/receipts/hy3_lite_sft_length_normalization.json`
+- `eval/receipts/hy3_lite_v1_train.json`
+- `eval/receipts/hy3_lite_v1_adapter_smoke.json`
+- `eval/receipts/hy3_lite_v1_adapter_eval.jsonl`
+- `eval/receipts/hy3_lite_v1_fuse.json`
+- `eval/receipts/hy3_lite_v1_fused_smoke.json`
+- `eval/receipts/hy3_lite_v1_fused_eval.jsonl`
+- `eval/receipts/hy3_lite_v1_fused_server_smoke.json`
+
 ## Soul-Preserving REAP
 
 Hy3 pruning must not optimize only for average expert saliency. Rare souls can
@@ -196,26 +210,44 @@ fullstack, gamedev, legacy, music, art, and perfumery. `scripts/05_apply_reap_pr
 refuses to build a protected prune plan unless those soul saliency buckets are
 present, unless an explicit override is passed.
 
-Train and fuse the Lite behavior adapter:
+Train and fuse the Lite behavior adapter (lite-v1 recipe):
 
 ```bash
 ./scripts/11_prepare_lite_sft.py
 ./scripts/15_import_glm52_datasets.py
+./scripts/16_normalize_lite_sft_lengths.py --write
+./scripts/17_prepare_hy3_train_view.py
 ./scripts/07_heal_lora_hy3_mlx.py \
-  --model "$HY3_MODEL_DIR" \
+  --model models/hy3-mlx-base-ar-train \
   --data data/hy3_lite_sft_combined \
-  --adapter-path dist/adapters-hy3-lite \
-  --save-path dist/hy3-demolition-mlx-lite-fused \
-  --train \
-  --fuse
+  --adapter-path dist/adapters-hy3-lite-v1 \
+  --iters 200 \
+  --num-layers 8 \
+  --max-seq-length 2048 \
+  --train
+./scripts/18_fuse_lora_streamed.py \
+  --model models/hy3-mlx-base-ar \
+  --adapter-path dist/adapters-hy3-lite-v1 \
+  --save-path dist/hy3-demolition-mlx-lite-v1-fused
 ```
+
+Three hard-won rules baked into that recipe:
+
+- Train against `models/hy3-mlx-base-ar-train` (script 17), never the plain AR
+  view: the stock Hy3 chat template only appends EOS to the final assistant
+  turn when `is_training` is set, and training without it destroys stop
+  behavior (token-0 `!` spam after answers).
+- `--num-layers 16` does not fit the 128 GB envelope for LoRA training on this
+  checkpoint (Metal OOM); 8 layers trains fine.
+- Fuse with script 18 (lazy, shard-streamed), not `mlx_lm fuse`, which loads
+  all 105 GB eagerly and dies or thrashes swap.
 
 Run the fused model directly:
 
 ```bash
-mlx_lm.generate --model dist/hy3-demolition-mlx-lite-fused --prompt "Write a tiny Python fizzbuzz." --max-tokens 128
-mlx_lm.chat --model dist/hy3-demolition-mlx-lite-fused
-mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
+mlx_lm.generate --model dist/hy3-demolition-mlx-lite-v1-fused --prompt "Write a tiny Python fizzbuzz." --max-tokens 128
+mlx_lm.chat --model dist/hy3-demolition-mlx-lite-v1-fused
+mlx_lm.server --model dist/hy3-demolition-mlx-lite-v1-fused --port 8080
 ```
 
 ## Repo Map

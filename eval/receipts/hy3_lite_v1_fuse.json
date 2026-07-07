@@ -1,0 +1,9 @@
+{
+  "model": "models/hy3-mlx-base-ar",
+  "adapter_path": "dist/adapters-hy3-lite-v1",
+  "save_path": "dist/hy3-demolition-mlx-lite-v1-fused",
+  "fused_modules": 88,
+  "elapsed_s": 22.511985625002126,
+  "peak_memory_gb": 44.431810756,
+  "lazy": true
+}

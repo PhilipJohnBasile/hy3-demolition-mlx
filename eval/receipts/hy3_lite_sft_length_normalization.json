@@ -1,0 +1,38 @@
+{
+  "data": "data/hy3_lite_sft_combined",
+  "model": "models/hy3-mlx-base-ar",
+  "max_seq_length": 2048,
+  "write": true,
+  "splits": {
+    "train": {
+      "total": 313,
+      "kept": 305,
+      "quarantined": 8,
+      "quarantined_facets": {
+        "coding": 8
+      },
+      "max_tokens": 2556,
+      "kept_max_tokens": 1744
+    },
+    "valid": {
+      "total": 17,
+      "kept": 16,
+      "quarantined": 1,
+      "quarantined_facets": {
+        "coding": 1
+      },
+      "max_tokens": 2128,
+      "kept_max_tokens": 1818
+    },
+    "test": {
+      "total": 17,
+      "kept": 16,
+      "quarantined": 1,
+      "quarantined_facets": {
+        "coding": 1
+      },
+      "max_tokens": 2470,
+      "kept_max_tokens": 1411
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-07-07",
+  "model": "models/hy3-mlx-base-ar-train",
+  "data": "data/hy3_lite_sft_combined",
+  "adapter_path": "dist/adapters-hy3-lite-v1",
+  "backend": "mlx_lm.lora",
+  "fine_tune_type": "lora",
+  "optimizer": "adamw",
+  "iters": 200,
+  "num_layers": 8,
+  "rank": 8,
+  "batch_size": 1,
+  "learning_rate": 1e-05,
+  "max_seq_length": 2048,
+  "grad_checkpoint": true,
+  "mask_prompt": true,
+  "trainable_parameters": "211.202M/295033.528M (0.072%)",
+  "val_loss": {
+    "1": 1.154,
+    "200": 0.722
+  },
+  "final_train_loss": 0.198,
+  "trained_tokens_k": 29.0,
+  "duration_min_approx": 20,
+  "status": "passed",
+  "notes": [
+    "Plan profile was --num-layers 16; that run hit Metal OOM (kIOGPUCommandBufferCallbackErrorOutOfMemory) at ~iter 70-80 on the 128 GB machine. Trained at --num-layers 8 instead.",
+    "First 200-iter adapter (trained against models/hy3-mlx-base-ar) never emitted EOS and degenerated to token-0 '!' spam: the stock Hy3 chat template only appends eos_token to the final assistant turn when is_training is set, and mlx_lm ChatDataset passes no template kwargs. Discarded.",
+    "Retrained against models/hy3-mlx-base-ar-train (scripts/17_prepare_hy3_train_view.py), whose template defaults is_training=true so training sequences end with EOS. Adapter smoke then stopped cleanly at EOS.",
+    "Data pack was length-normalized first: rows over 2048 tokens quarantined (see hy3_lite_sft_length_normalization.json).",
+    "Checkpoints at 100 and 200 iters; adapters.safetensors is the 200-iter weights."
+  ]
+}

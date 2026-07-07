@@ -39,20 +39,32 @@ Prepare verified SFT data in `data/hy3_lite_sft_combined/{train,valid,test}.json
 ```bash
 ./scripts/11_prepare_lite_sft.py
 ./scripts/15_import_glm52_datasets.py
+./scripts/16_normalize_lite_sft_lengths.py --write
+./scripts/17_prepare_hy3_train_view.py
 ./scripts/07_heal_lora_hy3_mlx.py \
-  --model "$HY3_MODEL_DIR" \
+  --model models/hy3-mlx-base-ar-train \
   --data data/hy3_lite_sft_combined \
-  --adapter-path dist/adapters-hy3-lite \
-  --save-path dist/hy3-demolition-mlx-lite-fused \
-  --train \
-  --fuse
+  --adapter-path dist/adapters-hy3-lite-v1 \
+  --iters 200 \
+  --num-layers 8 \
+  --max-seq-length 2048 \
+  --train
+./scripts/18_fuse_lora_streamed.py \
+  --model models/hy3-mlx-base-ar \
+  --adapter-path dist/adapters-hy3-lite-v1 \
+  --save-path dist/hy3-demolition-mlx-lite-v1-fused
 ```
+
+Do not train against the plain AR view (its chat template omits EOS on the
+final assistant turn unless `is_training` is set, which breaks stop behavior),
+do not raise `--num-layers` past 8 on a 128 GB machine, and do not use
+`mlx_lm fuse` (eager load of the full 105 GB checkpoint; script 18 streams).
 
 Run:
 
 ```bash
-mlx_lm.chat --model dist/hy3-demolition-mlx-lite-fused
-mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
+mlx_lm.chat --model dist/hy3-demolition-mlx-lite-v1-fused
+mlx_lm.server --model dist/hy3-demolition-mlx-lite-v1-fused --port 8080
 ```
 
 ## Rebuild REAP Artifact

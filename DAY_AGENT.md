@@ -21,18 +21,25 @@ required to chat with the final fused model.
 
 ## Default Daily Path
 
-1. Build or download the fused model:
+1. Build or download the fused model (full lite-v1 recipe in RESTORE.md —
+   train against the `-train` view, 8 layers, fuse with script 18):
 
 ```bash
 . scripts/00_env.sh
 ./scripts/11_prepare_lite_sft.py
+./scripts/15_import_glm52_datasets.py
+./scripts/16_normalize_lite_sft_lengths.py --write
+./scripts/17_prepare_hy3_train_view.py
 ./scripts/07_heal_lora_hy3_mlx.py \
-  --model "$HY3_MODEL_DIR" \
-  --data data/hy3_lite_sft \
-  --adapter-path dist/adapters-hy3-lite \
-  --save-path "$HY3_LITE_FUSED" \
-  --train \
-  --fuse
+  --model models/hy3-mlx-base-ar-train \
+  --data data/hy3_lite_sft_combined \
+  --adapter-path dist/adapters-hy3-lite-v1 \
+  --iters 200 --num-layers 8 --max-seq-length 2048 \
+  --train
+./scripts/18_fuse_lora_streamed.py \
+  --model models/hy3-mlx-base-ar \
+  --adapter-path dist/adapters-hy3-lite-v1 \
+  --save-path "$HY3_LITE_FUSED"
 ```
 
 2. Serve for daily agent use:

@@ -14,3 +14,11 @@ eval/receipts/*.jsonl
 !eval/receipts/baseline_agent_eval.jsonl
 !eval/receipts/hy3_lora_smoke.json
 !eval/receipts/hy3_lora_adapter_smoke.json
+!eval/receipts/hy3_lite_sft_length_normalization.json
+!eval/receipts/hy3_lite_v1_train.json
+!eval/receipts/hy3_lite_v1_adapter_smoke.json
+!eval/receipts/hy3_lite_v1_adapter_eval.jsonl
+!eval/receipts/hy3_lite_v1_fuse.json
+!eval/receipts/hy3_lite_v1_fused_smoke.json
+!eval/receipts/hy3_lite_v1_fused_eval.jsonl
+!eval/receipts/hy3_lite_v1_fused_server_smoke.json

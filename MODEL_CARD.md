@@ -69,6 +69,20 @@ Not supported:
 - SGLang
 - CUDA-first serving
 
+## Released Artifacts
+
+### lite-v1 (2026-07-07)
+
+- Artifact: `dist/hy3-demolition-mlx-lite-v1-fused` (104 GB MLX safetensors,
+  standalone, stock chat template).
+- Recipe: length-normalized combined SFT pack (305/16/16, all ≤ 2048 tokens),
+  LoRA rank 8 on 8 layers (211M params, 0.072%), 200 iters, batch 1, lr 1e-5,
+  adamw, grad checkpoint, masked prompts, trained against the `is_training`
+  template view; streamed lazy fuse.
+- Val loss 1.154 → 0.722. Agent eval 5/5 with adapter and 5/5 fused via
+  `mlx_lm.server` `/v1/chat/completions`. Peak inference memory 112.3 GB on an
+  M5 Max 128 GB; ~1.4 tok/s cold generation.
+
 ## Evaluation Receipts
 
 Receipts are JSONL files under `eval/receipts/`. Each record should include:
