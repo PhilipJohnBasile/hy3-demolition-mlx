@@ -1,23 +1,22 @@
 {
-  "canon_rows": 16,
-  "merged_new": 16,
+  "canon_rows": 6,
+  "merged_new": 6,
   "skipped_duplicates": 0,
   "assigned": {
-    "train": 11,
-    "valid": 3,
-    "test": 2
+    "train": 5,
+    "valid": 1
   },
   "split_sizes": {
-    "train": 339,
-    "valid": 23,
+    "train": 344,
+    "valid": 24,
     "test": 21
   },
   "combined_facets": {
-    "agentic": 21,
+    "agentic": 23,
     "art": 4,
-    "coding": 13,
-    "design": 4,
-    "fullstack": 4,
+    "coding": 14,
+    "design": 6,
+    "fullstack": 5,
     "gamedev": 4,
     "legacy": 4,
     "math": 4,
