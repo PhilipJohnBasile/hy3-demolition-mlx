@@ -193,7 +193,20 @@ now refuses MTP-sidecar sources and defaults to the AR view.
 ## Phase 4: conditional
 
 - [ ] **#24 REAP 40%** — only if reap25-v1 promotes. Same protections, same
-      pipeline, same gates.
+      pipeline, same gates. Its real purpose: the 96 GB-Mac tier of the
+      family (#33).
+
+## Phase 5: the family (post-promotion, PJB 2026-07-07)
+
+- [ ] **#33 Family ladder** — lite-v1 (128 GB) · reap25 (~80 GB) · reap40
+      (~65 GB → 96 GB Macs). No 64 GB tier from this base — past the
+      quality cliff; that audience gets a smaller base wearing the same
+      soul/verifier treatment (future project). Public-release decision,
+      per-tier cards + receipts. Blocked by #23.
+- [ ] **#34 GGUF export** — distribution format for llama.cpp users; the
+      MLX-only RUNTIME rule is unchanged. Dequant→f16 (~440 GB scratch),
+      convert_hf_to_gguf, quant tiers, verify num_experts=144 loads,
+      fast-tier eval per shipped quant. Blocked by #23.
 
 ## Expected payoff (why we're doing this)
 
