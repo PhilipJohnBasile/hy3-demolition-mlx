@@ -175,7 +175,7 @@ Current verified Lite baseline:
 - MTP sidecar omitted for the day-to-day path
 - no-wire MLX generation avoids the Metal watchdog seen with the stock giant-model pin
 - one-token smoke: `ready`, peak memory 112.329 GB
-- sixteen-token smoke: coherent sentence, peak memory 112.329 GB, cold generation 1.285 tok/s
+- sixteen-token smoke: coherent sentence, peak memory 112.329 GB, 16 tokens in 49.5 s end-to-end on a cold load (see receipt; steady-state decode measured separately at ~7.4 tok/s warm in hy3_mtp_smoke.json)
 
 Receipts:
 
@@ -187,7 +187,7 @@ Receipts:
 Promoted lite-v1 (2026-07-07): trained 200 iters on the length-normalized
 combined pack (val loss 1.154 → 0.722), fused, and verified standalone.
 Agent eval passed 5/5 with the adapter and 5/5 fused through
-`/v1/chat/completions`; peak memory 112.3 GB; generation ~1.4 tok/s cold.
+`/v1/chat/completions`; peak memory 112.3 GB; ~7.4 tok/s warm decode (hy3_mtp_smoke.json).
 
 - `eval/receipts/hy3_lite_sft_length_normalization.json`
 - `eval/receipts/hy3_lite_v1_train.json`

@@ -96,8 +96,17 @@ def build_plan(
             values = ranking_scores(facet_scores)
             if values is None:
                 continue
+            # Only protect experts this facet ACTUALLY routed to. Padding the
+            # keep set with never-routed (count 0 -> reap-mean 0.0) experts,
+            # tie-broken by ascending index, silently "protects" experts
+            # 0,1,2,... that the soul never used — the opposite of soul
+            # preservation. Cap protection at the number of experts with
+            # positive routing for this facet in this layer.
+            counts = facet_scores.get("counts") or [0] * len(values)
+            routed = sum(1 for c in counts if c > 0)
+            take = min(min_keep_per_protected_facet, routed)
             facet_ranked = sorted(range(len(values)), key=lambda i: (-float(values[i]), i))
-            chosen = sorted(facet_ranked[:min_keep_per_protected_facet])
+            chosen = sorted(facet_ranked[:take])
             protected[facet] = chosen
             protected_set.update(chosen)
         if len(protected_set) > keep_count:

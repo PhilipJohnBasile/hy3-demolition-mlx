@@ -75,6 +75,22 @@ def main() -> None:
         print("dry run only; pass --write to stream and write pruned safetensors")
         return
 
+    # Coverage guard before the multi-hour write: a partial or stale saliency
+    # file yields a plan missing MoE layers, which would prune some layers and
+    # leave others at 192 experts — a config mismatch that corrupts the model.
+    n_hidden = int(cfg["num_hidden_layers"])
+    first_dense = int(cfg.get("first_k_dense_replace", 0))
+    expected = set(range(first_dense, n_hidden))
+    planned = {lp.layer for lp in plan.layers}
+    missing = expected - planned
+    if missing:
+        raise SystemExit(
+            f"plan covers {len(planned)} MoE layers but the checkpoint has "
+            f"{len(expected)} (layers {first_dense}..{n_hidden - 1}); missing "
+            f"{sorted(missing)[:8]}{'...' if len(missing) > 8 else ''}. "
+            "Saliency is partial/stale — recalibrate before --write."
+        )
+
     copy_non_weight_files(args.model, out)
     new_cfg = cfg.copy()
     new_cfg["num_experts"] = plan.new_num_experts

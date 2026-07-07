@@ -67,7 +67,7 @@ All measured on the fused artifact, 2026-07-07, receipts committed under
   (coding ×2, tool-call JSON, repair, strict JSON schema), outputs verified
   by the agent-toolkit verifier mesh.
 - Strict-JSON server smoke: parseable JSON, `finish_reason: stop`.
-- Peak inference memory 112.3 GB; cold generation ~1.4 tok/s.
+- Peak inference memory 112.3 GB; warm decode ~7.4 tok/s (measured, `hy3_mtp_smoke.json`). First-token latency is high on cold load.
 
 ## Limitations
 
@@ -76,8 +76,9 @@ All measured on the fused artifact, 2026-07-07, receipts committed under
   still needs a real harness.
 - Quantized MoE base: expect the usual quantization artifacts.
 - Trained/evaluated primarily in English on agent/code tasks.
-- ~1.4 tok/s cold on M5 Max — usable as a local daily driver with prompt
-  caching, not a high-throughput server.
+- ~7.4 tok/s warm decode on M5 Max (measured) — a usable local daily
+  driver with prompt caching, not a high-throughput server. Cold load
+  pages ~104 GB from disk, so the first response lags.
 
 ## Runtime support
 

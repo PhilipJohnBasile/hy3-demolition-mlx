@@ -24,11 +24,26 @@ def log(msg: str) -> None:
 
 def run(cmd: list[str], timeout: int = 57600) -> int:
     log("run: " + " ".join(cmd))
-    return subprocess.run(cmd, cwd=REPO, timeout=timeout).returncode
+    try:
+        return subprocess.run(cmd, cwd=REPO, timeout=timeout).returncode
+    except subprocess.TimeoutExpired:
+        log(f"TIMEOUT after {timeout}s: {' '.join(cmd)}")
+        return 124
 
 
 def pgrep(pattern: str) -> bool:
     return subprocess.run(["pgrep", "-f", pattern], capture_output=True).returncode == 0
+
+
+# every process pattern that can hold model memory; 14_serve is the
+# GRANDCHILD the chain's server.terminate() does not reach (audit finding)
+GPU_PATTERNS = (
+    "14_serve_mlx_ar_nowire",
+    "mlx_lm server",
+    "mlx_lm.server",
+    "08_serve_mlx",
+    "09_eval_agent_toolkit",
+)
 
 
 def main() -> int:
@@ -39,12 +54,26 @@ def main() -> int:
         if "CHAIN COMPLETE" in chain_log.read_text():
             break
         if not pgrep("27_baseline_chain"):
+            # TOCTOU: the chain may have completed and exited between the log
+            # read and the pgrep — re-read before declaring failure
+            if "CHAIN COMPLETE" in chain_log.read_text():
+                break
             log("chain process gone without CHAIN COMPLETE — check dist/chain.log; aborting")
             return 1
         time.sleep(60)
-    log("chain complete; waiting for GPU processes to clear")
-    while pgrep("08_serve_mlx") or pgrep("09_eval_agent_toolkit"):
+    log("chain complete; clearing GPU processes (incl. orphaned grandchild server)")
+    deadline = time.time() + 600
+    while any(pgrep(p) for p in GPU_PATTERNS):
+        if time.time() > deadline:
+            for p in GPU_PATTERNS:
+                subprocess.run(["pkill", "-9", "-f", p])
+            log("escalated to SIGKILL on lingering GPU processes")
+            deadline = time.time() + 600
+        else:
+            for p in GPU_PATTERNS:
+                subprocess.run(["pkill", "-f", p])
         time.sleep(20)
+    log("GPU clear; settling 60s")
     time.sleep(60)
 
     # sanity: fp32 router patch present (D0 — calibration must not run without it)
