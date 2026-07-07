@@ -45,6 +45,22 @@ reliability.
       `eval/receipts/hy3_environment.json`.
 - [x] **#14 Eval tiers** — documented in README (fast tier vs full suite).
 
+## Phase 2 additions (2026-07-07 review)
+
+- [ ] **#31 Hard-tier eval pack** — the 30-case suite passes everything, so it
+      has no discriminating power for measuring pruning damage. 8 borderline
+      cases in `eval/hard/prompts.jsonl` (tool sequencing, injection
+      distractor, nested schema, non-crashing logic repairs, mutation bug,
+      property-style coding, race-condition planning, IFRA fougère). All
+      harnesses validated with reference solutions. Run vs lite-v1 into the
+      baseline commit; expected score 50-70%.
+- [ ] **#32 MTPLX backend prototype** — unblocked from upstream (#29 only
+      gates the mlx-lm follow-up PR). Facade + registry change + injector
+      design doc now; live wiring after the MTP smoke.
+
+**GPU queue after the suite completes:** hard tier vs live server → MTP smoke
+(#25) → base-model baseline overnight (#15) → REAP calibration (#18).
+
 ## Phase 2 wrap-up (GPU / human)
 
 - [ ] **#15 Base-model baseline** — run the 30-case suite against plain
