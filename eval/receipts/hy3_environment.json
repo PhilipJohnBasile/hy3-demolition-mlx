@@ -1,0 +1,15 @@
+{
+  "date": "2026-07-07",
+  "python": "3.12.13",
+  "platform": "Darwin 27.0.0 arm64",
+  "mlx": "0.31.2",
+  "mlx_metal": "0.31.2",
+  "mlx_lm": "0.31.3",
+  "mlx_lm_source": "git+https://github.com/eauchs/mlx-lm.git@a7cc3054b1ff48c19950513b422a66cfed7baa60",
+  "mlx_lm_branch": "hy_v3-mtp",
+  "transformers": "5.12.1",
+  "notes": [
+    "Exact environment lite-v1 was trained, fused, and evaluated with.",
+    "mlx-lm installed from a moving branch; the commit hash above is the reproducible pin."
+  ]
+}

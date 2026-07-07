@@ -9,6 +9,7 @@ so the training pack never depends on silent truncation.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -37,6 +38,13 @@ def token_length(tokenizer, row: dict) -> int:
     if "messages" in row:
         return len(tokenizer.apply_chat_template(row["messages"], add_generation_prompt=False))
     return len(tokenizer.encode(row.get("text", "")))
+
+
+def row_key(row: dict) -> str:
+    content = row.get("messages", row.get("text", ""))
+    return hashlib.sha256(
+        json.dumps(content, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    ).hexdigest()
 
 
 def main() -> None:
@@ -92,9 +100,19 @@ def main() -> None:
         )
         if args.write and quarantined:
             write_jsonl(path, kept)
-            quarantine_path = data_dir / f"{split}.overlength.jsonl"
+        quarantine_path = data_dir / f"{split}.overlength.jsonl"
+        if args.write and quarantined:
             existing = read_jsonl(quarantine_path) if quarantine_path.exists() else []
-            write_jsonl(quarantine_path, existing + quarantined)
+            seen = {row_key(row) for row in existing}
+            fresh = [row for row in quarantined if row_key(row) not in seen]
+            receipt["splits"][split]["quarantine_deduped"] = len(quarantined) - len(fresh)
+            write_jsonl(quarantine_path, existing + fresh)
+        if quarantine_path.exists():
+            qrows = read_jsonl(quarantine_path)
+            receipt["splits"][split]["quarantine_file_rows"] = len(qrows)
+            receipt["splits"][split]["quarantine_file_unique"] = len(
+                {row_key(row) for row in qrows}
+            )
 
     receipt_path = REPO_ROOT / args.receipt
     receipt_path.parent.mkdir(parents=True, exist_ok=True)

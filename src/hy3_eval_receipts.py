@@ -23,6 +23,10 @@ class EvalCase:
     harness: str = ""
     expected_format: str = "text"
     facet: str = "coding"
+    verifier: str = "toolkit"
+    spec: dict | None = None
+    max_tokens: int = 0
+    allow_truncation: bool = False
 
 
 @dataclass
@@ -36,6 +40,10 @@ class EvalReceipt:
     diag: str
     output: str
     created_at: float
+    verifier: str = "toolkit"
+    elapsed_s: float = 0.0
+    completion_tokens: int = 0
+    finish_reason: str = ""
 
 
 def load_cases(path: str | Path) -> list[EvalCase]:
@@ -56,7 +64,7 @@ def chat_completion(
     temperature: float = 0.0,
     top_p: float = 1.0,
     timeout: int = 600,
-) -> str:
+) -> tuple[str, int, str]:
     payload = {
         "model": model,
         "messages": messages,
@@ -77,7 +85,11 @@ def chat_completion(
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", "replace")
         raise RuntimeError(f"HTTP {e.code}: {detail}") from e
-    return body["choices"][0]["message"].get("content") or ""
+    choice = body["choices"][0]
+    content = choice["message"].get("content") or ""
+    usage = body.get("usage") or {}
+    finish_reason = str(choice.get("finish_reason") or "")
+    return content, int(usage.get("completion_tokens") or 0), finish_reason
 
 
 _FENCE_RE = re.compile(r"```(?:[a-zA-Z0-9_+-]+)?\n(.*?)```", re.DOTALL)
@@ -99,6 +111,13 @@ def _load_verify_domain():
 
 
 def verify_output(case: EvalCase, output: str) -> tuple[bool, str, str]:
+    if case.verifier != "toolkit":
+        from hy3_local_verifiers import LOCAL_VERIFIERS
+
+        local = LOCAL_VERIFIERS.get(case.verifier)
+        if local is None:
+            return False, "config", f"unknown verifier {case.verifier!r}"
+        return local(output, case.spec or {})
     verify_domain = _load_verify_domain()
     result = verify_domain(
         case.domain,
@@ -117,6 +136,7 @@ def run_cases(
     out: str | Path,
     system_prompt: str,
     max_tokens: int,
+    timeout: int = 1800,
 ) -> list[EvalReceipt]:
     receipts: list[EvalReceipt] = []
     out = Path(out)
@@ -127,13 +147,25 @@ def run_cases(
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": case.prompt},
             ]
-            output = chat_completion(
+            started = time.perf_counter()
+            case_max_tokens = case.max_tokens or max_tokens
+            output, completion_tokens, finish_reason = chat_completion(
                 base_url,
                 model,
                 messages,
-                max_tokens=max_tokens,
+                max_tokens=case_max_tokens,
+                timeout=timeout,
             )
+            elapsed = time.perf_counter() - started
             passed, stage, diag = verify_output(case, output)
+            truncated = finish_reason == "length" or completion_tokens >= case_max_tokens
+            if truncated and not case.allow_truncation:
+                diag = (
+                    f"hit token cap ({completion_tokens}/{case_max_tokens}, "
+                    f"finish_reason={finish_reason!r}); verifier verdict was "
+                    f"passed={passed} stage={stage} {diag}".strip()
+                )
+                passed, stage = False, "truncated"
             receipt = EvalReceipt(
                 id=case.id,
                 domain=case.domain,
@@ -144,6 +176,10 @@ def run_cases(
                 diag=diag,
                 output=output,
                 created_at=time.time(),
+                verifier=case.verifier,
+                elapsed_s=round(elapsed, 3),
+                completion_tokens=completion_tokens,
+                finish_reason=finish_reason,
             )
             f.write(json.dumps(asdict(receipt), ensure_ascii=False) + "\n")
             f.flush()
@@ -156,4 +192,5 @@ def add_common_eval_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--model", default="hy3")
     parser.add_argument("--backend", default="mlx_lm")
     parser.add_argument("--max-tokens", type=int, default=512)
+    parser.add_argument("--timeout", type=int, default=1800)
 

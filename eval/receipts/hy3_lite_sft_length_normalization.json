@@ -5,34 +5,49 @@
   "write": true,
   "splits": {
     "train": {
-      "total": 313,
-      "kept": 305,
-      "quarantined": 8,
-      "quarantined_facets": {
-        "coding": 8
-      },
-      "max_tokens": 2556,
-      "kept_max_tokens": 1744
+      "total": 328,
+      "kept": 328,
+      "quarantined": 0,
+      "quarantined_facets": {},
+      "max_tokens": 1744,
+      "kept_max_tokens": 1744,
+      "quarantine_file_rows": 8,
+      "quarantine_file_unique": 8
     },
     "valid": {
-      "total": 17,
-      "kept": 16,
-      "quarantined": 1,
-      "quarantined_facets": {
-        "coding": 1
-      },
-      "max_tokens": 2128,
-      "kept_max_tokens": 1818
+      "total": 20,
+      "kept": 20,
+      "quarantined": 0,
+      "quarantined_facets": {},
+      "max_tokens": 1818,
+      "kept_max_tokens": 1818,
+      "quarantine_file_rows": 1,
+      "quarantine_file_unique": 1
     },
     "test": {
-      "total": 17,
-      "kept": 16,
-      "quarantined": 1,
-      "quarantined_facets": {
-        "coding": 1
-      },
-      "max_tokens": 2470,
-      "kept_max_tokens": 1411
+      "total": 19,
+      "kept": 19,
+      "quarantined": 0,
+      "quarantined_facets": {},
+      "max_tokens": 1411,
+      "kept_max_tokens": 1411,
+      "quarantine_file_rows": 1,
+      "quarantine_file_unique": 1
     }
+  },
+  "idempotency_proof": {
+    "date": "2026-07-07",
+    "procedure": "re-ran 15_import (seed 52) recreating the 10 over-length rows, then this normalizer --write twice; canon merge (script 22) is also hash-deduped and was verified to add 0 rows on rerun",
+    "quarantine_rows_after_first_write": {
+      "train": 8,
+      "valid": 1,
+      "test": 1
+    },
+    "quarantine_rows_after_second_write": {
+      "train": 8,
+      "valid": 1,
+      "test": 1
+    },
+    "dedupe": "sha256 of row messages/text (row_key)"
   }
 }

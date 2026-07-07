@@ -29,6 +29,12 @@ def main() -> int:
     parser.add_argument("--adapter-path", default="dist/adapters-hy3-lite-v1")
     parser.add_argument("--save-path", default="dist/hy3-demolition-mlx-lite-v1-fused")
     parser.add_argument("--receipt", default="eval/receipts/hy3_lite_v1_fuse.json")
+    parser.add_argument(
+        "--card",
+        default="cards/hy3-demolition-mlx-lite-v1.md",
+        help="model card copied to <save-path>/README.md after fusing "
+        "(mlx_lm save writes a frontmatter-only stub otherwise); '' skips",
+    )
     args = parser.parse_args()
 
     started = time.perf_counter()
@@ -51,6 +57,15 @@ def main() -> int:
     print("Saving shard by shard")
     save(Path(args.save_path), args.model, model, tokenizer, config)
     elapsed = time.perf_counter() - started
+
+    card = Path(args.card) if args.card else None
+    if card is not None:
+        if not card.exists():
+            raise FileNotFoundError(f"model card {card} not found; pass --card '' to skip")
+        (Path(args.save_path) / "README.md").write_text(
+            card.read_text(encoding="utf-8"), encoding="utf-8"
+        )
+        print(f"model card: {card} -> {args.save_path}/README.md")
 
     receipt = {
         "model": args.model,

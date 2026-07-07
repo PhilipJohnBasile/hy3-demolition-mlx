@@ -9,8 +9,14 @@ rebuilt from source plus Hugging Face checkpoints.
 uv venv --python 3.12 --seed
 . .venv/bin/activate
 pip install "transformers>=5.7,<5.13" \
-  "mlx-lm @ git+https://github.com/eauchs/mlx-lm.git@hy_v3-mtp"
+  "mlx-lm @ git+https://github.com/eauchs/mlx-lm.git@a7cc3054b1ff48c19950513b422a66cfed7baa60"
 ```
+
+The mlx-lm pin is the exact commit of the `hy_v3-mtp` branch this project was
+built and verified against (mlx 0.31.2, mlx-lm 0.31.3, transformers 5.12.1 —
+see `eval/receipts/hy3_environment.json`). The branch moves; the EOS template
+behavior, streamed fuse, and hy_v3/MTP support are all version-specific, so
+restore from the commit hash, not the branch name.
 
 Then:
 

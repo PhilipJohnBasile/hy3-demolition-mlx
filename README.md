@@ -198,6 +198,25 @@ Agent eval passed 5/5 with the adapter and 5/5 fused through
 - `eval/receipts/hy3_lite_v1_fused_eval.jsonl`
 - `eval/receipts/hy3_lite_v1_fused_server_smoke.json`
 
+## Eval Tiers
+
+Two tiers, one runner (`scripts/09_eval_agent_toolkit.py`):
+
+- **Fast tier** (~20 min warm): the 15 short-form cases — coding, tool-call
+  payloads, repair, strict JSON. For iterating on adapters, quant policies,
+  and prune candidates.
+
+  ```bash
+  ./scripts/09_eval_agent_toolkit.py \
+    --cases eval/coding/prompts.jsonl eval/tool_calls/prompts.jsonl \
+            eval/agent_repair/prompts.jsonl eval/json_schema/prompts.jsonl \
+    --out eval/receipts/fast_tier.jsonl
+  ```
+
+- **Full suite** (~4 h): all 30 cases including planning and the 11 protected
+  souls. Required for promotion gates; compared against the committed baseline
+  with `scripts/20_compare_receipts.py` (exit 0 = promote).
+
 ## Soul-Preserving REAP
 
 Hy3 pruning must not optimize only for average expert saliency. Rare souls can

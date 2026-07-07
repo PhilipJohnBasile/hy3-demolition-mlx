@@ -22,6 +22,8 @@ def main() -> None:
             "eval/tool_calls/prompts.jsonl",
             "eval/agent_repair/prompts.jsonl",
             "eval/json_schema/prompts.jsonl",
+            "eval/planning/prompts.jsonl",
+            "eval/souls/prompts.jsonl",
         ],
     )
     parser.add_argument("--out", default="eval/receipts/agent_toolkit_eval.jsonl")
@@ -38,6 +40,7 @@ def main() -> None:
         out=args.out,
         system_prompt=MODEL_FIRST_SYSTEM,
         max_tokens=args.max_tokens,
+        timeout=args.timeout,
     )
     passed = sum(1 for r in receipts if r.passed)
     total = len(receipts)
