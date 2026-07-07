@@ -63,52 +63,63 @@ def main() -> None:
     if hasattr(model, "mtp"):
         delattr(model, "mtp")
 
+    def zero_bucket(n: int) -> dict:
+        return {
+            "counts": [0] * n,
+            "score_sum": [0.0] * n,
+            "reap_sum": [0.0] * n,
+        }
+
     layers = {}
+    moe_cls = None
     for i, layer in enumerate(model.layers):
         mlp = getattr(layer, "mlp", None)
         router = getattr(mlp, "router", None)
         if router is not None:
-            setattr(router, "_hy3_reap_layer", i)
-            layers[i] = {
-                "counts": [0 for _ in range(router.expert_bias.shape[0])],
-                "score_sum": [0.0 for _ in range(router.expert_bias.shape[0])],
-                "facets": {},
-            }
+            setattr(mlp, "_hy3_reap_layer", i)
+            moe_cls = mlp.__class__
+            n = router.expert_bias.shape[0]
+            layers[i] = {**zero_bucket(n), "facets": {}}
 
-    if not layers:
-        raise RuntimeError("no Hy3 MoE routers found")
+    if not layers or moe_cls is None:
+        raise RuntimeError("no Hy3 MoE layers found")
 
-    gate_cls = next(
-        getattr(getattr(layer, "mlp", None), "router").__class__
-        for layer in model.layers
-        if getattr(getattr(layer, "mlp", None), "router", None) is not None
-    )
-    original_call = gate_cls.__call__
+    original_call = moe_cls.__call__
     active_facet = "default"
 
+    # True REAP saliency (arXiv:2510.13999 eq. 9) needs gate value AND the
+    # L2 norm of the selected expert's output: S_j = mean over routed tokens
+    # of g_j(x) * ||f_j(x)||. Replicate the MoE forward once (a wrapped
+    # re-call would double prefill cost) and accumulate both.
     def recording_call(self, x):
-        inds, scores = original_call(self, x)
+        if self.sharding_group is not None:
+            return original_call(self, x)
+        inds, scores = self.router(x)
+        combine_scores = scores if self.fp32_combine else scores.astype(x.dtype)
+        y = self.switch_mlp(x, inds)
         layer_idx = getattr(self, "_hy3_reap_layer", None)
         if layer_idx is not None:
-            mx.eval(inds, scores)
+            norms = mx.linalg.norm(y.astype(mx.float32), axis=-1)
+            mx.eval(inds, scores, norms)
             idx_rows = inds.reshape(-1).tolist()
             score_rows = scores.reshape(-1).tolist()
+            norm_rows = norms.reshape(-1).tolist()
             bucket = layers[layer_idx]
             facet_bucket = bucket["facets"].setdefault(
-                active_facet,
-                {
-                    "counts": [0 for _ in bucket["counts"]],
-                    "score_sum": [0.0 for _ in bucket["score_sum"]],
-                },
+                active_facet, zero_bucket(len(bucket["counts"]))
             )
-            for idx, score in zip(idx_rows, score_rows):
-                bucket["counts"][idx] += 1
-                bucket["score_sum"][idx] += float(score)
-                facet_bucket["counts"][idx] += 1
-                facet_bucket["score_sum"][idx] += float(score)
-        return inds, scores
+            for idx, score, norm in zip(idx_rows, score_rows, norm_rows):
+                contribution = float(score) * float(norm)
+                for b in (bucket, facet_bucket):
+                    b["counts"][idx] += 1
+                    b["score_sum"][idx] += float(score)
+                    b["reap_sum"][idx] += contribution
+        out = (y * combine_scores[..., None]).sum(axis=-2)
+        if self.shared_mlp is not None:
+            out = out + self.shared_mlp(x)
+        return out.astype(x.dtype)
 
-    gate_cls.__call__ = recording_call
+    moe_cls.__call__ = recording_call
     try:
         cases = load_prompts(args.prompts)
         soul_path = Path(args.soul_prompts)
@@ -132,12 +143,15 @@ def main() -> None:
                 verbose=False,
             )
     finally:
-        gate_cls.__call__ = original_call
+        moe_cls.__call__ = original_call
 
     payload = {
         "model": args.model,
         "prompts": args.prompts,
         "soul_prompts": args.soul_prompts,
+        "criterion": "reap_sum = sum g_j(x)*||f_j(x)||_2 over routed tokens; "
+                     "divide by counts for the REAP mean (arXiv:2510.13999 eq. 9). "
+                     "score_sum (gate-only) kept for comparison.",
         "created_at": time.time(),
         "layers": {str(k): v for k, v in sorted(layers.items())},
     }

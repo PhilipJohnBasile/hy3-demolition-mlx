@@ -18,6 +18,13 @@ see `eval/receipts/hy3_environment.json`). The branch moves; the EOS template
 behavior, streamed fuse, and hy_v3/MTP support are all version-specific, so
 restore from the commit hash, not the branch name.
 
+After installing, re-apply the fp32 router patch (the reference Hy3
+implementation computes the gate matmul in fp32; bf16 perturbs top-8 expert
+selection — see DECISIONS.md D0). One-line change in
+`mlx_lm/models/hy_v3.py` `MoEGate.__call__`:
+`self.gate(x)` → `self.gate(x.astype(mx.float32))`
+(upstream candidate: avlp12/mlx-lm@14f7837).
+
 Then:
 
 ```bash

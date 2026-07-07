@@ -1,5 +1,31 @@
 # REAP Decision Rubric
 
+## D0. Research grounding (2026-07-07)
+
+Validated against the REAP paper (arXiv:2510.13999, Cerebras; 20B–1T MoEs)
+and community Hy3 work:
+
+- **Criterion**: true REAP saliency is `mean over routed tokens of
+  g_j(x)·||f_j(x)||₂` — the mean decouples frequency from impact, so
+  rare-but-strong experts (our soul concern) score correctly. Calibration
+  (script 04) records `reap_sum` + `counts`; planning ranks by the mean.
+  Gate-only `score_sum` is kept for comparison, not ranking.
+- **Expectations**: one-shot 25% prune ≈ −2.8% on codegen (no healing);
+  50% ≈ −8% and clearly degraded. Our 25%→40% ladder with healing sits on
+  the safe side of both numbers. Late layers are most sensitive — read the
+  analyzer's per-layer output with that prior.
+- **Calibration data**: domain-matched calibration is critical (C4-style
+  generic calibration collapsed their code models to 0%). Our pack is
+  domain-matched by construction; volume (~1k prompts) matches their
+  small-model floor, well short of their 12k×16k large-model recipe —
+  acceptable trade for 0.5 tok/s hardware, noted honestly.
+- **Routing numerics** (avlp12, mlx-lm PR #1211 thread): the reference
+  implementation computes the router matmul in fp32; bf16 flips top-8
+  selections on tight margins. Applied to our installed fork (see RESTORE);
+  calibration must run with this patch or saliency is measured on wrong
+  routing. Same source: keep `router.gate` unquantized in requant
+  (~58 MB) — implemented in script 06.
+
 Pre-committed judgment for the decisions between here and reap40, written
 2026-07-07 with full session context. Change it deliberately, not casually —
 each rule exists because of something measured or a failure already hit.

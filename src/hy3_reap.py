@@ -71,9 +71,18 @@ def build_plan(
                 + ", ".join(sorted(missing))
                 + "; run calibration with eval/souls/protected_prompts.jsonl or pass an explicit override"
             )
+    def ranking_scores(data: dict) -> list[float] | None:
+        """REAP mean (gate x ||f||, averaged over routed tokens) when the
+        calibration recorded it; gate-sum otherwise (legacy saliency files)."""
+        reap = data.get("reap_sum")
+        counts = data.get("counts")
+        if reap and counts:
+            return [r / c if c else 0.0 for r, c in zip(reap, counts)]
+        return data.get("score_sum") or counts
+
     for layer_key in sorted(layer_scores, key=lambda x: int(x)):
         layer_data = layer_scores[layer_key]
-        scores = layer_data.get("score_sum") or layer_data.get("counts")
+        scores = ranking_scores(layer_data)
         if scores is None:
             raise ValueError(f"missing scores for layer {layer_key}")
         ranked = sorted(range(len(scores)), key=lambda i: (-float(scores[i]), i))
@@ -84,7 +93,7 @@ def build_plan(
             facet_scores = facets.get(facet)
             if not facet_scores:
                 continue
-            values = facet_scores.get("score_sum") or facet_scores.get("counts")
+            values = ranking_scores(facet_scores)
             if values is None:
                 continue
             facet_ranked = sorted(range(len(values)), key=lambda i: (-float(values[i]), i))

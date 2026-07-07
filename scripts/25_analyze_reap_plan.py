@@ -108,7 +108,8 @@ def main() -> int:
         sal = load(args.saliency)["layers"]
         retained = []
         for lp in layers:
-            scores = sal.get(str(lp["layer"]), {}).get("score_sum")
+            data = sal.get(str(lp["layer"]), {})
+            scores = data.get("reap_sum") or data.get("score_sum")
             if not scores:
                 continue
             total = sum(scores)

@@ -11,5 +11,8 @@
   "notes": [
     "Exact environment lite-v1 was trained, fused, and evaluated with.",
     "mlx-lm installed from a moving branch; the commit hash above is the reproducible pin."
+  ],
+  "local_patches": [
+    "fp32 router matmul in MoEGate.__call__ (matches reference HYV3TopKRouter; avlp12/mlx-lm@14f7837) \u2014 applied 2026-07-07 to site-packages; re-apply after reinstall (see RESTORE.md)"
   ]
 }

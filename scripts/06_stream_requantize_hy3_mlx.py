@@ -123,6 +123,15 @@ def main() -> None:
                 old_params["bits"],
                 old_params["mode"],
             )
+            if ".mlp.router.gate." in key:
+                # Routing is a discrete decision path: keep the gate in bf16
+                # (~58 MB total) so quantization noise cannot flip expert
+                # selection. No quant_config entry -> loads as a plain Linear.
+                emitted[key] = tensor.astype(mx.bfloat16)
+                mx.eval(emitted[key])
+                skip.add(scale_key)
+                skip.add(bias_key)
+                continue
             if tensor.shape[-1] % args.group_size != 0:
                 raise ValueError(
                     f"{key}: dequantized in_dim {tensor.shape[-1]} not divisible "
