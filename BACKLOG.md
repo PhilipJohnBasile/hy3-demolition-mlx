@@ -196,6 +196,55 @@ now refuses MTP-sidecar sources and defaults to the AR view.
       pipeline, same gates. Its real purpose: the 96 GB-Mac tier of the
       family (#33).
 
+## Phase 5: family tiers — CANCELLED (PJB, 2026-07-07 evening)
+
+Considered and cut the same day: GGUF export (#34 — ~440 GB scratch, a
+second runtime to validate, receipts per quant level; also violates the
+spirit of the pure-MLX pipeline), a 64 GB tier (#35 — its cheap route WAS
+the GGUF export; the prune route sits past the quality cliff), and a
+32 GB distill-to-small-base (#36 — a different project, parked as an
+idea, the factory stays reusable). The family that remains is what the
+endgame plan already builds: **reap25 (~80 GB) and reap40 (~65 GB, if
+earned)** — packaging language, not extra work.
+
+## Phase 3: REAP 25% (each step gated on the previous)
+
+- [ ] **#18 Calibration** — streamed saliency with soul buckets for all 11
+      protected facets → `dist/hy3-reap-saliency-v1.json`. Blocked by #11.
+      Calibration pack pre-assembled: `scripts/26_prepare_reap_calibration.py`
+      → `data/hy3_reap_calibration/prompts.jsonl` (soul + eval + capped mixed).
+      Run: `scripts/04 --model models/hy3-mlx-base-ar --prompts
+      data/hy3_reap_calibration/prompts.jsonl --out dist/hy3-reap-saliency-v1.json`.
+- [ ] **#19 Dry-run prune plan** — ratio 0.25, min keep 8 experts per protected
+      facet per layer; reject if any soul bucket missing. Commit plan receipt
+      **before** writing weights. Judgment encoded in
+      `scripts/25_analyze_reap_plan.py` (ACCEPT/REVIEW/REJECT) — run it on the
+      plan + saliency before deciding to `--write`.
+
+**REAP audit fixes (2026-07-07, pre-run):** scripts/06 requant had two
+artifact-corrupting bugs (quantizing unquantized norms; expert quant-param
+lookup missing on storage-vs-runtime name mismatch → silent 2-bit corruption
+of the 3-bit down_proj) — both fixed and verified on real tensors. scripts/05
+now refuses MTP-sidecar sources and defaults to the AR view.
+- [ ] **#20 Apply prune + smoke** — `dist/hy3-reap25-pruned`, keep
+      `num_experts_per_tok=8`, direct MLX smokes with receipts.
+- [ ] **#21 Mixed requant + smoke** — experts 3-bit; attention/router/shared/
+      norm/head 8-bit; group 64 → `dist/hy3-reap25-requant`.
+- [ ] **#22 Heal + fuse** — LoRA on the balanced pack (+ REAP eval failures),
+      trained via the `-train` template view, 8 layers, 200→500 iters only if
+      healthy; streamed fuse → `dist/hy3-demolition-mlx-reap25-v1-fused`.
+      Blocked by #21 and #17.
+- [ ] **#23 Evaluate + promote** — full suite vs reap25; `compare_receipts`
+      against the lite-v1 baseline (match-or-beat pass rate; memory, load time,
+      tok/s recorded); manual soul review. Promote (tag `reap25-v1`, private HF)
+      only if materially better for daily use. Blocked by #22 and #12.
+
+## Phase 4: conditional
+
+- [ ] **#24 REAP 40%** — only if reap25-v1 promotes. Same protections, same
+      pipeline, same gates. Its real purpose: the 96 GB-Mac tier of the
+      family (#33).
+
 ## Phase 5: the family (post-promotion, PJB 2026-07-07)
 
 - [ ] **#33 Family ladder** — lite-v1 (128 GB) · reap25 (~80 GB) · reap40
