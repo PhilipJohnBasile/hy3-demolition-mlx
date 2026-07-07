@@ -1,0 +1,24 @@
+{
+  "date": "2026-07-07",
+  "model": "dist/hy3-demolition-mlx-lite-v1-fused",
+  "suite": {
+    "cases": 30,
+    "passed": 30,
+    "pass_rate": 1.0,
+    "failed": []
+  },
+  "hard_tier": {
+    "cases": 8,
+    "passed": 8,
+    "pass_rate": 1.0,
+    "failed": []
+  },
+  "throughput_tok_s_end_to_end": 0.501,
+  "peak_memory_gb": 112.3,
+  "peak_memory_source": "eval/receipts/hy3_lite_v1_fused_smoke.json",
+  "amended_cases": [
+    "soul_design",
+    "soul_fullstack"
+  ],
+  "note": "REAP comparison baseline; compare candidates with scripts/20_compare_receipts.py"
+}
