@@ -51,3 +51,28 @@ Credit: MTP implementation originally by @eauchs
 - [ ] Confirm @eauchs is credited appropriately / consider co-authoring
 - [ ] pre-commit run --files on the three changed files
 - [ ] PJB go-ahead to fork + push + open
+
+## BLOCKERS before opening this PR (found by ultracode audit 2026-07-07)
+
+The fork's generate.py mtp_generate_step has 3 criticals that must be fixed
+before this becomes a real PR (they don't affect the AR-only artifacts we
+ship, only the MTP self-speculative path this PR would upstream):
+
+1. **Silently ignores sampler/logits_processors** — stream_generate
+   auto-activates mtp_generate_step for any num_nextn_predict_layers>0 model
+   with no draft; that path is greedy-argmax only. Every temperature>0 request
+   silently becomes temp-0. Fix: gate behind an explicit opt-in flag AND/OR
+   fall back to generate_step when a non-greedy sampler is requested.
+2. **prompt_cache split is wrong** — mtp_generate_step does
+   prompt_cache[:-1] (trunk) / [-1] (mtp), but make_prompt_cache(model)
+   returns exactly num_hidden_layers entries (no +1 for mtp), so cache reuse
+   indexes past the end / misassigns. Fix: build/derive the mtp cache slot
+   explicitly, don't assume caller layout.
+3. **First token yields logprobs=None** — unlike generate_step, breaking
+   mlx_lm.server (indexes gen.logprobs[gen.token]) with TypeError. Fix: yield
+   a real logprobs vector for the first token.
+
+Also: mtp_generate_step ignores max_kv_size/kv_bits/prompt_progress_callback
+(accepts but no-ops), the draft cache is never prefilled over the prompt, and
+test_hy_v3_mtp exercises none of mtp_generate_step. Do NOT open the PR until
+1-3 are fixed and tested against the real path.
