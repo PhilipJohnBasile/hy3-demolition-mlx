@@ -80,3 +80,10 @@
   with the two honest caveats (not live-tested pending mlx-lm hy_v3; the
   model-attribute binding should be reworked to the runtime-adapter wiring
   per the resolved design notes). Offered a proper PR on maintainer word.
+- 2026-07-07 (evening): injector REWORKED to the runtime-adapter surface
+  (mtp_forward/mtp_update_cache/make_mtp_cache subclass wrapper, guards on
+  concat order/hidden variant/depth), verified on the v2.0.1 tag (76/76
+  artifact tests) and surface-tested on a tiny hy_v3. Opened DRAFT PR
+  https://github.com/youssofal/MTPLX/pull/142 with PJB's go; #141 comment
+  edited to point at it. Remaining: live test + bench fixtures when
+  hy_v3 reaches their mlx-lm pin.
