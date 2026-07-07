@@ -75,6 +75,14 @@ original size. Therefore:
   artifact — never bundled into the first reap25 build.
 - If requant does run: router.gate stays unquantized bf16 (script 06 does
   this now), and remember the stacked-loss caveat in D3.
+- **Bit-width choice is a benchmark, not a default** (PJB, 2026-07-07):
+  Metal kernel paths favor power-of-2 widths — 4/8-bit pack uint32 cleanly,
+  3-bit needs cross-word extraction. But decode may be bandwidth-bound
+  (fewer bits = fewer bytes/token), and 4-bit experts don't fit until after
+  a deep prune (~175 GB unpruned, ~110 GB at reap25, viable ~88 GB at
+  reap40). Any requant candidate benchmarks 3-bit vs 4-bit (incl. mxfp4
+  mode, which has first-class Metal kernels) on tok/s + evals before
+  choosing. The native 2/2/3 checkpoint remains the measured reference.
 
 ## D3. reap25 promotion (#23)
 
