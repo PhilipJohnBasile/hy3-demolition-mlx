@@ -61,6 +61,21 @@ Train against the `-train` view; fuse against the stock-template dir.
 Smoke MUST include a stop-behavior check (generate 64 tokens, expect
 finish before cap with no trailing repetition).
 
+## D2b. Requant is OPTIONAL for reap25 — default is skip (#21)
+
+Arithmetic, 2026-07-07: experts are ~101 of 105 GB and already sit at
+gate/up 2-bit, down 3-bit. The inherited "experts 3-bit" requant policy
+would GROW gate/up by 50%, canceling the prune: 0.75 × 9/7 ≈ 0.96 of
+original size. Therefore:
+- **Default reap25 path: prune only.** Pruned tensors keep their original
+  quantization; skip script 06 entirely (saves hours, avoids a
+  dequant→requant noise cycle). Expected ~80 GB disk / ~85-90 GB peak.
+- Requant exists for pushing SMALLER (e.g. down 3→2-bit toward ~70 GB) and
+  only runs as a separate candidate compared against the prune-only
+  artifact — never bundled into the first reap25 build.
+- If requant does run: router.gate stays unquantized bf16 (script 06 does
+  this now), and remember the stacked-loss caveat in D3.
+
 ## D3. reap25 promotion (#23)
 
 Mechanical gate first: `scripts/20_compare_receipts.py baseline candidate`
