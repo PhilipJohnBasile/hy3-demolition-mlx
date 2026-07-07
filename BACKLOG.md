@@ -59,8 +59,36 @@ reliability.
       Patch + design doc in docs/upstream/. Live wiring + PR wait on the
       mlx-lm chain and PJB go-ahead (#28).
 
-**GPU queue after the suite completes:** hard tier vs live server → MTP smoke
-(#25) → base-model baseline overnight (#15) → REAP calibration (#18).
+## Execution order & time estimates (as of 2026-07-07 ~17:00)
+
+**Tonight — automated (scripts/27_baseline_chain.py, running):**
+1. Hard tier vs lite-v1 (~17:20) → 2. MTP smoke, decides #25/#27 (~18:10)
+→ 3. baseline merged + committed, #11 closes (~18:15) → 4. base-model
+baseline, 30 cases + hard tier (~00:30) → 5. base-vs-lite compare
+committed. Receipts: hy3_lite_v1_baseline_suite/summary, hard_tier,
+mtp_smoke, hy3_base_*, hy3_base_vs_lite_compare.
+
+**REAP block — one launch per step, gates between (start next morning):**
+6. #18 calibration (true REAP, fp32 router, pack ready): **6–12 h**, the
+   long pole → 7. #19 dry-run plan + scripts/25 analyzer + PJB read
+   (~15 min + review) → 8. #20 prune write + smokes (~1 h) → 9. #22 heal:
+   train-view for the pruned dir (D2!) + 200 iters + streamed fuse +
+   stop-smoke (~1.5 h) → 10. #23 full suite + hard tier vs reap25 +
+   compare (~5.5 h) → 11. D3 promotion decision + manual pass + upload
+   (PJB + 1–3 h). **Reap25 verdict ≈ 36–48 h from now.**
+
+**Slotted around the GPU:** #16 manual pass (PJB, any lite-v1 server
+window); #26 MTP-enabled lite (CPU assembly minutes; ~1.5 h GPU
+verification slot after tonight's smoke); #27 auto-resolves from the
+smoke per D5.
+
+**External-event queue:** #1211 merges → MTP follow-up PR (patch staged,
+numbers from tonight's smoke) → MTPLX pin bump → #28 backend PR → #30
+LM Studio verify.
+
+**Open human decisions (everything else is pre-committed in
+DECISIONS.md):** manual-pass verdict; promotion call if compare returns
+REVIEW rather than clean PROMOTE.
 
 ## Phase 2 wrap-up (GPU / human)
 

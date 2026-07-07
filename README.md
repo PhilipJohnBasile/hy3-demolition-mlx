@@ -278,7 +278,15 @@ data/      seed and imported build-time SFT/calibration packs
 eval/      tiny verifier-first smoke suites and receipts
 dist/      generated fused artifacts, adapters, and plans
 models/    downloaded MLX base checkpoints
+docs/      upstream contribution patches and design docs
 ```
+
+Governance docs (read these before doing anything substantial):
+
+- `BACKLOG.md` — numbered status board + execution order and estimates
+- `DECISIONS.md` — pre-committed judgment for every REAP/promotion call
+- `BUILD_NOTES.md` — append-only incident log (what went right and wrong)
+- `RESTORE.md` — rebuild everything from source, including local patches
 
 ## External Model Facts
 
