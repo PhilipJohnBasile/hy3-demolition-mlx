@@ -1,334 +1,185 @@
-From 69ca507757c75e7b2b1a1e3bcddd6c198b29467f Mon Sep 17 00:00:00 2001
+From 148de92bd26b4f700262d0c3fb363ddf9404eb16 Mon Sep 17 00:00:00 2001
 From: Philip John Basile <PBasile@Basilcom.com>
-Date: Tue, 7 Jul 2026 14:23:10 -0400
-Subject: [PATCH] Add hy_v3 (Tencent Hy3) native MTP backend
+Date: Tue, 7 Jul 2026 19:18:50 -0400
+Subject: [PATCH] hy_v3 MTP backend: fix contract-default guards, validator,
+ registry (audit)
 
-Hy3 registers as recognized-backend-pending; this wires the actual backend:
-facade, hy_v3_mtp_patch (config detection + injection), runtime dispatch,
-import smoke, and registry upgrade to experimental-native-contract-gated.
-
-Because the mlx-lm hy_v3 MTP revision exposes the head natively
-(predict_next_tokens + return_hidden_states), injection binds the existing
-surface instead of grafting weights. Draft depth 1; verification stays in
-generation.py. Depends on hy_v3 landing in the pinned mlx-lm
-(ml-explore/mlx-lm#1211 + MTP follow-up); runtime contract fixtures to be
-measured on Apple Silicon before promotion past experimental.
+Adversarial audit of the initial version found 3 blocking bugs:
+- injector guards rejected the post_norm hidden_variant that
+  runtime.draft_mtp resolves from the bare MTPContract default -> every
+  draft call raised. Now accept-and-ignore like glm/step3p5 (Hy3 has one
+  native wiring).
+- validate_mtp_support requires model.mtp.layers; native MTPBlock exposes
+  .layer -> added a .layers alias (child-module container, not a copy).
+- registry: hy-v3-mtp was absent from SUPPORTED_ARCH_IDS and the
+  appended-layer runtime gate -> added to both.
+- depth>=2 now reuses the single NextN layer instead of raising.
+Adds tests/test_hy_v3_mtp_backend.py (4 tests incl the post_norm path);
+artifact suite still 76/76.
 ---
- mtplx/backends/hy_v3_mtp.py |  69 +++++++++++++++++
- mtplx/backends/registry.py  |  18 ++++-
- mtplx/commands/public.py    |   1 +
- mtplx/hy_v3_mtp_patch.py    | 149 ++++++++++++++++++++++++++++++++++++
- mtplx/runtime.py            |   3 +
- tests/test_artifacts.py     |   1 -
- 6 files changed, 237 insertions(+), 4 deletions(-)
- create mode 100644 mtplx/backends/hy_v3_mtp.py
- create mode 100644 mtplx/hy_v3_mtp_patch.py
+ mtplx/backends/registry.py      |  2 ++
+ mtplx/hy_v3_mtp_patch.py        | 36 ++++++++++---------
+ tests/test_hy_v3_mtp_backend.py | 61 +++++++++++++++++++++++++++++++++
+ 3 files changed, 83 insertions(+), 16 deletions(-)
+ create mode 100644 tests/test_hy_v3_mtp_backend.py
 
-diff --git a/mtplx/backends/hy_v3_mtp.py b/mtplx/backends/hy_v3_mtp.py
-new file mode 100644
-index 0000000..1ac9ba6
---- /dev/null
-+++ b/mtplx/backends/hy_v3_mtp.py
-@@ -0,0 +1,69 @@
-+"""Tencent Hy3 (hy_v3) native MTP backend facade.
-+
-+Hy3 ships one appended MTP layer (num_nextn_predict_layers=1): a full MoE
-+decoder layer fed concat[RMSNorm(next-token embedding), RMSNorm(trunk
-+pre-final-norm hidden state)] through an eh_proj down-projection, sharing the
-+trunk's embeddings and lm_head. The MLX reference implementation exposes it as
-+``Model.predict_next_tokens(hidden, token_ids, cache)`` with
-+``return_hidden_states=True`` on the trunk forward (see
-+mlx-lm ``models/hy_v3.py``, MTP revision).
-+
-+Like the GLM/DeepSeek facades, drafting and verification are wired through the
-+shared speculative sampler in ``generation.py``; this facade gates execution
-+behind the verified runtime contract.
-+"""
-+
-+from __future__ import annotations
-+
-+from pathlib import Path
-+from typing import Any
-+
-+from . import DraftTokens, ModelState, MTPBackend, VerifyOutput
-+from mtplx.profiles import DEFAULT_PROFILE_NAME
-+
-+
-+class HyV3MTPBackend(MTPBackend):
-+    arch_id = "hy-v3-mtp"
-+
-+    def load(self, model_path: Path) -> ModelState:
-+        from mtplx.mtp_patch import MTPContract
-+        from mtplx.runtime import load
-+
-+        runtime = load(model_path, mtp=True, contract=MTPContract())
-+        return ModelState(
-+            model_path=Path(model_path),
-+            runtime=runtime,
-+            metadata={"arch_id": self.arch_id, "contract_gated": True},
-+        )
-+
-+    def verify(self, state: ModelState, draft_tokens: DraftTokens, hidden: Any) -> VerifyOutput:
-+        raise NotImplementedError("HyV3MTPBackend.verify is wired through generation.py")
-+
-+    def propose(self, state: ModelState, hidden: Any) -> DraftTokens:
-+        raise NotImplementedError("HyV3MTPBackend.propose is wired through generation.py")
-+
-+    def recommended_profile(self) -> str:
-+        return DEFAULT_PROFILE_NAME
-+
-+    def health(self) -> dict[str, Any]:
-+        return {
-+            "arch_id": self.arch_id,
-+            "runtime_path": "mtplx.runtime + mtplx.hy_v3_mtp_patch + mtplx.generation",
-+            "support_level": "experimental-native-contract-gated",
-+            "contract_required": True,
-+            "supported_model_types": ["hy_v3"],
-+            "mtp_depth_max": 1,
-+            "notes": (
-+                "Single appended NextN layer with its own 192-expert MoE MLP, "
-+                "sigmoid top-8 routing with expert bias, eh_proj over "
-+                "concat[enorm(embedding), hnorm(hidden)], shared embeddings "
-+                "and head. Draft layer consumes the trunk pre-final-norm "
-+                "hidden state. Verification is exact rejection sampling in "
-+                "generation.py; the MLX reference (mlx-lm hy_v3 MTP revision) "
-+                "verifies greedily and is temp-0 exact."
-+            ),
-+            "references": [
-+                "REFERENCES:TOOLS/vllm-official-main/vllm/model_executor/models/hy_v3_mtp.py",
-+                "REFERENCES:TOOLS/mlx-lm/mlx_lm/models/hy_v3.py",
-+            ],
-+        }
 diff --git a/mtplx/backends/registry.py b/mtplx/backends/registry.py
-index 5005df0..703f19c 100644
+index 703f19c..1083ce9 100644
 --- a/mtplx/backends/registry.py
 +++ b/mtplx/backends/registry.py
-@@ -411,10 +411,22 @@ ARCHITECTURE_CATALOG: dict[str, ArchitectureSupport] = {
-         display_name="HY V3 MTP",
-         family="hy",
-         backend="hy_v3_mtp",
--        support_level="recognized-backend-pending",
--        runtime_compatibility="recognized-backend-pending",
-+        support_level="experimental-native-contract-gated",
-+        runtime_compatibility="native-contract-gated",
-+        can_run_verified=True,
-         aliases=("hy_v3_mtp", "hy_v3"),
--        references=("REFERENCES:TOOLS/vllm-official-main/vllm/model_executor/models/hy_v3_mtp.py",),
-+        family_gate="appended-layer-mtp-markers",
-+        references=(
-+            "REFERENCES:TOOLS/vllm-official-main/vllm/model_executor/models/hy_v3_mtp.py",
-+            "REFERENCES:TOOLS/mlx-lm/mlx_lm/models/hy_v3.py",
-+        ),
-+        notes=(
-+            "Hy3 ships one appended NextN layer with its own 192-expert MoE, "
-+            "eh_proj over concat[enorm(embedding), hnorm(hidden)], and shared "
-+            "embeddings/head. The mlx-lm hy_v3 MTP revision exposes the head "
-+            "natively (predict_next_tokens), so injection binds the existing "
-+            "surface rather than grafting weights."
-+        ),
-     ),
-     "generic-mtp": ArchitectureSupport(
-         arch_id="generic-mtp",
-diff --git a/mtplx/commands/public.py b/mtplx/commands/public.py
-index 93fcff0..f64f406 100644
---- a/mtplx/commands/public.py
-+++ b/mtplx/commands/public.py
-@@ -13216,6 +13216,7 @@ def _run_runtime_import_smoke() -> list[dict[str, Any]]:
-         ("mtplx.backends.mimo_mtp", "MiMoMTPBackend"),
-         ("mtplx.backends.nemotron_h_mtp", "NemotronHMTPBackend"),
-         ("mtplx.backends.step3p5_mtp", "Step3p5MTPBackend"),
-+        ("mtplx.backends.hy_v3_mtp", "HyV3MTPBackend"),
-     ):
-         try:
-             module = importlib.import_module(module_name)
-diff --git a/mtplx/hy_v3_mtp_patch.py b/mtplx/hy_v3_mtp_patch.py
-new file mode 100644
-index 0000000..5553d6f
---- /dev/null
-+++ b/mtplx/hy_v3_mtp_patch.py
-@@ -0,0 +1,149 @@
-+"""Hy3 (hy_v3) native MTP support injection.
-+
-+Unlike families whose MTP layers must be grafted on at load time, the mlx-lm
-+hy_v3 model class (MTP revision) already owns its MTP head: with
-+``num_nextn_predict_layers > 0`` the checkpoint's mtp.* weights load onto an
-+``MTPBlock`` submodule natively. Injection therefore installs the MTPLX
-+runtime surface (``mtp_forward`` / ``mtp_update_cache`` / ``make_mtp_cache``,
-+plus ``return_hidden`` on the trunk forward) as a subclass wrapper over the
-+already-loaded model — no weight rewriting.
-+
-+Architecture contract (must match the checkpoint):
-+- one appended NextN layer (depth 1) with its own MoE MLP;
-+- draft input is concat[enorm(next-token embedding), hnorm(trunk hidden)]
-+  with the trunk hidden taken PRE-final-norm ("embedding_hidden" order);
-+- shared embeddings and lm_head.
-+
-+Status: experimental — pending hy_v3 landing in the pinned mlx-lm
-+(ml-explore/mlx-lm#1211 + MTP follow-up) and a hardware-measured runtime
-+contract.
-+"""
-+
-+from __future__ import annotations
-+
-+import logging
-+from pathlib import Path
-+from typing import Any
-+
-+logger = logging.getLogger(__name__)
-+
-+
-+def is_hy_v3_mtp_config(config: dict[str, Any]) -> bool:
-+    model_type = str(config.get("model_type", "")).lower()
-+    architectures = [str(a) for a in config.get("architectures") or []]
-+    if model_type != "hy_v3" and "HyV3ForCausalLM" not in architectures:
-+        return False
-+    return int(config.get("num_nextn_predict_layers") or 0) > 0
-+
-+
-+def inject_hy_v3_mtp_support(
-+    model: Any,
-+    path: Path,
-+    config: dict[str, Any],
-+    contract: Any,
-+) -> bool:
-+    """Install the MTPLX draft surface on an already-loaded hy_v3 model.
-+
-+    Returns True when the model exposes a usable MTP head. Raises if the
-+    config promises MTP but the loaded model cannot draft (an AR-only export
-+    with the sidecar stripped, or an mlx-lm predating hy_v3 MTP support).
-+    """
-+    if not is_hy_v3_mtp_config(config):
-+        return False
-+
-+    if getattr(model, "num_nextn_predict_layers", 0) <= 0 or not hasattr(model, "mtp"):
-+        raise RuntimeError(
-+            f"{path}: config declares num_nextn_predict_layers="
-+            f"{config.get('num_nextn_predict_layers')} but the loaded model has "
-+            "no MTP submodule. The checkpoint is likely an AR-only export "
-+            "(model-mtp.safetensors absent) or the installed mlx-lm predates "
-+            "hy_v3 MTP support."
-+        )
-+
-+    from mlx_lm.models.base import create_attention_mask
-+    from mlx_lm.models.cache import KVCache
-+
-+    original_outer_class = model.__class__
-+
-+    class _MTPLXHyV3Model(original_outer_class):
-+        def __call__(
-+            self,
-+            inputs,
-+            cache=None,
-+            return_hidden: bool = False,
-+            input_embeddings=None,
-+            hidden_variant: str | None = None,
-+            **kwargs,
-+        ):
-+            if input_embeddings is not None:
-+                raise ValueError("Hy3 MTP backend does not support input_embeddings")
-+            if hidden_variant not in {None, "auto", "contract", "pre_norm"}:
-+                raise ValueError(
-+                    "Hy3 MTP drafts from the trunk pre-final-norm hidden state"
-+                )
-+            if return_hidden:
-+                # hy_v3's native forward already returns (logits, pre-norm h)
-+                return super().__call__(
-+                    inputs, cache=cache, return_hidden_states=True
-+                )
-+            return super().__call__(inputs, cache=cache)
-+
-+        def mtp_forward(
-+            self,
-+            hidden_states,
-+            next_token_ids,
-+            cache=None,
-+            mtp_cache=None,
-+            concat_order=None,
-+            return_hidden: bool = False,
-+            mtp_hidden_variant: str = "pre_norm",
-+            position_offset: int | None = None,
-+            mtp_depth: int | None = None,
-+        ):
-+            if concat_order not in {None, "auto", "contract", "embedding_hidden"}:
-+                raise ValueError(
-+                    "Hy3 MTP backend supports embedding_hidden concat order only"
-+                )
-+            if mtp_hidden_variant not in {None, "auto", "contract", "pre_norm"}:
-+                raise ValueError("Hy3 MTP consumes the pre-final-norm trunk hidden")
-+            if mtp_depth not in {None, 0, 1}:
-+                raise ValueError("Hy3 ships a single NextN layer (depth 1)")
-+            layer_cache = mtp_cache if mtp_cache is not None else cache
-+            if isinstance(layer_cache, list):
-+                layer_cache = layer_cache[0]
-+            # replicate Model.predict_next_tokens, keeping the draft hidden
-+            e_next = self.model.embed_tokens(next_token_ids)
-+            mask = create_attention_mask(e_next, layer_cache)
-+            h_mtp = self.mtp(hidden_states, e_next, mask, layer_cache)
-+            logits = self._logits(h_mtp)
-+            if not return_hidden:
-+                return logits
-+            return logits, h_mtp
-+
-+        def mtp_update_cache(
-+            self,
-+            hidden_states,
-+            next_token_ids,
-+            mtp_cache=None,
-+            concat_order=None,
-+            position_offset: int | None = None,
-+            mtp_depth: int | None = None,
-+        ):
-+            _logits, hidden = self.mtp_forward(
-+                hidden_states,
-+                next_token_ids,
-+                mtp_cache=mtp_cache,
-+                concat_order=concat_order,
-+                return_hidden=True,
-+                mtp_depth=mtp_depth,
-+            )
-+            return hidden
-+
-+        def make_mtp_cache(self):
-+            return [KVCache()]
-+
-+    model.__class__ = _MTPLXHyV3Model
-+    if contract is not None and hasattr(contract, "note"):
-+        contract.note(arch_id="hy-v3-mtp", mtp_depth=1)
-+    logger.info("[Hy3 MTP inject] native head bound for %s", path)
-+    return True
-diff --git a/mtplx/runtime.py b/mtplx/runtime.py
-index 1a4c0c1..2f7d6fb 100644
---- a/mtplx/runtime.py
-+++ b/mtplx/runtime.py
-@@ -352,6 +352,7 @@ def load(
-         from .mimo_mtp_patch import inject_mimo_mtp_support, is_mimo_mtp_config
-         from .nemotron_h_mtp_patch import inject_nemotron_h_mtp_support, is_nemotron_h_mtp_config
-         from .step3p5_mtp_patch import inject_step3p5_mtp_support
-+        from .hy_v3_mtp_patch import inject_hy_v3_mtp_support, is_hy_v3_mtp_config
+@@ -21,6 +21,7 @@ SUPPORTED_ARCH_IDS = {
+     "nemotron-h-mtp",
+     "gemma4-assistant-mtp",
+     "step3p5-mtp",
++    "hy-v3-mtp",
+ }
  
-         if is_nemotron_h_mtp_config(config):
-             mtp_enabled = inject_nemotron_h_mtp_support(model, path, config, contract)
-@@ -361,6 +362,8 @@ def load(
-             mtp_enabled = inject_glm_mtp_support(model, path, config, contract)
-         elif is_step3p5_mtp_config(config):
-             mtp_enabled = inject_step3p5_mtp_support(model, path, config, contract)
-+        elif is_hy_v3_mtp_config(config):
-+            mtp_enabled = inject_hy_v3_mtp_support(model, path, config, contract)
-         elif is_deepseek_mtp_config(config):
-             mtp_enabled = inject_deepseek_mtp_support(model, path, config, contract)
-         else:
-diff --git a/tests/test_artifacts.py b/tests/test_artifacts.py
-index 24b2259..aae9d6d 100644
---- a/tests/test_artifacts.py
-+++ b/tests/test_artifacts.py
-@@ -1570,7 +1570,6 @@ def test_gemma4_pair_subfolder_reports_bundle_required(tmp_path):
-         ("LongCatFlashForCausalLM", "longcat_flash", "longcat-flash-mtp"),
-         ("OpenPanguForCausalLM", "openpangu", "pangu-ultra-moe-mtp"),
-         ("Step3P5ForCausalLM", "step3p5", "step3p5-mtp"),
--        ("HyV3ForCausalLM", "hy_v3", "hy-v3-mtp"),
-     ],
- )
- def test_big_mtp_architecture_markers_are_recognized_backend_pending(
+ TIER_VERIFIED = "verified"
+@@ -928,6 +929,7 @@ def _passes_family_runtime_gate(arch_id: str, inspection: Any, tensor_gate: bool
+         "glm4-moe-mtp",
+         "glm4-moe-lite-mtp",
+         "step3p5-mtp",
++        "hy-v3-mtp",
+     }:
+         return _passes_appended_layer_gate(inspection)
+     if arch_id == "mimo-mtp":
+diff --git a/mtplx/hy_v3_mtp_patch.py b/mtplx/hy_v3_mtp_patch.py
+index 5553d6f..8e344a0 100644
+--- a/mtplx/hy_v3_mtp_patch.py
++++ b/mtplx/hy_v3_mtp_patch.py
+@@ -63,8 +63,24 @@ def inject_hy_v3_mtp_support(
+     from mlx_lm.models.base import create_attention_mask
+     from mlx_lm.models.cache import KVCache
+ 
++    # validate_mtp_support (mtp_patch.py) requires model.mtp.layers to be a
++    # truthy container; the native mlx-lm MTPBlock exposes its single decoder
++    # as `.layer`. Expose a `.layers` alias (assigning a list to an nn.Module
++    # attribute registers it as a child-module container — an alias, not a
++    # weight copy) so the validator and any depth-indexing caller see a
++    # 1-element list.
++    if getattr(model.mtp, "layers", None) is None:
++        model.mtp.layers = [model.mtp.layer]
++
+     original_outer_class = model.__class__
+ 
++    # Hy3 has exactly one native draft wiring (pre-final-norm trunk hidden,
++    # [enorm(embedding), hnorm(hidden)] concat). Like the sibling appended-layer
++    # backends (glm_mtp defaults post_norm, step3p5 pre_norm), we ACCEPT and
++    # IGNORE whatever hidden_variant / concat_order the runtime resolves from
++    # the contract default — raising would break every draft call, since
++    # runtime.draft_mtp resolves None/auto/contract to contract.hidden_variant
++    # (== 'post_norm' for a bare MTPContract).
+     class _MTPLXHyV3Model(original_outer_class):
+         def __call__(
+             self,
+@@ -77,10 +93,6 @@ def inject_hy_v3_mtp_support(
+         ):
+             if input_embeddings is not None:
+                 raise ValueError("Hy3 MTP backend does not support input_embeddings")
+-            if hidden_variant not in {None, "auto", "contract", "pre_norm"}:
+-                raise ValueError(
+-                    "Hy3 MTP drafts from the trunk pre-final-norm hidden state"
+-                )
+             if return_hidden:
+                 # hy_v3's native forward already returns (logits, pre-norm h)
+                 return super().__call__(
+@@ -100,17 +112,11 @@ def inject_hy_v3_mtp_support(
+             position_offset: int | None = None,
+             mtp_depth: int | None = None,
+         ):
+-            if concat_order not in {None, "auto", "contract", "embedding_hidden"}:
+-                raise ValueError(
+-                    "Hy3 MTP backend supports embedding_hidden concat order only"
+-                )
+-            if mtp_hidden_variant not in {None, "auto", "contract", "pre_norm"}:
+-                raise ValueError("Hy3 MTP consumes the pre-final-norm trunk hidden")
+-            if mtp_depth not in {None, 0, 1}:
+-                raise ValueError("Hy3 ships a single NextN layer (depth 1)")
++            # depth is informational for a single-layer head — the one NextN
++            # layer is reused regardless (mirrors GLM's modulo-into-layers).
+             layer_cache = mtp_cache if mtp_cache is not None else cache
+             if isinstance(layer_cache, list):
+-                layer_cache = layer_cache[0]
++                layer_cache = layer_cache[0] if layer_cache else None
+             # replicate Model.predict_next_tokens, keeping the draft hidden
+             e_next = self.model.embed_tokens(next_token_ids)
+             mask = create_attention_mask(e_next, layer_cache)
+@@ -143,7 +149,5 @@ def inject_hy_v3_mtp_support(
+             return [KVCache()]
+ 
+     model.__class__ = _MTPLXHyV3Model
+-    if contract is not None and hasattr(contract, "note"):
+-        contract.note(arch_id="hy-v3-mtp", mtp_depth=1)
+-    logger.info("[Hy3 MTP inject] native head bound for %s", path)
++    logger.info("[Hy3 MTP inject] native head bound (depth 1) for %s", path)
+     return True
+diff --git a/tests/test_hy_v3_mtp_backend.py b/tests/test_hy_v3_mtp_backend.py
+new file mode 100644
+index 0000000..247679e
+--- /dev/null
++++ b/tests/test_hy_v3_mtp_backend.py
+@@ -0,0 +1,61 @@
++"""Regression tests for the hy_v3 MTP backend (audit-driven)."""
++import mlx.core as mx
++from pathlib import Path
++from mlx_lm.models import hy_v3
++from mtplx.hy_v3_mtp_patch import inject_hy_v3_mtp_support, is_hy_v3_mtp_config
++from mtplx.mtp_patch import validate_mtp_support, MTPContract
++from mtplx.backends.registry import SUPPORTED_ARCH_IDS
++
++
++def _tiny():
++    args = hy_v3.ModelArgs(
++        model_type="hy_v3", vocab_size=128, hidden_size=64, intermediate_size=128,
++        num_hidden_layers=2, num_attention_heads=4, num_key_value_heads=2, head_dim=16,
++        num_experts=4, num_experts_per_tok=2, num_shared_experts=1, expert_hidden_dim=64,
++        first_k_dense_replace=1, rms_norm_eps=1e-5,
++        rope_parameters={"rope_theta": 10000.0, "rope_type": "default"},
++        num_nextn_predict_layers=1)
++    return hy_v3.Model(args)
++
++
++def test_hy_v3_in_supported_arch_ids():
++    assert "hy-v3-mtp" in SUPPORTED_ARCH_IDS
++
++
++def test_inject_and_validate():
++    m = _tiny()
++    cfg = {"model_type": "hy_v3", "num_nextn_predict_layers": 1}
++    assert is_hy_v3_mtp_config(cfg)
++    assert inject_hy_v3_mtp_support(m, Path("t"), cfg, None)
++    # validate_mtp_support needs model.mtp.layers -> alias must exist
++    assert validate_mtp_support(m)
++
++
++def test_post_norm_contract_default_does_not_crash():
++    m = _tiny()
++    inject_hy_v3_mtp_support(m, Path("t"), {"model_type": "hy_v3", "num_nextn_predict_layers": 1}, None)
++    x = mx.array([[1, 2, 3, 4]])
++    # the bare-contract default is post_norm; the backend must tolerate it
++    assert MTPContract().hidden_variant == "post_norm"
++    logits, hidden = m(x, return_hidden=True, hidden_variant="post_norm")
++    assert logits.shape == (1, 4, 128) and hidden.shape == (1, 4, 64)
++    d = m.mtp_forward(hidden[:, -1:, :], mx.array([[5]]),
++                      mtp_hidden_variant="post_norm", concat_order="embedding_hidden")
++    assert d.shape == (1, 1, 128)
++
++
++def test_ar_only_export_raises_clearly():
++    args = hy_v3.ModelArgs(
++        model_type="hy_v3", vocab_size=128, hidden_size=64, intermediate_size=128,
++        num_hidden_layers=2, num_attention_heads=4, num_key_value_heads=2, head_dim=16,
++        num_experts=4, num_experts_per_tok=2, num_shared_experts=1, expert_hidden_dim=64,
++        first_k_dense_replace=1, rms_norm_eps=1e-5,
++        rope_parameters={"rope_theta": 10000.0, "rope_type": "default"},
++        num_nextn_predict_layers=0)
++    m = hy_v3.Model(args)  # no mtp submodule
++    try:
++        inject_hy_v3_mtp_support(m, Path("t"), {"model_type": "hy_v3", "num_nextn_predict_layers": 1}, None)
++    except RuntimeError as e:
++        assert "no MTP submodule" in str(e) or "AR-only" in str(e)
++    else:
++        raise AssertionError("expected RuntimeError on AR-only export")
 -- 
 2.54.0 (Apple Git-157)
 

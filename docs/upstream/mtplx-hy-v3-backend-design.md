@@ -87,3 +87,13 @@
   https://github.com/youssofal/MTPLX/pull/142 with PJB's go; #141 comment
   edited to point at it. Remaining: live test + bench fixtures when
   hy_v3 reaches their mlx-lm pin.
+- 2026-07-07 (audit): ultracode adversarial audit found 3 BLOCKING bugs in
+  the first PR revision: (1) injector guards rejected the post_norm
+  hidden_variant that runtime.draft_mtp resolves from the bare MTPContract
+  default -> every draft raised; (2) validate_mtp_support requires
+  model.mtp.layers, native head has .layer -> added alias; (3) hy-v3-mtp
+  absent from SUPPORTED_ARCH_IDS + appended-layer gate. All fixed + regression
+  test (tests/test_hy_v3_mtp_backend.py, post_norm path covered); pushed to
+  PR #142, honest update comment posted. LESSON: guarding strictly against a
+  contract you don't control's DEFAULT value crashes the happy path — mirror
+  sibling backends (accept-and-ignore).
