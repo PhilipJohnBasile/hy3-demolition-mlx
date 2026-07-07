@@ -92,7 +92,15 @@ sampling, OpenAI/Anthropic APIs). Findings:
 - [ ] **#28 Contribute hy_v3_mtp backend to MTPLX** — facade + injector patch
       + runtime contract fixtures; PR upstream. Blocked by #25, #29.
 - [ ] **#29 hy_v3 trunk into stock mlx-lm** — upstream from the fork (or land
-      the model class inside the MTPLX contribution). Prerequisite for #28.
+      the model class inside the MTPLX contribution). **Highest-leverage
+      external task: unlocks both MTPLX and LM Studio.** The PR must tolerate
+      mtp.* tensors when num_nextn_predict_layers=0.
+- [ ] **#30 LM Studio compatibility** — LM Studio's mlx-engine builds on stock
+      mlx-lm, so #29 is the unlock; no model changes needed. Then: place the
+      fused artifact under ~/.lmstudio/models/, raise the memory guardrail for
+      the 104 GB load, smoke chat + API. LM Studio spec-decode is
+      draft-model-only → serves AR speed; MTPLX remains the fast path.
+      Blocked by #29.
 
 ## Phase 2.5: data before demolition
 
