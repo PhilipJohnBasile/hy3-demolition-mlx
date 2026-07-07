@@ -32,7 +32,7 @@ DEFAULT_PROTECTED_FACETS = [
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="models/hy3-mlx-base")
+    parser.add_argument("--model", default="models/hy3-mlx-base-ar")
     parser.add_argument("--saliency", required=True)
     parser.add_argument("--out", default="dist/hy3-reap-pruned")
     parser.add_argument("--ratio", type=float, default=0.25)
@@ -44,6 +44,14 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = load_config(args.model)
+    if int(cfg.get("num_nextn_predict_layers") or 0) > 0:
+        raise SystemExit(
+            f"{args.model}: num_nextn_predict_layers="
+            f"{cfg['num_nextn_predict_layers']} — pruning a source with an MTP "
+            "sidecar would emit unpruned mtp.* experts against a pruned config "
+            "and break loading. Prune the AR view (models/hy3-mlx-base-ar) or "
+            "resolve the sidecar strategy (backlog #27) first."
+        )
     old_num_experts = int(cfg["num_experts"])
     protected_facets = [] if args.no_soul_protection else (
         args.protected_facets or DEFAULT_PROTECTED_FACETS

@@ -13,19 +13,39 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from hy3_weight_store import copy_non_weight_files, iter_weight_shards, load_config
 
 
-def quant_params_for_key(cfg: dict, weight_key: str) -> dict:
+def quant_params_for_key(cfg: dict, weight_key: str, weight, scales) -> dict:
+    """Resolve the ORIGINAL quant params for a stored tensor.
+
+    The config's per-module entries use runtime module names
+    (mlp.switch_mlp.*), while checkpoint tensors use storage names
+    (mlp.experts.*) — a raw lookup misses every expert tensor and the global
+    fallback (bits=2) silently corrupts the 3-bit down_proj. So: translate
+    storage->runtime names for the lookup, then cross-check against the bits
+    implied by the packed shapes and trust the shapes on any mismatch.
+    """
     quant = cfg.get("quantization_config") or cfg.get("quantization") or {}
     module_key = weight_key[:-7] if weight_key.endswith(".weight") else weight_key
-    if isinstance(quant, dict):
-        exact = quant.get(module_key)
-        if isinstance(exact, dict):
-            return exact
-        return {
-            "group_size": quant.get("group_size", 64),
-            "bits": quant.get("bits", 4),
-            "mode": quant.get("mode", "affine"),
+    runtime_key = module_key.replace(".mlp.experts.", ".mlp.switch_mlp.")
+    entry = quant.get(runtime_key) if isinstance(quant, dict) else None
+    if not isinstance(entry, dict):
+        entry = {
+            "group_size": quant.get("group_size", 64) if isinstance(quant, dict) else 64,
+            "bits": quant.get("bits", 4) if isinstance(quant, dict) else 4,
         }
-    return {"group_size": 64, "bits": 4, "mode": "affine"}
+    group_size = int(entry.get("group_size", 64))
+    mode = entry.get("mode", "affine")
+    # packed uint32 last dim holds in_dim*bits/32; scales last dim holds
+    # in_dim/group_size — solve for bits and verify.
+    in_dim = scales.shape[-1] * group_size
+    inferred_bits = weight.shape[-1] * 32 // in_dim
+    bits = int(entry.get("bits", inferred_bits))
+    if bits != inferred_bits:
+        print(
+            f"WARN {weight_key}: config says {bits}-bit but packed shape implies "
+            f"{inferred_bits}-bit; trusting the shape"
+        )
+        bits = inferred_bits
+    return {"group_size": group_size, "bits": bits, "mode": mode}
 
 
 def bits_for_key(key: str, expert_bits: int, high_bits: int) -> int:
@@ -84,22 +104,29 @@ def main() -> None:
                 if key not in skip and not (key.endswith(".scales") or key.endswith(".biases")):
                     emitted[key] = tensor
                 continue
-            if tensor.shape[-1] % args.group_size != 0:
-                emitted[key] = tensor
-                continue
             base = key[:-7]
             scale_key = base + ".scales"
             bias_key = base + ".biases"
-            if scale_key in tensors:
-                old_params = quant_params_for_key(old_cfg, key)
-                old_biases = tensors.get(bias_key)
-                tensor = mx.dequantize(
-                    tensor,
-                    tensors[scale_key],
-                    old_biases,
-                    old_params.get("group_size", 64),
-                    old_params.get("bits", 4),
-                    old_params.get("mode", "affine"),
+            if scale_key not in tensors:
+                # Not quantized in the source (norms, unquantized embeds):
+                # pass through untouched. Quantizing e.g. an RMSNorm vector
+                # produces weights its module class cannot consume.
+                emitted[key] = tensor
+                continue
+            old_params = quant_params_for_key(old_cfg, key, tensor, tensors[scale_key])
+            old_biases = tensors.get(bias_key)
+            tensor = mx.dequantize(
+                tensor,
+                tensors[scale_key],
+                old_biases,
+                old_params["group_size"],
+                old_params["bits"],
+                old_params["mode"],
+            )
+            if tensor.shape[-1] % args.group_size != 0:
+                raise ValueError(
+                    f"{key}: dequantized in_dim {tensor.shape[-1]} not divisible "
+                    f"by target group size {args.group_size}"
                 )
             bits = bits_for_key(key, args.expert_bits, args.high_bits)
             q_weight, scales, *biases = mx.quantize(
@@ -108,11 +135,14 @@ def main() -> None:
                 bits=bits,
                 mode=args.mode,
             )
+            mx.eval(q_weight, scales, *biases)
             emitted[key] = q_weight
             emitted[scale_key] = scales
             if biases:
                 emitted[bias_key] = biases[0]
-            quant_config[base] = {
+            # Write the runtime module name so the loader's config lookup hits.
+            runtime_base = base.replace(".mlp.experts.", ".mlp.switch_mlp.")
+            quant_config[runtime_base] = {
                 "group_size": args.group_size,
                 "bits": bits,
                 "mode": args.mode,
@@ -124,6 +154,8 @@ def main() -> None:
         for key, tensor in emitted.items():
             weight_map[key] = out_name
             total_size += tensor.nbytes
+        del tensors, emitted
+        mx.clear_cache()
         print(f"wrote {out / out_name}")
 
     index = {
