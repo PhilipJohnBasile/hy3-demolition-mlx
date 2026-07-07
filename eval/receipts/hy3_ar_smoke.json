@@ -1,0 +1,22 @@
+{
+  "model": "models/hy3-mlx-base-ar",
+  "model_type": "hy_v3",
+  "num_hidden_layers": 80,
+  "num_nextn_predict_layers": 0,
+  "prompt_tokens": 19,
+  "max_tokens": 1,
+  "prefill_step_size": 16,
+  "reasoning_effort": "no_think",
+  "elapsed_s": 45.318182500000034,
+  "peak_memory_gb": 112.329166816,
+  "metal": true,
+  "device": {
+    "device_name": "Apple M5 Max",
+    "max_recommended_working_set_size": 127926272000,
+    "memory_size": 137438953472,
+    "architecture": "applegpu_g17s",
+    "max_buffer_length": 86586540032,
+    "resource_limit": 499000
+  },
+  "output": "ready"
+}

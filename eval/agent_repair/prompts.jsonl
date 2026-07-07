@@ -1,0 +1,2 @@
+{"id":"repair_off_by_one","domain":"python","facet":"coding","prompt":"Repair this function and return only fixed Python code in one fenced block:\n\ndef last_index(items):\n    return len(items)\n","harness":"assert last_index([10,20,30]) == 2\nassert last_index(['x']) == 0\nassert last_index([]) == -1\n"}
+

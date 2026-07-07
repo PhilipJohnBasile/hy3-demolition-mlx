@@ -1,0 +1,78 @@
+# Restore
+
+This repo is designed so the local generated artifacts can be deleted and
+rebuilt from source plus Hugging Face checkpoints.
+
+## Environment
+
+```bash
+uv venv --python 3.12 --seed
+. .venv/bin/activate
+pip install "transformers>=5.7,<5.13" \
+  "mlx-lm @ git+https://github.com/eauchs/mlx-lm.git@hy_v3-mtp"
+```
+
+Then:
+
+```bash
+. scripts/00_env.sh
+```
+
+## Restore Lite Base
+
+```bash
+./scripts/01_download_mlx_base.sh
+./scripts/02_inspect_hy3_mlx.py --model "$HY3_MODEL_DIR"
+./scripts/13_prepare_hy3_ar_view.py --source "$HY3_MODEL_DIR" --out models/hy3-mlx-base-ar
+./scripts/13_smoke_generate_mlx_ar.py --model models/hy3-mlx-base-ar --max-tokens 16
+./scripts/08_serve_mlx.py --model models/hy3-mlx-base-ar --port 8080 --prompt-cache-size 8
+```
+
+The AR view is intentionally lightweight: it symlinks the base checkpoint,
+omits `model-mtp.safetensors`, sets `num_nextn_predict_layers=0`, and writes a
+tokenizer config with `fix_mistral_regex=true`.
+
+## Rebuild Lite Fused Artifact
+
+Prepare verified SFT data in `data/hy3_lite_sft/{train,valid,test}.jsonl`, then:
+
+```bash
+./scripts/11_prepare_lite_sft.py
+./scripts/07_heal_lora_hy3_mlx.py \
+  --model "$HY3_MODEL_DIR" \
+  --data data/hy3_lite_sft \
+  --adapter-path dist/adapters-hy3-lite \
+  --save-path dist/hy3-demolition-mlx-lite-fused \
+  --train \
+  --fuse
+```
+
+Run:
+
+```bash
+mlx_lm.chat --model dist/hy3-demolition-mlx-lite-fused
+mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
+```
+
+## Rebuild REAP Artifact
+
+```bash
+./scripts/04_stream_calibrate_hy3_mlx.py \
+  --model "$HY3_MODEL_DIR" \
+  --prompts eval/coding/prompts.jsonl \
+  --out dist/hy3-reap-saliency.json
+
+./scripts/05_apply_reap_prune_hy3_mlx.py \
+  --model "$HY3_MODEL_DIR" \
+  --saliency dist/hy3-reap-saliency.json \
+  --out dist/hy3-reap-pruned \
+  --ratio 0.25 \
+  --write
+
+./scripts/06_stream_requantize_hy3_mlx.py \
+  --model dist/hy3-reap-pruned \
+  --out dist/hy3-reap-requant \
+  --write
+```
+
+Then heal and fuse as above.

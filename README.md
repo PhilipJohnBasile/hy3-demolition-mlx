@@ -1,0 +1,197 @@
+# Hy3-Demolition-MLX
+
+Apple-Silicon-first research pipeline for turning Tencent Hy3 into a local
+verifier-trained agent brain while keeping the artifact MLX-native.
+
+The end state is intentionally simple:
+
+```bash
+mlx_lm.chat --model dist/hy3-demolition-mlx-lite-fused
+mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
+```
+
+Everything else in this repo exists to put useful agent behavior into the model
+before that final run command.
+
+## Target
+
+Hy3-Demolition-MLX is an Apple-Silicon-first research pipeline that turns
+Tencent Hy3 into a local verifier-first agent model. It keeps the full path
+MLX-native: streamed expert saliency, conservative REAP pruning, mixed
+precision MLX quantization, LoRA healing on verified agent/code data, and
+OpenAI-compatible local serving through `mlx_lm.server`.
+
+## Rules
+
+1. Runtime: MLX only
+2. Weight format: MLX safetensors only
+3. Calibration: `mlx.core` / `mlx.nn` only
+4. Pruning: stream one MLX layer or shard at a time
+5. Quantization: `mlx.quantize` / `mlx.dequantize` only
+6. Serving: `mlx_lm.generate`, `mlx_lm.chat`, and `mlx_lm.server`
+7. Agent layer: build-time verifier/curriculum, not a required runtime wrapper
+8. No GGUF
+9. No llama.cpp
+10. No CUDA dependency
+
+## What Goes Into The Model
+
+The final goal is not "Hy3 plus a wrapper." It is a fused MLX model artifact.
+
+Build-time sources:
+
+- `agent-toolkit`: verifier mesh used to keep only passing code, tool-call, JSON,
+  repair, and domain outputs.
+- `agent-brain-blueprint`: behavior curriculum for local LLM engineering,
+  verifier-first operation, agent security, tool-use discipline, and repair loops.
+- `glm52-demolition`: proven demolition pattern, eval discipline, REAP/LoRA
+  framing, and verified-data shape.
+- `tinygpt-souls`: soul tags, canons, and per-soul verifier-gated examples.
+
+What can be distilled into weights:
+
+- tool-call format discipline
+- coding and repair habits
+- verifier-first self-checking behavior
+- brain-blueprint operating stance
+- soul/facet routing prompts such as `<|soul:security|>` and `<|soul:music|>`
+- concise failure reporting and retry behavior
+
+What cannot honestly be baked into weights:
+
+- real compiler execution
+- filesystem or shell authority
+- exact test results for unseen code
+- external retrieval or private memory
+
+Those remain build-time gates and optional eval tools. The shipped model should
+still run without importing `agent-toolkit`.
+
+## Phases
+
+### `hy3-demolition-mlx-lite`
+
+Base:
+
+- existing Hy3 MLX quantized checkpoint
+
+Demolition:
+
+- no pruning
+
+Model-first agent work:
+
+- generate verifier-filtered SFT data from `agent-toolkit`
+- distill `agent-brain-blueprint` and `tinygpt-souls` behavior into LoRA
+- fuse the LoRA into a standalone MLX model directory
+- validate with direct `mlx_lm.generate`, `mlx_lm.chat`, and `mlx_lm.server`
+
+### `hy3-demolition-mlx-reap`
+
+Base:
+
+- Hy3 MLX checkpoint
+
+Demolition:
+
+- Hy3-specific streamed REAP saliency
+- conservative 25 percent expert prune first
+- 40 percent prune only after receipts prove agent reliability holds
+- mixed precision MLX requantization
+- LoRA heal on verified agent/code data
+- fuse before release
+
+## Metal On Apple Silicon
+
+There is no CUDA switch in this project. MLX uses Metal automatically when it is
+installed in an arm64 Python environment on Apple Silicon.
+
+Verify it before loading Hy3:
+
+```bash
+.venv/bin/python -c "import mlx.core as mx; print('metal:', mx.metal.is_available()); print(mx.device_info())"
+```
+
+Expected on this Mac:
+
+```text
+metal: True
+```
+
+If that prints `False`, fix the environment before serving the model:
+
+- use the native arm64 Homebrew/Python, not Rosetta
+- install `mlx` and `mlx-lm` in the active venv
+- run model-loading commands from a normal terminal session with GPU access
+- keep the MLX safetensors checkpoint local on fast storage
+
+Inside restricted automation sandboxes, Metal can be hidden even when the host
+supports it. The actual host probe for this workspace reports Metal available on
+Apple M5 Max with 128 GB unified memory.
+
+## Quick Start
+
+```bash
+. scripts/00_env.sh
+./scripts/01_download_mlx_base.sh
+./scripts/02_inspect_hy3_mlx.py --model "$HY3_MODEL_DIR"
+./scripts/13_prepare_hy3_ar_view.py --source "$HY3_MODEL_DIR" --out models/hy3-mlx-base-ar
+./scripts/13_smoke_generate_mlx_ar.py --model models/hy3-mlx-base-ar --max-tokens 16
+./scripts/08_serve_mlx.py --model models/hy3-mlx-base-ar --port 8080 --prompt-cache-size 8
+./scripts/03_baseline_agent_eval.py --base-url http://127.0.0.1:8080/v1
+```
+
+Current verified Lite baseline:
+
+- `models/hy3-mlx-base`: 105 GB MLX safetensors, `hy_v3`, 80 layers
+- `models/hy3-mlx-base-ar`: symlinked AR-only view with `num_nextn_predict_layers=0`
+- MTP sidecar omitted for the day-to-day path
+- no-wire MLX generation avoids the Metal watchdog seen with the stock giant-model pin
+- one-token smoke: `ready`, peak memory 112.329 GB
+- sixteen-token smoke: coherent sentence, peak memory 112.329 GB, cold generation 1.285 tok/s
+
+Receipts:
+
+- `eval/receipts/hy3_base_inspect.json`
+- `eval/receipts/hy3_ar_smoke.json`
+- `eval/receipts/hy3_ar_smoke_16.json`
+
+Train and fuse the Lite behavior adapter:
+
+```bash
+./scripts/11_prepare_lite_sft.py
+./scripts/07_heal_lora_hy3_mlx.py \
+  --model "$HY3_MODEL_DIR" \
+  --data data/hy3_lite_sft \
+  --adapter-path dist/adapters-hy3-lite \
+  --save-path dist/hy3-demolition-mlx-lite-fused \
+  --train \
+  --fuse
+```
+
+Run the fused model directly:
+
+```bash
+mlx_lm.generate --model dist/hy3-demolition-mlx-lite-fused --prompt "Write a tiny Python fizzbuzz." --max-tokens 128
+mlx_lm.chat --model dist/hy3-demolition-mlx-lite-fused
+mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
+```
+
+## Repo Map
+
+```text
+scripts/   numbered build, serve, eval, prune, quant, heal steps
+src/       MLX weight-store, REAP, serving, prompt, receipt helpers
+eval/      tiny verifier-first smoke suites and receipts
+dist/      generated fused artifacts, adapters, and plans
+models/    downloaded MLX base checkpoints
+```
+
+## External Model Facts
+
+Tencent's Hy3 model card describes Hy3 as a 295B-parameter MoE with 21B active
+parameters, 80 layers, 192 experts with top-8 routing, 256K context, and BF16
+official precision. It also recommends large-memory multi-GPU serving for the
+official deployment path. This repo targets the local Apple Silicon path instead:
+MLX quantized artifacts, then conservative MLX-native demolition only after the
+Lite model proves reliable.

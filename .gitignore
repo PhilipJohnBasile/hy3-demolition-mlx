@@ -1,0 +1,11 @@
+.venv/
+models/
+dist/
+__pycache__/
+*.pyc
+eval/receipts/*.json
+eval/receipts/*.jsonl
+!eval/receipts/.gitkeep
+!eval/receipts/hy3_base_inspect.json
+!eval/receipts/hy3_ar_smoke.json
+!eval/receipts/hy3_ar_smoke_16.json

@@ -1,0 +1,2 @@
+{"id":"tool_call_json_weather","domain":"python","facet":"coding","prompt":"Return Python code that defines parse_tool_payload(text) and parses a JSON object with tool and args keys. It should raise ValueError when either key is missing. Return only code.","harness":"payload = parse_tool_payload('{\"tool\":\"search\",\"args\":{\"q\":\"mlx\"}}')\nassert payload['tool'] == 'search'\nassert payload['args']['q'] == 'mlx'\ntry:\n    parse_tool_payload('{\"tool\":\"search\"}')\n    raise AssertionError('expected ValueError')\nexcept ValueError:\n    pass\n"}
+

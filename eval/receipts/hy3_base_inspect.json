@@ -1,0 +1,165 @@
+{
+  "path": "models/hy3-mlx-base",
+  "model_type": "hy_v3",
+  "num_hidden_layers": 80,
+  "num_experts": 192,
+  "num_experts_per_tok": 8,
+  "quantization_summary": {
+    "kind": "dict",
+    "entry_count": 891,
+    "global": {
+      "group_size": 64,
+      "bits": 2
+    },
+    "module_entry_count": 889,
+    "bits": {
+      "2": 160,
+      "3": 80,
+      "8": 649
+    },
+    "group_sizes": {
+      "64": 889
+    },
+    "modes": {},
+    "examples": {
+      "lm_head": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.mlp.down_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.mlp.gate_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.mlp.up_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.self_attn.k_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.self_attn.o_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.self_attn.q_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.0.self_attn.v_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.1.mlp.router.gate": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.1.mlp.shared_mlp.down_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.1.mlp.shared_mlp.gate_proj": {
+        "group_size": 64,
+        "bits": 8
+      },
+      "model.layers.1.mlp.shared_mlp.up_proj": {
+        "group_size": 64,
+        "bits": 8
+      }
+    }
+  },
+  "safetensor_files": [
+    "model-000-of-00081.safetensors",
+    "model-00080-of-00081.safetensors",
+    "model-001-of-00081.safetensors",
+    "model-002-of-00081.safetensors",
+    "model-003-of-00081.safetensors",
+    "model-004-of-00081.safetensors",
+    "model-005-of-00081.safetensors",
+    "model-006-of-00081.safetensors",
+    "model-007-of-00081.safetensors",
+    "model-008-of-00081.safetensors",
+    "model-009-of-00081.safetensors",
+    "model-010-of-00081.safetensors",
+    "model-011-of-00081.safetensors",
+    "model-012-of-00081.safetensors",
+    "model-013-of-00081.safetensors",
+    "model-014-of-00081.safetensors",
+    "model-015-of-00081.safetensors",
+    "model-016-of-00081.safetensors",
+    "model-017-of-00081.safetensors",
+    "model-018-of-00081.safetensors",
+    "model-019-of-00081.safetensors",
+    "model-020-of-00081.safetensors",
+    "model-021-of-00081.safetensors",
+    "model-022-of-00081.safetensors",
+    "model-023-of-00081.safetensors",
+    "model-024-of-00081.safetensors",
+    "model-025-of-00081.safetensors",
+    "model-026-of-00081.safetensors",
+    "model-027-of-00081.safetensors",
+    "model-028-of-00081.safetensors",
+    "model-029-of-00081.safetensors",
+    "model-030-of-00081.safetensors",
+    "model-031-of-00081.safetensors",
+    "model-032-of-00081.safetensors",
+    "model-033-of-00081.safetensors",
+    "model-034-of-00081.safetensors",
+    "model-035-of-00081.safetensors",
+    "model-036-of-00081.safetensors",
+    "model-037-of-00081.safetensors",
+    "model-038-of-00081.safetensors",
+    "model-039-of-00081.safetensors",
+    "model-040-of-00081.safetensors",
+    "model-041-of-00081.safetensors",
+    "model-042-of-00081.safetensors",
+    "model-043-of-00081.safetensors",
+    "model-044-of-00081.safetensors",
+    "model-045-of-00081.safetensors",
+    "model-046-of-00081.safetensors",
+    "model-047-of-00081.safetensors",
+    "model-048-of-00081.safetensors",
+    "model-049-of-00081.safetensors",
+    "model-050-of-00081.safetensors",
+    "model-051-of-00081.safetensors",
+    "model-052-of-00081.safetensors",
+    "model-053-of-00081.safetensors",
+    "model-054-of-00081.safetensors",
+    "model-055-of-00081.safetensors",
+    "model-056-of-00081.safetensors",
+    "model-057-of-00081.safetensors",
+    "model-058-of-00081.safetensors",
+    "model-059-of-00081.safetensors",
+    "model-060-of-00081.safetensors",
+    "model-061-of-00081.safetensors",
+    "model-062-of-00081.safetensors",
+    "model-063-of-00081.safetensors",
+    "model-064-of-00081.safetensors",
+    "model-065-of-00081.safetensors",
+    "model-066-of-00081.safetensors",
+    "model-067-of-00081.safetensors",
+    "model-068-of-00081.safetensors",
+    "model-069-of-00081.safetensors",
+    "model-070-of-00081.safetensors",
+    "model-071-of-00081.safetensors",
+    "model-072-of-00081.safetensors",
+    "model-073-of-00081.safetensors",
+    "model-074-of-00081.safetensors",
+    "model-075-of-00081.safetensors",
+    "model-076-of-00081.safetensors",
+    "model-077-of-00081.safetensors",
+    "model-078-of-00081.safetensors",
+    "model-079-of-00081.safetensors",
+    "model-lm_head.safetensors",
+    "model-mtp.safetensors"
+  ],
+  "safetensor_count": 83,
+  "expected_safetensor_count": 81,
+  "missing_safetensor_files": [],
+  "has_index": false,
+  "total_size": null
+}

@@ -1,0 +1,2 @@
+{"id":"json_schema_minimal","domain":"python","facet":"coding","prompt":"Write Python code defining validate_person(obj) that returns True only when obj has string name and integer age >= 0. Return only code.","harness":"assert validate_person({'name':'Ada','age':36}) is True\nassert validate_person({'name':'Ada','age':-1}) is False\nassert validate_person({'name':3,'age':36}) is False\nassert validate_person({'age':36}) is False\n"}
+
