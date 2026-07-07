@@ -199,10 +199,18 @@ now refuses MTP-sidecar sources and defaults to the AR view.
 ## Phase 5: the family (post-promotion, PJB 2026-07-07)
 
 - [ ] **#33 Family ladder** — lite-v1 (128 GB) · reap25 (~80 GB) · reap40
-      (~65 GB → 96 GB Macs). No 64 GB tier from this base — past the
-      quality cliff; that audience gets a smaller base wearing the same
-      soul/verifier treatment (future project). Public-release decision,
-      per-tier cards + receipts. Blocked by #23.
+      (~65 GB → 96 GB Macs). Public-release decision, per-tier cards +
+      receipts. Blocked by #23.
+- [ ] **#35 64 GB tier** (PJB 2026-07-07) — Route A first: low-bit GGUF
+      export of reap40 (IQ2-class, ~40-47 GB; community runs Hy3 IQ1_M on
+      Apple Silicon). Route B fallback: reap55-60 MLX prune — inside the
+      never-70% hard stop, full gates, expect real degradation. Blocked
+      by #24.
+- [ ] **#36 32 GB tier: Hy3-Demolition-Mini** (PJB) — cannot prune 295B
+      to 32 GB inside the hard stop (~85% needed). Route: distill the
+      promoted fused model into a clean 20-30B-class MLX base with the
+      verified pack + same verifier gates. Design doc first. Blocked
+      by #23.
 - [ ] **#34 GGUF export** — distribution format for llama.cpp users; the
       MLX-only RUNTIME rule is unchanged. Dequant→f16 (~440 GB scratch),
       convert_hf_to_gguf, quant tiers, verify num_experts=144 loads,
