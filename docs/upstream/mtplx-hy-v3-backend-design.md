@@ -67,3 +67,11 @@
   **[enorm(embedding), hnorm(hidden)]** (embedding first; "order matters" per
   the mlx-lm implementation). Fixtures get measured by `mtplx bench` on the
   M5 Max once the model loads.
+
+## Outreach log
+
+- 2026-07-07: opened https://github.com/youssofal/MTPLX/issues/141
+  (model-compatibility template) offering the prototype branch, the
+  architecture/contract facts, the 13.7x mlx-lm loop measurement, and
+  M5 Max fixture hardware. PJB may also email the developer directly
+  (draft in session log). PR opens only on maintainer welcome + PJB go.
