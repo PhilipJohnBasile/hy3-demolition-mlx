@@ -200,9 +200,10 @@ Train and fuse the Lite behavior adapter:
 
 ```bash
 ./scripts/11_prepare_lite_sft.py
+./scripts/15_import_glm52_datasets.py
 ./scripts/07_heal_lora_hy3_mlx.py \
   --model "$HY3_MODEL_DIR" \
-  --data data/hy3_lite_sft \
+  --data data/hy3_lite_sft_combined \
   --adapter-path dist/adapters-hy3-lite \
   --save-path dist/hy3-demolition-mlx-lite-fused \
   --train \
@@ -222,6 +223,7 @@ mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
 ```text
 scripts/   numbered build, serve, eval, prune, quant, heal steps
 src/       MLX weight-store, REAP, serving, prompt, receipt helpers
+data/      seed and imported build-time SFT/calibration packs
 eval/      tiny verifier-first smoke suites and receipts
 dist/      generated fused artifacts, adapters, and plans
 models/    downloaded MLX base checkpoints

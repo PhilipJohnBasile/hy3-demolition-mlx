@@ -1,5 +1,12 @@
 {
   "policy": "Use GLM-5.2 demolition datasets as build-time training/calibration inputs only. Do not add runtime dependencies. Do not blindly mix every row; sample, normalize to MLX-LM messages, deduplicate, and keep verifier receipts.",
+  "current_import": {
+    "script": "scripts/15_import_glm52_datasets.py",
+    "sft_output": "data/hy3_lite_sft_combined",
+    "normalized_output": "data/glm52_import/normalized",
+    "raw_cache": "data/glm52_import/raw",
+    "raw_cache_tracked": false
+  },
   "datasets": [
     {
       "repo": "philipjohnbasile/glm52-demolition-data",

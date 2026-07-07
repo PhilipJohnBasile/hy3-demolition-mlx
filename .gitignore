@@ -3,6 +3,7 @@ models/
 dist/
 __pycache__/
 *.pyc
+data/glm52_import/raw/
 eval/receipts/*.json
 eval/receipts/*.jsonl
 !eval/receipts/.gitkeep
@@ -11,3 +12,4 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_ar_smoke_16.json
 !eval/receipts/hy3_server_smoke.json
 !eval/receipts/baseline_agent_eval.jsonl
+!eval/receipts/hy3_lora_smoke.json

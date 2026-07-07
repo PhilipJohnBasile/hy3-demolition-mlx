@@ -1,0 +1,36 @@
+{
+  "raw_dir": "data/glm52_import/raw",
+  "seed_dir": "data/hy3_lite_sft",
+  "out_dir": "data/hy3_lite_sft_combined",
+  "normalized_dir": "data/glm52_import/normalized",
+  "seed": 52,
+  "sft_imported": 338,
+  "calib_imported": 1536,
+  "combined": {
+    "train": 313,
+    "valid": 17,
+    "test": 17
+  },
+  "source_counts": {
+    "glm52-demolition-data/heal/gold2/code_mlx.jsonl": 7,
+    "glm52-demolition-data/heal/gold2/code_modelinfra.jsonl": 8,
+    "glm52-demolition-data/heal/gold_agentic/longhorizon.jsonl": 7,
+    "glm52-demolition-data/heal/gold_agentic/tool_reliability.jsonl": 8,
+    "glm52-demolition-data/heal/gold_cyber/securecode.jsonl": 8,
+    "glm52-demolition-data/heal/gold_perfumery/perfumery.jsonl": 8,
+    "glm52-demolition-data/heal/gold_sound/sound.jsonl": 4,
+    "glm52-verified-fixes/recover_data.jsonl": 12,
+    "glm52-verified-fixes/recover_data_diverse.jsonl": 285
+  },
+  "facet_counts": {
+    "agentic": 15,
+    "coding": 15,
+    "music": 4,
+    "perfumery": 8,
+    "repair": 297,
+    "security": 8
+  },
+  "skipped": {
+    "duplicate_sft": 9
+  }
+}

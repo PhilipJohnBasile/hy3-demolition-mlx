@@ -34,13 +34,14 @@ tokenizer config with `fix_mistral_regex=true`.
 
 ## Rebuild Lite Fused Artifact
 
-Prepare verified SFT data in `data/hy3_lite_sft/{train,valid,test}.jsonl`, then:
+Prepare verified SFT data in `data/hy3_lite_sft_combined/{train,valid,test}.jsonl`, then:
 
 ```bash
 ./scripts/11_prepare_lite_sft.py
+./scripts/15_import_glm52_datasets.py
 ./scripts/07_heal_lora_hy3_mlx.py \
   --model "$HY3_MODEL_DIR" \
-  --data data/hy3_lite_sft \
+  --data data/hy3_lite_sft_combined \
   --adapter-path dist/adapters-hy3-lite \
   --save-path dist/hy3-demolition-mlx-lite-fused \
   --train \

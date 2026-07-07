@@ -1,0 +1,25 @@
+{
+  "date": "2026-07-07",
+  "model": "models/hy3-mlx-base-ar",
+  "data": "data/hy3_lite_sft_combined",
+  "adapter_path": "dist/adapters-hy3-lite-glm52-smoke",
+  "backend": "mlx_lm.lora",
+  "train": true,
+  "fine_tune_type": "lora",
+  "iters": 1,
+  "num_layers": 4,
+  "rank": 8,
+  "batch_size": 1,
+  "max_seq_length": 1024,
+  "trainable_parameters": "105.601M/295033.528M",
+  "val_loss": 1.209,
+  "train_loss": 1.305,
+  "duration_s": 89.15,
+  "adapter_size": "403M",
+  "status": "passed",
+  "notes": [
+    "Smoke run only; adapter is a local build artifact and is not committed.",
+    "Some sequences were truncated to max_seq_length=1024.",
+    "Raw GLM52 dataset cache is ignored; normalized import outputs are tracked."
+  ]
+}
