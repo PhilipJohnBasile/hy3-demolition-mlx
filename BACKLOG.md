@@ -134,9 +134,21 @@ sampling, OpenAI/Anthropic APIs). Findings:
 
 - [ ] **#18 Calibration** — streamed saliency with soul buckets for all 11
       protected facets → `dist/hy3-reap-saliency-v1.json`. Blocked by #11.
+      Calibration pack pre-assembled: `scripts/26_prepare_reap_calibration.py`
+      → `data/hy3_reap_calibration/prompts.jsonl` (soul + eval + capped mixed).
+      Run: `scripts/04 --model models/hy3-mlx-base-ar --prompts
+      data/hy3_reap_calibration/prompts.jsonl --out dist/hy3-reap-saliency-v1.json`.
 - [ ] **#19 Dry-run prune plan** — ratio 0.25, min keep 8 experts per protected
       facet per layer; reject if any soul bucket missing. Commit plan receipt
-      **before** writing weights.
+      **before** writing weights. Judgment encoded in
+      `scripts/25_analyze_reap_plan.py` (ACCEPT/REVIEW/REJECT) — run it on the
+      plan + saliency before deciding to `--write`.
+
+**REAP audit fixes (2026-07-07, pre-run):** scripts/06 requant had two
+artifact-corrupting bugs (quantizing unquantized norms; expert quant-param
+lookup missing on storage-vs-runtime name mismatch → silent 2-bit corruption
+of the 3-bit down_proj) — both fixed and verified on real tensors. scripts/05
+now refuses MTP-sidecar sources and defaults to the AR view.
 - [ ] **#20 Apply prune + smoke** — `dist/hy3-reap25-pruned`, keep
       `num_experts_per_tok=8`, direct MLX smokes with receipts.
 - [ ] **#21 Mixed requant + smoke** — experts 3-bit; attention/router/shared/
