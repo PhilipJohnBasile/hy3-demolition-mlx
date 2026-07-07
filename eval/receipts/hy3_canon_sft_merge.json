@@ -1,27 +1,31 @@
 {
-  "canon_rows": 30,
-  "merged_new": 0,
-  "skipped_duplicates": 30,
-  "assigned": {},
+  "canon_rows": 16,
+  "merged_new": 16,
+  "skipped_duplicates": 0,
+  "assigned": {
+    "train": 11,
+    "valid": 3,
+    "test": 2
+  },
   "split_sizes": {
-    "train": 328,
-    "valid": 20,
-    "test": 19
+    "train": 339,
+    "valid": 23,
+    "test": 21
   },
   "combined_facets": {
     "agentic": 21,
-    "art": 3,
-    "coding": 12,
-    "design": 2,
-    "fullstack": 2,
-    "gamedev": 2,
-    "legacy": 3,
-    "math": 2,
-    "music": 7,
-    "perfumery": 11,
+    "art": 4,
+    "coding": 13,
+    "design": 4,
+    "fullstack": 4,
+    "gamedev": 4,
+    "legacy": 4,
+    "math": 4,
+    "music": 8,
+    "perfumery": 12,
     "repair": 288,
-    "science": 2,
-    "security": 12
+    "science": 4,
+    "security": 13
   },
   "seed": 52,
   "note": "run scripts/16_normalize_lite_sft_lengths.py --write after merging"
