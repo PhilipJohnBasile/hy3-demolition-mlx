@@ -75,3 +75,8 @@
   architecture/contract facts, the 13.7x mlx-lm loop measurement, and
   M5 Max fixture hardware. PJB may also email the developer directly
   (draft in session log). PR opens only on maintainer welcome + PJB go.
+- 2026-07-07 (later): posted the patch itself + apply instructions to #141
+  (https://github.com/youssofal/MTPLX/issues/141#issuecomment-4909675109),
+  with the two honest caveats (not live-tested pending mlx-lm hy_v3; the
+  model-attribute binding should be reworked to the runtime-adapter wiring
+  per the resolved design notes). Offered a proper PR on maintainer word.
