@@ -37,6 +37,7 @@ def main() -> int:
         description="Smoke-test Hy3 with plain AR MLX decoding and no wired-limit pin."
     )
     parser.add_argument("--model", default="models/hy3-mlx-base-ar")
+    parser.add_argument("--adapter-path")
     parser.add_argument("--prompt", default="Return exactly: ready")
     parser.add_argument("--max-tokens", type=int, default=1)
     parser.add_argument("--prefill-step-size", type=int, default=128)
@@ -56,6 +57,7 @@ def main() -> int:
     started = time.perf_counter()
     model, tokenizer, config = load(
         str(model_path),
+        adapter_path=args.adapter_path,
         lazy=not args.eager_load,
         tokenizer_config={"fix_mistral_regex": True},
         return_config=True,
@@ -78,6 +80,7 @@ def main() -> int:
 
     receipt = {
         "model": str(model_path),
+        "adapter_path": args.adapter_path,
         "model_type": config.get("model_type"),
         "num_hidden_layers": config.get("num_hidden_layers"),
         "num_nextn_predict_layers": config.get("num_nextn_predict_layers"),

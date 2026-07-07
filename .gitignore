@@ -13,3 +13,4 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_server_smoke.json
 !eval/receipts/baseline_agent_eval.jsonl
 !eval/receipts/hy3_lora_smoke.json
+!eval/receipts/hy3_lora_adapter_smoke.json
