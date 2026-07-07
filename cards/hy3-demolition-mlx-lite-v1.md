@@ -22,9 +22,9 @@ adapter trained on verifier-filtered agent data (coding, repair, tool-call
 discipline, strict JSON, security, and protected soul facets) is fused into
 the quantized weights. No experts are pruned in the lite variant.
 
-This is a **private research artifact**. It is not a public release, carries
-no support, and inherits the base model's license and usage terms. Do not
-redistribute.
+This is a **research artifact**, shared as-is with receipts: no support or
+fitness claims, Apache-2.0 like its base model. Every number in this card is
+measured, not estimated — the receipts live in the source repo.
 
 ## Usage
 
@@ -54,8 +54,8 @@ work: temperature 0–0.2, top-p 1.0.
 - Fused with a streamed lazy fuse (one shard at a time), keeping the stock
   Hy3 chat template.
 
-Build scripts, receipts, and the full recipe live in the private GitHub repo
-`PhilipJohnBasile/hy3-demolition-mlx` (tag `lite-v1`).
+Build scripts, receipts, and the full recipe:
+https://github.com/PhilipJohnBasile/hy3-demolition-mlx (tag `lite-v1`).
 
 ## Verification receipts
 
