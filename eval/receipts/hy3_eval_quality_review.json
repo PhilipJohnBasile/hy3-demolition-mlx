@@ -1,0 +1,24 @@
+{
+  "date": "2026-07-07",
+  "cases_reviewed": 46,
+  "clean": [
+    "json_schema (all additionalProperties:False)",
+    "planning (all have must_mention)",
+    "tool_call (shape+args+no-prose)",
+    "no duplicate ids across packs"
+  ],
+  "fixed": {
+    "soul_keyword_bar": "raised min_keywords 2->3 on 7 souls with 6-7 keyword lists; min_chars floor 200 \u2014 reduces pass-by-luck",
+    "ids": [
+      "soul_security",
+      "soul_fullstack",
+      "soul_gamedev",
+      "soul_legacy",
+      "soul_music",
+      "soul_art",
+      "soul_perfumery"
+    ]
+  },
+  "by_design_not_fixed": "soul verifiers remain heuristic (assert facet engagement, not expertise) and are SECONDARY per DECISIONS.md D3; the brutal tier carries the tight soul discrimination (soul_music_theory, soul_science_calc).",
+  "baseline_dependency": "these tightened cases + the brutal tier require a FRESH lite-v1 full-suite baseline before it serves as the reap25 gate; the prior committed 30/30 predates the brutal tier and this tightening. No extra GPU cost \u2014 folds into the already-required re-baseline."
+}

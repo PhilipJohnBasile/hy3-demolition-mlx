@@ -35,3 +35,4 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_base_vs_lite_compare.json
 !eval/receipts/hy3_reap25_plan_report.json
 !eval/receipts/hy3_sft_data_audit.json
+!eval/receipts/hy3_eval_quality_review.json

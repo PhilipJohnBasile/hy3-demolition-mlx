@@ -122,7 +122,12 @@ Then the judgment layer:
   (multi-constraint code, two-bug repair, cross-field JSON, tool-trap,
   safety-refusal planning, named-theory souls) is designed to register
   partial capability loss as partial failure. GATE: establish lite-v1's
-  brutal-tier baseline FIRST (run when GPU frees, before reap25); then
+  FULL baseline FIRST — one fresh run of suite + hard + brutal on the
+  CURRENT eval set (run when GPU frees, before reap25). The committed
+  30/30 baseline is STALE for gate purposes: it predates the brutal tier
+  and the 2026-07-07 soul-keyword tightening (see
+  eval/receipts/hy3_eval_quality_review.json). Do NOT compare reap25
+  against the stale baseline; then
   reap25 losing 1 brutal case = REVIEW (read outputs), losing 2+ = do not
   promote (heal more or keep lite-v1). The old hard tier stays as a
   secondary check but is not decisive on its own.
