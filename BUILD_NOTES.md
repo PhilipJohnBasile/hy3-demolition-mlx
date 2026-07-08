@@ -179,3 +179,18 @@ misdiagnoses stay in the record with their corrections.
     was cold-load page-cache behavior. *Lesson:* "has the feature" and
     "the feature helps" are separate receipts; and always re-measure
     baselines warm.
+
+15. **Base server jetsam-killed by memory competition (2026-07-07 ~20:00,
+    self-inflicted).** While the 112 GB base model was resident and serving
+    the #15 baseline eval, an ultracode audit ran 34 parallel agents + pytest
+    suites in scratch clones. Memory pressure spiked and the OS SIGKILL'd the
+    base server (no error logged — classic jetsam). The chain's stage 5 then
+    ignored the eval's nonzero rc (audit finding, same run) and committed a
+    meaningless 24-vs-30 comparison, pushed publicly. Marked the receipt
+    INVALID with reason; #15 needs a clean re-run (optional, non-blocking —
+    calibration is independent and proceeded fine). *Lessons:* (1) do NOT run
+    memory-heavy build/audit work alongside a resident bigger-than-half-RAM
+    model — they compete and the OS picks a loser; pause one or the other.
+    (2) An orchestration step that ignores return codes will faithfully
+    publish garbage; the audit called this exact bug and it fired within
+    hours — fix rc-handling in 27 before reuse.
