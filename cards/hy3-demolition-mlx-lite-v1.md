@@ -85,4 +85,5 @@ All measured on the fused artifact, 2026-07-07, receipts committed under
 ## Runtime support
 
 Supported: `mlx_lm.generate`, `mlx_lm.chat`, `mlx_lm.server`.
-Not supported: GGUF, llama.cpp, Ollama, vLLM, SGLang, CUDA serving.
+Not supported (today): GGUF, llama.cpp, vLLM, SGLang, CUDA serving.
+- **LM Studio / Ollama:** pending — needs the `hy_v3` architecture in *mainline* mlx-lm ([ml-explore/mlx-lm#1211](https://github.com/ml-explore/mlx-lm/pull/1211)). Today these load only on the pinned fork (`eauchs/mlx-lm@hy_v3-mtp`); once #1211 merges, the AR models should work in LM Studio.
