@@ -213,22 +213,23 @@ def main() -> int:
     finally:
         srv.terminate()
     base_rows = read_jsonl(REPO / "eval/receipts/hy3_base_clean_baseline.jsonl")
-    if len(base_rows) >= 38:  # complete-enough: 30 suite + 8 hard
+    # ALWAYS commit whatever base receipts we got (never lose the work); add
+    # the base-vs-lite compare only when the run is complete (>=38: suite+hard).
+    subprocess.run(["git", "add", "-f", "eval/receipts/hy3_base_clean_baseline.jsonl"], cwd=REPO)
+    if len(base_rows) >= 38:
         subprocess.run([PY, "scripts/20_compare_receipts.py",
                         "eval/receipts/hy3_base_clean_baseline.jsonl",
                         "eval/receipts/hy3_lite_v1_fresh_baseline.jsonl",
                         "--out", "eval/receipts/hy3_base_vs_lite_clean.json"], cwd=REPO)
-        subprocess.run(["git", "add", "eval/receipts/hy3_base_clean_baseline.jsonl",
-                        "eval/receipts/hy3_base_vs_lite_clean.json"], cwd=REPO)
-        subprocess.run(["git", "commit", "-m",
-                        "Clean base-model baseline + base-vs-lite (the #15 re-run)\n\n"
-                        "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>\n"
-                        "Claude-Session: https://claude.ai/code/session_01LJenYJzwFH5NTvNc76tTgY"],
-                       cwd=REPO)
-        subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
-        log(f"base baseline: {sum(r['passed'] for r in base_rows)}/{len(base_rows)}")
+        subprocess.run(["git", "add", "eval/receipts/hy3_base_vs_lite_clean.json"], cwd=REPO)
+        msg = f"Clean base-model baseline ({sum(r['passed'] for r in base_rows)}/{len(base_rows)}) + base-vs-lite (#15)"
     else:
-        log(f"base baseline incomplete ({len(base_rows)} cases) — not committing compare")
+        msg = f"Base-model baseline PARTIAL ({len(base_rows)} cases) — receipts saved, #15 to finish/rerun"
+    subprocess.run(["git", "commit", "-m",
+                    msg + "\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>\n"
+                    "Claude-Session: https://claude.ai/code/session_01LJenYJzwFH5NTvNc76tTgY"], cwd=REPO)
+    subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
+    log(f"base baseline (#15): {sum(r['passed'] for r in base_rows)}/{len(base_rows)} committed")
 
     log("OVERNIGHT SEQUENCE COMPLETE — plan, fresh baseline, benchmark, base baseline all in git")
     return 0
