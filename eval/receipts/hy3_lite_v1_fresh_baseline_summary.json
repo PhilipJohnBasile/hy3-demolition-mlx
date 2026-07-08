@@ -1,0 +1,16 @@
+{
+  "date": "2026-07-08",
+  "model": "dist/hy3-demolition-mlx-lite-v1-fused",
+  "cases": 46,
+  "passed": 46,
+  "failed_ids": [],
+  "by_domain": {
+    "python": 13,
+    "tool_call": 6,
+    "json": 7,
+    "planning": 6,
+    "soul": 14
+  },
+  "brutal_discriminates": false,
+  "note": "D3 reap25-gate baseline on the CURRENT eval set (suite+hard+brutal). If brutal fails nothing, the instrument does not discriminate \u2014 see REFLECTIONS risk #1."
+}
