@@ -1,0 +1,36 @@
+{
+  "train": [
+    {"id": "t01", "facet": "coding", "prompt": "Write a Python decorator that caches function results with a TTL (time-to-live), evicting expired entries."},
+    {"id": "t02", "facet": "coding", "prompt": "Explain how Python's asyncio event loop schedules coroutines, with a short example showing two tasks interleaving."},
+    {"id": "t03", "facet": "security", "prompt": "A web app stores session tokens in localStorage. Explain the XSS risk and the safer alternative."},
+    {"id": "t04", "facet": "security", "prompt": "Explain the difference between symmetric and asymmetric encryption and when you'd use each in a real system."},
+    {"id": "t05", "facet": "math", "prompt": "Derive the derivative of sin(x) from first principles using the limit definition."},
+    {"id": "t06", "facet": "math", "prompt": "Explain eigenvalues and eigenvectors intuitively, with a simple 2x2 matrix example."},
+    {"id": "t07", "facet": "science", "prompt": "Explain why the sky is blue using Rayleigh scattering, in terms a curious teenager would understand."},
+    {"id": "t08", "facet": "science", "prompt": "Explain the difference between weather and climate, and why a cold week doesn't disprove warming trends."},
+    {"id": "t09", "facet": "design", "prompt": "Critique the usability of a login form that puts the password field above the email field."},
+    {"id": "t10", "facet": "design", "prompt": "Explain the principle of visual hierarchy and how font size, weight, and color establish it."},
+    {"id": "t11", "facet": "fullstack", "prompt": "Design a REST API for a simple todo app: list the endpoints, methods, and status codes."},
+    {"id": "t12", "facet": "fullstack", "prompt": "Explain the tradeoffs between server-side rendering and client-side rendering for an e-commerce site."},
+    {"id": "t13", "facet": "gamedev", "prompt": "Explain the difference between a finite state machine and a behavior tree for enemy AI."},
+    {"id": "t14", "facet": "gamedev", "prompt": "Explain fixed timestep vs variable timestep game loops and why physics usually wants fixed."},
+    {"id": "t15", "facet": "legacy", "prompt": "You inherit a 10,000-line PHP file with no tests. Outline a safe strategy to start refactoring it."},
+    {"id": "t16", "facet": "legacy", "prompt": "Explain the strangler fig pattern for migrating a legacy monolith to microservices."},
+    {"id": "t17", "facet": "music", "prompt": "Explain what makes a ii-V-I progression sound so resolved in jazz."},
+    {"id": "t18", "facet": "music", "prompt": "Explain the difference between major and minor pentatonic scales and when a soloist would pick each."},
+    {"id": "t19", "facet": "art", "prompt": "Explain the rule of thirds in composition and why it's more pleasing than dead-center framing."},
+    {"id": "t20", "facet": "art", "prompt": "Explain complementary color theory and how it creates visual tension in a painting."},
+    {"id": "t21", "facet": "perfumery", "prompt": "Explain the difference between an EDT and an EDP concentration and how it affects longevity."},
+    {"id": "t22", "facet": "perfumery", "prompt": "Structure a gourmand fragrance pyramid: name the levels and give example materials."},
+    {"id": "t23", "facet": "coding", "prompt": "Explain the difference between a shallow copy and a deep copy in Python, with an example where it matters."},
+    {"id": "t24", "facet": "science", "prompt": "Explain entropy in thermodynamics in plain language, using a melting ice cube as the example."}
+  ],
+  "eval": [
+    {"id": "e01", "facet": "coding", "prompt": "Implement a simple LRU cache in Python without using OrderedDict, explaining your approach."},
+    {"id": "e02", "facet": "security", "prompt": "Explain what CSRF is and how a same-site cookie attribute helps prevent it."},
+    {"id": "e03", "facet": "gamedev", "prompt": "Explain object pooling and why it matters for a bullet-hell shooter's performance."},
+    {"id": "e04", "facet": "music", "prompt": "Explain what syncopation is and give a simple rhythmic example."},
+    {"id": "e05", "facet": "perfumery", "prompt": "Explain what a 'fixative' does in a fragrance and name two common examples."},
+    {"id": "e06", "facet": "design", "prompt": "Explain Fitts's Law and how it should influence button placement and size in a mobile UI."}
+  ]
+}
