@@ -29,5 +29,8 @@
     }
   ],
   "soul_regressions_gating": false,
-  "verdict": "PROMOTE"
+  "verdict": "PROMOTE",
+  "INVALID": true,
+  "invalid_reason": "PARTIAL DATA \u2014 the base server was OS-killed (memory competition with a concurrent audit workload) after 24/30 suite cases; the hard tier never ran (0 cases). The chain's stage 5 ignored the eval return code and committed anyway (known audit finding). Verdict PROMOTE here is meaningless: it compared 24 base cases vs 30 lite cases with no hard tier. Re-run #15 clean before drawing any base-vs-lite conclusion.",
+  "partial_base_result": "23/24 passed (only plan_db_migration failed); souls run: coding, math, science, security, design"
 }
