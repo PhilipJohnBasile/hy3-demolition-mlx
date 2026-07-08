@@ -69,20 +69,37 @@ def main() -> int:
 
     hard_regressions = [r for r in regressions if r["hard"]]
     soul_regressions = [r for r in regressions if not r["hard"]]
-    gating = hard_regressions + (soul_regressions if args.strict_souls else [])
+
+    # Rate that gates the decision is over HARD (gating) domains only, so a
+    # tolerated soul flip (keyword-heuristic noise, DECISIONS.md D3) can't drag
+    # the overall rate below baseline and force a spurious REJECT.
+    def hard_rate(rows: dict[str, dict]) -> float:
+        hard = [r for r in rows.values() if r["domain"] in HARD_DOMAINS]
+        return sum(r["passed"] for r in hard) / len(hard) if hard else 1.0
 
     base_rate, cand_rate = rate(base), rate(cand)
-    verdict = "PROMOTE" if not gating and cand_rate >= base_rate else "REJECT"
+    reject = bool(hard_regressions) or hard_rate(cand) < hard_rate(base) \
+        or (args.strict_souls and bool(soul_regressions))
+    # D3: a soul flip is not decisive on its own, but a human reads it.
+    if reject:
+        verdict = "REJECT"
+    elif soul_regressions:
+        verdict = "REVIEW"
+    else:
+        verdict = "PROMOTE"
 
     report = {
         "baseline": {"path": args.baseline, "cases": len(base),
-                     "pass_rate": round(base_rate, 4), "tok_s": tok_s(base)},
+                     "pass_rate": round(base_rate, 4),
+                     "hard_pass_rate": round(hard_rate(base), 4), "tok_s": tok_s(base)},
         "candidate": {"path": args.candidate, "cases": len(cand),
-                      "pass_rate": round(cand_rate, 4), "tok_s": tok_s(cand)},
+                      "pass_rate": round(cand_rate, 4),
+                      "hard_pass_rate": round(hard_rate(cand), 4), "tok_s": tok_s(cand)},
         "shared_cases": len(shared),
         "missing_in_candidate": only_base,
         "new_in_candidate": only_cand,
         "regressions": regressions,
+        "soul_regressions": [r["id"] for r in soul_regressions],
         "improvements": improvements,
         "soul_regressions_gating": args.strict_souls,
         "verdict": verdict,
@@ -90,7 +107,9 @@ def main() -> int:
     print(json.dumps(report, indent=2))
     if args.out:
         Path(args.out).write_text(json.dumps(report, indent=2) + "\n")
-    return 0 if verdict == "PROMOTE" else 1
+    # REJECT is the only hard fail; REVIEW passes the gate but flags for a human
+    # read (soul flips), matching scripts/25's ACCEPT/REVIEW/REJECT convention.
+    return 1 if verdict == "REJECT" else 0
 
 
 if __name__ == "__main__":
