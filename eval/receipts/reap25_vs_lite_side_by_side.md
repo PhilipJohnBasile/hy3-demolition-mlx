@@ -1,6 +1,6 @@
 # reap25 vs lite-v1 — manual-pass material (#16)
 
-Same prompts, both models, one process each. Judge quality yourself. Generated 2026-07-08 06:36.
+Same prompts, both models, one process each. Judge quality yourself. Generated 2026-07-08 07:32.
 
 
 ## code_ratelimiter
@@ -8,69 +8,128 @@ Same prompts, both models, one process each. Judge quality yourself. Generated 2
 **Prompt:** Implement a thread-safe sliding-window rate limiter class in Python: allow(key) returns True if fewer than N calls happened for that key in the last window_seconds, else False. No external deps.
 
 
-### reap25 (62.3s, clean_stop=True)
+### reap25 (50.7s, clean_stop=True)
 
 ```
-The user wants a thread-safe sliding-window rate limiter class in Python.
-Requirements:
-1. Sliding-window rate limiter (not fixed window, but sliding window).
-2. Method: allow(key) -> returns True if fewer than N calls happened for that key in the last window_seconds, else False.
-3. Thread-safe.
-4. No external dependencies (only standard library).
+Here is a simple, dependency-free, thread-safe sliding-window rate limiter in Python.
 
-Let's think about the sliding window rate limiter.
-- Sliding window means we need to keep track of timestamps of requests for each key.
-- For a given key, when allow() is called, we need to count how many timestamps are within the last window_seconds.
-- If that count is < N, we allow the request (return True) and record the current timestamp.
-- If that count is >= N, we return False (do not record? or record anyway? Usually, if rejected, we don't record, but it doesn't matter if we record because it's already >= N. But to be precise, we only record if we allow, or we record anyway? The prompt says "allow(key) returns True if fewer than N calls happened for that key in the last window_seconds, else False." It doesn't explicitly say whether rejected calls count. Usually, rate limiters count successful requests or all requests? "fewer than N calls happened" - calls means requests made. If we count all calls, then a rejected call still counts as a call. But if we only count allowed calls, it's a token bucket. Let's assume it counts all calls that happened (i.e., we record the timestamp when allow() is called, regardless of whether it returns True or False? Actually, if we record the call when it's rejected, it doesn't change the count for future requests because it's already >= N. But if we record it, it just pushes out older timestamps. Wait, if we record it, it's fine. But typically, rate limiters count the requests that were *attempted* or *allowed*? Let's just record the timestamp when allow() is called, because the prompt says "fewer than N calls happened". So a call is an attempt. But if we record it, and it's already at N, it will be N+1, still >= N. So it's fine. But to be memory efficient, we should only record when we allow? Actually, if we record when rejected, it doesn't hurt. But if we record only
-```
+It uses a `threading.Lock` and a per-key deque of timestamps. Each call removes expired timestamps and then decides whether to allow the request.
 
-
-### lite-v1 (97.9s, clean_stop=True)
-
-```
-The user wants a thread-safe sliding-window rate limiter class in Python.
-Requirements:
-1. Sliding-window rate limiter (not fixed window, but sliding window).
-2. Method: allow(key) -> returns True if fewer than N calls happened for that key in the last window_seconds, else False.
-3. Thread-safe.
-4. No external dependencies (only standard library).
-
-Let's think about sliding window rate limiting.
-There are two common ways to implement sliding window:
-1. Keep a list of timestamps for each key. When a request comes, remove timestamps older than window_seconds, then check length. If length < N, append current timestamp and return True, else return False.
-2. Use a rolling window with counters (e.g., divide window into buckets). But the user specifically says "sliding-window" and "fewer than N calls happened for that key in the last window_seconds". The list of timestamps approach is the most accurate sliding window.
-
-Thread-safety: We need to ensure that multiple threads can call allow(key) concurrently without race conditions.
-We can use threading.Lock or threading.RLock. Or use a lock per key to reduce contention, but a global lock is simpler and usually sufficient. However, if we want to be efficient, we can use a dict of locks or a single lock. Since it's a simple implementation, a single threading.Lock is fine. But we need to be careful about deadlocks or holding locks while doing time operations (which is fine).
-
-Let's design the class:
 ```python
 import threading
 import time
+from collections import deque
+
 
 class SlidingWindowRateLimiter:
-    def __init__(self, max_calls: int, window_seconds: float):
-        self.max_calls = max_c
+    def __init__(self, limit: int, window_seconds: float):
+        if limit <= 0:
+            raise ValueError("limit must be positive")
+        if window_seconds <= 0:
+            raise ValueError("window_seconds must be positive")
+
+        self.limit = limit
         self.window_seconds = window_seconds
-        self.lock = threading.Lock()
-        self.calls = {}  # key -> list of timestamps
+        self._store = {}
+        self._lock = threading.Lock()
 
     def allow(self, key: str) -> bool:
         now = time.monotonic()
-        with self.lock:
-            # Remove old timestamps
-            if key in self.calls:
-                timestamps = self.calls[key]
-                # Remove timestamps older than window
-                cutoff = now - self.window_seconds
-                # Remove from the front (since they are appended in order)
-                # We can use list comprehension or while loop
-                while timestamps and timestamps[0] <= cutoff:
-                    timestamps.pop(0)
+        cutoff = now - self.window_seconds
+
+        with self._lock:
+            timestamps = self._store.get(key)
+
+            if timestamps is None:
+                timestamps = deque()
+                self._store[key] = timestamps
             else:
-                timestamps = []
-                self.calls[key]
+                # Remove timestamps older than the window
+                while timestamps and timestamps[0] <= cutoff:
+                    timestamps.popleft()
+
+            if len(timestamps) < self.limit:
+                timestamps.append(now)
+                return True
+
+            return False
+
+
+# Example usage
+if __name__ == "__main__":
+    limiter = SlidingWindowRateLimiter(limit=3, window_seconds=1.0)
+
+    print(limiter.allow("user1"))  # True
+    print(limiter.allow("user1"))  # True
+    print(limiter.allow("user1"))  # True
+    print(limiter.allow("user1"))  # False
+    print(limiter.allow("user2"))  # True
+```
+
+Notes:
+- `time.monotonic()` is used to avoid issues with system clock changes.
+- The lock ensures concurrent calls are handled safely.
+- Old timestamps are cleaned lazily on each request, so memory stays bounded.
+```
+
+
+### lite-v1 (77.2s, clean_stop=True)
+
+```
+Here is a simple, dependency-free, thread-safe sliding-window rate limiter in Python.
+
+It uses a `threading.Lock` and stores timestamps per key in a deque.
+
+```python
+import threading
+from collections import deque
+from time import time
+
+
+class SlidingWindowRateLimiter:
+    def __init__(self, max_calls: int, window_seconds: float):
+        if max_calls <= 0:
+            raise ValueError("max_calls must be > 0")
+        if window_seconds <= 0:
+            raise ValueError("window_seconds must be > 0")
+
+        self.max_calls = max_calls
+        self.window_seconds = window_seconds
+        self._lock = threading.Lock()
+        self._calls = {}  # key -> deque of timestamps
+
+    def allow(self, key: str) -> bool:
+        now = time()
+        with self._lock:
+            dq = self._calls.setdefault(key, deque())
+
+            # Remove timestamps outside the window
+            while dq and dq[0] <= now - self.window_seconds:
+                dq.popleft()
+
+            if len(dq) < self.max_calls:
+                dq.append(now)
+                return True
+
+            return False
+```
+
+### Example usage
+
+```python
+limiter = SlidingWindowRateLimiter(max_calls=5, window_seconds=1.0)
+
+if limiter.allow("user_1"):
+    print("request allowed")
+else:
+    print("request blocked")
+```
+
+### Notes
+- Thread-safe via `threading.Lock`
+- Sliding window (not fixed buckets)
+- No external dependencies
+- Timestamps are stored in memory; for long-lived keys you may add periodic cleanup to avoid unbounded memory growth.
 ```
 
 
@@ -79,60 +138,184 @@ class SlidingWindowRateLimiter:
 **Prompt:** I have a working Flask app with session login. Give me a concrete, ordered plan to add 'Sign in with Google' (OAuth2) alongside it — steps, the libraries, and the two biggest correctness pitfalls.
 
 
-### reap25 (58.3s, clean_stop=True)
+### reap25 (58.0s, clean_stop=True)
 
 ```
-The user has a working Flask app with session login. They want to add "Sign in with Google" (OAuth2) alongside it. They want:
-1. A concrete, ordered plan (steps).
-2. The libraries to use.
-3. The two biggest correctness pitfalls.
+Here is a concrete, ordered plan to add **"Sign in with Google" (OAuth2)** alongside your existing Flask session login.
 
-Let's break this down.
+## Assumptions
+- Flask app uses `flask.session` for login
+- You already have a `User` model/table
+- You have a Google Cloud project with Google OAuth2 credentials (Client ID + Client Secret)
 
-Flask app with session login: meaning they already have a `session` based authentication (e.g., using Flask-Login or just manual sessions). They want to add OAuth2 Google login alongside it, so users can either log in with username/password or with Google.
+---
 
-Libraries:
-- `Flask` (obviously)
-- `requests` or `requests-oauthlib` or `authlib` (Authlib is the modern recommended library for OAuth in Flask). `Flask-OAuthlib` is deprecated. `Authlib` with `Flask-Client` or `Flask-Login` integration.
-- `Flask-Login` (if not already used, but they have session login, so maybe they already have something).
-- `google-auth` or `oauthlib`? Authlib is easiest. Let's recommend `Authlib` (with `Flask-Login` for session management). Or `pygoogle-auth`? Actually, for OAuth2, `Authlib` is the standard. `requests-oauthlib` is also fine. Let's mention `Authlib` and `Flask-Login`.
+## Ordered implementation plan
 
-Ordered plan:
-1. Create a Google API project / OAuth2 credentials (Client ID, Client Secret) in Google Cloud Console. Configure redirect URI.
-2. Install libraries (`authlib`, `Flask-Login` if not already).
-3. Configure the OAuth client in the Flask app (register the client with Google's endpoints).
-4. Add routes: `/login/google` (initiate OAuth, redirect to Google), `/login/google/callback` (handle callback, exchange code for token, fetch user info).
-5. Link the Google identity to the existing user account (or create a new user). This is crucial for "alongside" existing session login.
-6. Update the login page UI to show the "Sign in with Google" button.
-7. Ensure session management (Flask-Login) logs the user in after Google callback.
-8. Test and handle edge cases (user already exists with email, etc.).
+### 1. Install libraries
+```bash
+pip install Flask-OAuthlib
+# or, more modern:
+pip install authlib
+```
+Recommended: **Authlib** (Flask-OAuthlib is deprecated).
 
-Two biggest correctness pitfalls:
-1. **Account linking / email verification**: If a user signs up with password, then uses "Sign
+```bash
+pip install authlib
+```
+
+---
+
+### 2. Create Google OAuth client
+```python
+from authlib.integrations.flask_client import OAuth
+
+oauth = OAuth(app)
+google = oauth.register(
+    name="google",
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    scope="openid email profile",
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    token_url="https://oauth2.googleapis.com/token",
+    jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
+    redirect_uri="http://localhost:5000/google/callback",
+)
+```
+
+---
+
+### 3. Add routes
+```python
+@app.route("/login/google")
+def login_google():
+    return google.authorize_redirect(redirect_uri=google.redirect_uri)
+
+@app.route("/google/callback")
+def google_callback():
+    token = google.authorize_access_token()
+    userinfo = google.get("userinfo", token=token).json()
+    # create or fetch user
+    user = User.query.filter_by(email=userinfo["email"]).first()
+    if not user:
+        user = User(email=userinfo["email"], name=userinfo["name"])
+        db.session.add(user)
+        db.session.commit()
+    session["user_id"] = user.id
+    return redirect("/dashboard")
+```
+
+---
+
+### 4. Add a button in your login template
+```html
+<a href="/login/google">Sign in with Google</a>
+```
+
+---
+
+### 5. Keep existing session login intact
+- Do **not** change your existing `session["user_id"]` logic
+- Both flows should set the same session key
+
+---
+
+### 6. Verify logout works for both
+```python
+@app.route("/logout")
+def logout():
+    session.clear
 ```
 
 
-### lite-v1 (72.0s, clean_stop=True)
+### lite-v1 (72.1s, clean_stop=True)
 
 ```
-The user has a working Flask app with session login. They want to add "Sign in with Google" (OAuth2) alongside it.
-They want:
-1. A concrete, ordered plan (steps).
-2. The libraries to use.
-3. The two biggest correctness pitfalls.
+Here is a concrete, ordered plan to add **Sign in with Google** (OAuth2) alongside your existing Flask session login.
 
-Let's break this down.
+## Assumptions
+- Flask app uses `flask.session` for login
+- You already have a `User` model or user store
+- You have a Google Cloud project with OAuth2 credentials
 
-Flask app with session login: meaning they already have a `User` model, a login route, session management (probably using Flask's `session` or Flask-Login).
+---
 
-Adding OAuth2 (Google):
-- Need to use an OAuth2 client library. For Flask, `Authlib` is the modern, recommended library (or `Flask-OAuthlib` but that's deprecated). `Authlib` has `flask-oauth2` or `flask-login` integration. Alternatively, `Flask-Dance` is very popular and easy for OAuth2. Let's mention `Authlib` or `Flask-Dance`. `Flask-Dance` is specifically designed for OAuth2 social login (Google, Facebook, etc.) and integrates with Flask-Login. `Authlib` is more general. Let's recommend `Flask-Dance` for simplicity or `Authlib` for standard OAuth2. I'll mention `Flask-Dance` as the easiest path, or `Authlib` as the standard. Let's pick `Flask-Dance` because it handles the OAuth2 flow and integrates with Flask-Login. Or `Authlib` is also fine. I'll mention both or pick one. Let's say `Flask-Dance` (for quick integration) or `Authlib` (for standard). I'll provide the plan using `Flask-Dance` or `Authlib`. Let's use `Authlib` as it's the standard OAuth2 library, but `Flask-Dance` is arguably more concrete for Google. Let's mention `Flask-Dance` as the concrete library, and `Authlib` as an alternative. Actually, the user asked for "the libraries", so I should name them: `Flask-Dance` (or `Authlib`).
+## Ordered Plan
 
-Ordered plan:
-1. Create a Google OAuth2 credential in Google Cloud Console (get Client ID and Client Secret).
-2. Install the library (e.g., `pip install Flask-Dance` or `Authlib`).
-3. Configure the OAuth2 provider with the client ID/secret and redirect URI.
-4. Add a new route for "Sign in with Google" (initiate the flow) and a
+### 1. Install libraries
+```bash
+pip install Flask-OAuthlib
+# or, more modern:
+pip install authlib
+```
+Recommended: **Authlib** (Flask-OAuthlib is deprecated).
+
+```bash
+pip install authlib
+```
+
+---
+
+### 2. Create Google OAuth credentials
+- Go to Google Cloud Console → Credentials → OAuth Client ID
+- Type: **Web application**
+- Add redirect URI: `http://localhost:2000/oauth2callback` (or your domain)
+- Save **Client ID** and **Client Secret**
+
+---
+
+### 3. Configure OAuth in Flask
+```python
+from authlib.integrations.flask_client import OAuth
+
+oauth = OAuth(app)
+google = oauth.register(
+    name="google",
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    token_url="https://oauth2.googleapis.com/token",
+    jwks_url="https://www.googleapis.com/oauth2/v3/certs",
+    scope="openid email profile",
+    redirect_uri="http://localhost:2000/oauth2callback",
+)
+```
+
+---
+
+### 4. Add login button
+In your login page:
+```html
+<a href="/login/google">Sign in with Google</a>
+```
+
+---
+
+### 5. Add routes
+```python
+@app.route("/login/google")
+def login_google():
+    return google.authorize_redirect(redirect_uri=google.redirect_uri)
+
+@app.route("/oauth2callback")
+def oauth2callback():
+    token = google.authorize_access_token()
+    userinfo = google.get("userinfo", token=token).json()
+    user = find_or_create_user(userinfo)
+    session["user_id"] = user.id
+    return redirect("/dashboard")
+```
+
+---
+
+### 6. Link Google users to existing accounts
+- Match by `userinfo["email"]`
+- If user exists, log them in
+- If not, create a new user with `google_id`
+
+---
+
+### 7
 ```
 
 
@@ -147,14 +330,34 @@ def rolling_max(xs, k):
     return out
 
 
-### reap25 (27.6s, clean_stop=True)
+### reap25 (17.8s, clean_stop=True)
 
 ```
-</think:opensource>The bug is in the loop range: `range(len(xs)-k)` stops one window too early, so the last full window (starting at index `len(xs)-k`) is never computed.
+The bug is in the loop range. Using `range(len(xs)-k)` stops one window too early, so the last valid window (starting at index `len(xs)-k`) is never processed.
 
-For example, with `xs = [1,2,3,4]` and `k = 2`, `len(xs)-k = 2`, so `range(2)` iterates `i = 0, 1` and produces `[max(1,2), max(2,3)] = [2,3]`, missing the last window `max(3,4) = 4`.
+Fixed version:
 
-Fix: use `range(len(xs)-k+1)` (or `range(0, len(xs)-k+1)`).
+```python
+def rolling_max(xs, k):
+    out = []
+    for i in range(len(xs)-k + 1):
+        out.append(max(xs[i:i+k]))
+    return out
+```
+
+What was wrong: `range(len(xs)-k)` produces indices `0` to `len(xs)-k-1`, skipping the final window that starts at `len(xs)-k`. Changing the range to `range(len(xs)-k + 1)` includes that last window.
+```
+
+
+### lite-v1 (20.0s, clean_stop=True)
+
+```
+The bug is in the loop range.
+
+**What was wrong:**  
+`range(len(xs)-k)` stops one window too early. The last valid window starts at index `len(xs)-k`, but the loop only goes up to `len(xs)-k-1`, so the final window is never computed.
+
+**Fixed version:**
 
 ```python
 def rolling_max(xs, k):
@@ -164,30 +367,7 @@ def rolling_max(xs, k):
     return out
 ```
 
-What was wrong: the loop bound `range(len(xs)-k)` excludes the final valid starting index `len(xs)-k`, so the last window is omitted.
-```
-
-
-### lite-v1 (31.0s, clean_stop=True)
-
-```
-</think:opensource>The bug is in the loop bound: `range(len(xs)-k)` stops too early, so the last full window of length `k` is never computed.
-
-For example, with `xs = [1,2,3,4,5]` and `k = 3`, `len(xs)-k = 2`, so `i` takes only `0` and `1`. You get windows `[1,2,3]` and `[2,3,4]`, but not `[3,4,5]`.
-
-Fix: use `range(len(xs)-k+1)` (or `range(0, len(xs)-k+1)`).
-
-Fixed code:
-
-```python
-def rolling_max(xs, k):
-    out = []
-    for i in range(len(xs)-k+1):
-        out.append(max(xs[i:i+k]))
-    return out
-```
-
-What was wrong: the loop range was off by one, so the final window starting at index `len(xs)-k` was skipped.
+This ensures the last window `xs[len(xs)-k : len(xs)]` is included.
 ```
 
 
@@ -196,41 +376,15 @@ What was wrong: the loop range was off by one, so the final window starting at i
 **Prompt:** In 4 sentences, explain why a V7 chord creates tension that resolves to I, using the tritone. Be precise, not flowery.
 
 
-### reap25 (23.9s, clean_stop=True)
+### reap25 (14.6s, clean_stop=True)
 
 ```
-</think:opensource>1. In a V7 chord (e.g., G7 = G-B-D-F), the third (B) and the seventh (F) form a tritone interval (B–F), which is exactly half an octave and has no stable tonal center.
-2. This tritone is the harmonic interval between scale degrees 4 and 7 of the key, and the ear expects it to resolve inward to the interval 3–5 (e.g., F→E and B→C) of the tonic I chord.
-3. The seventh (scale degree 7) descends by a half step to the tonic (scale degree 1), while the third (scale degree 4) ascends by a half step to the tonic's third (scale degree 3), collapsing the unstable tritone into a consonant major third.
-4. Because the tritone's two notes are pulled toward the tonic chord's notes, the V7 chord creates directional tension that is released when the chord resolves to I.
+A V7 chord contains a tritone between its third (scale degree 7) and seventh (scale degree 4), which is the most unstable interval in tonal music. This tritone creates tension because both notes strongly want to resolve by step: the 7th descends to scale degree 3 and the 4th ascends to scale degree 5. When the V7 resolves to I, the tritone collapses into a major third (3–5), satisfying those opposing tendencies. The harmonic progression is driven by this interval's need for resolution, making V7→I the primary cadence in tonal music.
 ```
 
 
-### lite-v1 (71.9s, clean_stop=True)
+### lite-v1 (14.2s, clean_stop=True)
 
 ```
-The user wants a 4-sentence explanation of why a V7 chord creates tension that resolves to I, using the tritone. It must be precise, not flowery.
-
-Let's break down the music theory:
-- V7 chord is the dominant seventh chord (e.g., G7 in C major: G-B-D-F).
-- The tritone is the interval between the third and the seventh of the chord (B and F in C major).
-- The tritone has a strong tendency to resolve outwardly/inwardly by half steps: B wants to resolve up to C (the third of I), and F wants to resolve down to E (the third of I).
-- This resolution creates the root and fifth of the I chord (C-E-G), establishing the tonic.
-
-Let's draft 4 sentences:
-1. The V7 chord contains a tritone between its third and seventh scale degrees (e.g., B and F in C major), which is an unstable interval with no perfect consonance.
-2. This tritone creates a strong harmonic tension because its pitches have a natural tendency to resolve by half-step to the third of the I chord (B moves up to C, F moves down to E).
-3. When these notes resolve, they form the stable thirds of the tonic triad, while the V7 root and fifth move to the I root and fifth (G to C, D to G).
-4. This half-step resolution of the tritone eliminates the dissonance and establishes the I chord as a stable, consonant home.
-
-Let's check constraints:
-- 4 sentences: Yes.
-- Explain why V7 creates tension resolving to I using tritone: Yes.
-- Precise, not flowery: Yes, no metaphors or flowery language.
-
-Let's refine for maximum precision:
-1. The V7 chord contains a tritone between its third and seventh scale degrees (e.g., B and F in C major), which is an unstable interval with no perfect consonance.
-2. This tritone creates a strong harmonic tension because its pitches have a natural tendency to resolve by half-step to the third of the I chord (B moves up to C, F moves down to E).
-3. When these notes resolve, they form the stable thirds of the tonic triad, while the V7 root and fifth move to the I root and fifth (G to C, D to G).
-4. This half-step resolution of the tritone eliminates the dissonance
+A V7 chord contains a tritone between its third and seventh (e.g., B–F in G7), which is an unstable interval that demands resolution. The tritone voices resolve by contrary motion: the third moves up a half step to the tonic root, and the seventh moves down a half step to the tonic third. This motion aligns the unstable tones with stable members of the I chord. The harmonic instability of the tritone drives the V7 to resolve to I.
 ```
