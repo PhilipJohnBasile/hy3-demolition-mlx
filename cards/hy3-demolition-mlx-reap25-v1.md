@@ -1,0 +1,119 @@
+---
+license: apache-2.0
+base_model: tencent/Hy3
+library_name: mlx
+pipeline_tag: text-generation
+language: en
+tags:
+  - mlx
+  - apple-silicon
+  - hy3
+  - mixture-of-experts
+  - agent
+  - verifier-first
+  - lora-fused
+  - reap-pruned
+---
+
+# Hy3-Demolition-MLX reap25-v1
+
+A standalone, fused MLX model directory built from Tencent Hy3 (295B MoE, 21B
+active, 192 experts / top-8, 80 layers), **soul-preserving REAP-pruned to 144
+experts per layer (25%)** and then healed with a LoRA on verifier-filtered
+agent data. It is the same recipe as `lite-v1` plus the prune — a smaller,
+lighter daily driver (**223B params, ~87 GB peak** vs lite-v1's 295B / 112 GB)
+that measures functionally indistinguishable from the unpruned model.
+
+This is a **research artifact**, shared as-is with receipts: no support or
+fitness claims, Apache-2.0 like its base model. Every number here is measured,
+not estimated — receipts live in the source repo.
+
+## Why reap25 (and why not deeper)
+
+REAP (arXiv:2510.13999) ranks experts by the mean over routed tokens of
+`gate_value × ‖expert_output‖₂` — a criterion that decouples frequency from
+impact, so rare "soul" experts are protected. The full family was built and
+measured on an M5 Max 128 GB:
+
+| tier | eval | peak mem | healed val loss | verdict |
+|---|---|---|---|---|
+| lite-v1 (no prune) | 46/46 | 112 GB | 0.722 | reference |
+| **reap25 (this)** | **45/46** | **86.7 GB** | **0.979** | **the keeper** |
+| reap40 (40%) | 45/46 | 71 GB | 1.078 | rejected (real code-case crash) |
+
+reap25's single eval miss was a *truncation* of an otherwise-correct answer,
+not a wrong answer; it held every hard and brutal code/tool/JSON case (8/8,
+8/8). reap40 scored the same count but failed a brutal code case with a runtime
+crash — so **25% is the pruning knee**; deeper is not shipped.
+
+## Usage
+
+MLX only. Requires an Apple Silicon Mac with enough unified memory
+(measured peak 86.7 GB — leaves ~41 GB free on a 128 GB machine).
+
+```bash
+mlx_lm.generate --model <this-directory> --prompt "Write a tiny Python fizzbuzz." --max-tokens 128
+mlx_lm.chat --model <this-directory>
+mlx_lm.server --model <this-directory> --port 8080   # OpenAI-compatible /v1
+```
+
+No adapter path, agent framework, or custom runtime wrapper is required — the
+directory is the whole artifact. For clean, direct answers, serve with
+`--chat-template-args '{"reasoning_effort":"no_think"}'`; use `high` for hard
+agent tasks where step-by-step reasoning helps (the model reasons inside
+`<think:opensource>…</think:opensource>` tags). Suggested settings for
+coding/agent work: temperature 0–0.2, top-p 1.0.
+
+## Source and recipe
+
+- Base: `ox-ox/Hy3-295B-Instruct-w2q3exp-AProjQ8-SExpQ8-OutQ8-MTP-mlx`
+  (mixed-quant MLX checkpoint of Tencent Hy3), AR-only view
+  (`num_nextn_predict_layers=0`).
+- REAP calibration: streamed, true-criterion, soul-bucketed over a
+  domain-matched pack; all 11 protected soul facets present in the saliency.
+- Prune: 192 → 144 experts/layer (25%), soul-preserving plan verified by the
+  analyzer (ACCEPT — 87% average saliency mass kept, no layer below 70%, all
+  facets protected in every layer). Pruned tensors keep their original
+  quantization (no dequant→requant cycle).
+- Heal LoRA: rank 8 on 8 layers, 200 iterations, batch 1, lr 1e-5, adamw,
+  max-seq 2048, trained against the `is_training` template view (EOS-safe),
+  val loss 1.566 → 0.979.
+- Fused with a streamed lazy fuse (one shard at a time), stock Hy3 chat
+  template.
+
+Build scripts, receipts, and the full recipe:
+https://github.com/PhilipJohnBasile/hy3-demolition-mlx
+
+## Verification receipts
+
+All measured on the fused artifact, 2026-07-08, receipts committed under
+`eval/receipts/` in the source repo:
+
+- Full eval (suite + hard + brutal) **45/46**; hard 8/8, brutal 8/8; the one
+  miss is a token-cap truncation of a correct soul answer, not a wrong answer
+  (`hy3_reap25_eval.jsonl`, `hy3_reap25_vs_lite_compare.json`).
+- Manual side-by-side vs lite-v1 on real code / planning / repair / soul
+  prompts (production `no_think` mode): clean, correct, direct, functionally
+  indistinguishable — one marginal edge each way
+  (`reap25_vs_lite_side_by_side.md`).
+- Prune-plan analyzer verdict: ACCEPT (`hy3_reap25_plan_report.json`).
+- Pruned + fused smokes: correct output, clean EOS stop
+  (`hy3_reap25_pruned_smoke.json`, `hy3_reap25_fused_smoke.json`).
+- Peak inference memory 86.7 GB.
+
+## Limitations
+
+- The model learned self-checking and repair *habits*; it cannot execute
+  compilers, tests, shells, or tools. Verifying its outputs still needs a real
+  harness.
+- Quantized, pruned MoE base: expect quantization artifacts, and a small
+  capability cost from the 25% prune (visible as +0.26 healed val loss over
+  lite-v1, though not as felt output-quality loss in the manual pass).
+- Trained/evaluated primarily in English on agent/code tasks.
+- Decode speed is unchanged from lite-v1 (top-8 × 21B active is the same); the
+  win is ~25 GB of memory headroom, not throughput.
+
+## Runtime support
+
+Supported: `mlx_lm.generate`, `mlx_lm.chat`, `mlx_lm.server`.
+Not supported: GGUF, llama.cpp, Ollama, vLLM, SGLang, CUDA serving.
