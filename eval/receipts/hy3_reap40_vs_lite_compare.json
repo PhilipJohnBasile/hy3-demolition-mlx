@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "path": "eval/receipts/hy3_lite_v1_fresh_baseline.jsonl",
+    "cases": 46,
+    "pass_rate": 1.0,
+    "hard_pass_rate": 1.0,
+    "tok_s": 6.245
+  },
+  "candidate": {
+    "path": "eval/receipts/hy3_reap40_eval.jsonl",
+    "cases": 46,
+    "pass_rate": 0.9783,
+    "hard_pass_rate": 0.9688,
+    "tok_s": 9.638
+  },
+  "shared_cases": 46,
+  "missing_in_candidate": [],
+  "new_in_candidate": [],
+  "regressions": [
+    {
+      "id": "brutal_lru_cache",
+      "domain": "python",
+      "hard": true,
+      "candidate_stage": "run",
+      "candidate_diag": "Traceback (most recent call last):\n  File \"/var/folders/p8/mb9rd2cn4fs6p5dqkj34kc800000gn/T/tmpofcj3qfc/sol.py\", line 60, in <module>\n    c.put(1,1); c.put(2,2)\n    ^^^^^^^^^^\n  File \"/var/folders/p8/"
+    }
+  ],
+  "soul_regressions": [],
+  "improvements": [],
+  "soul_regressions_gating": false,
+  "verdict": "REJECT"
+}
