@@ -47,6 +47,7 @@ for daily use** — equal quality to reap25, 6–10× faster. The Hy3 tiers are 
   (`eauchs/mlx-lm@hy_v3-mtp`); the sibling runs on stock mlx-lm.
 - **Pending [ml-explore/mlx-lm#1211](https://github.com/ml-explore/mlx-lm/pull/1211):**
   puts `hy_v3` in mainline mlx-lm → unlocks **LM Studio** for the Hy3 AR models.
+  (The **sibling is already verified working in LM Studio** — arch `qwen3_5_moe` is native; Hy3 waits on this merge.)
 - **MTPLX** (speculative decoding): all `-mtp` variants are `forge probe`-recognized
   but not yet verified-runnable — MTPLX's bundled mlx_lm doesn't load
   `qwen3_5_mtp`/`hy_v3_mtp` yet. The Hy3 variants also wait on our backend PR
