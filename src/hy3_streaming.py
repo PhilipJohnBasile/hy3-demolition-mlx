@@ -28,14 +28,17 @@ class StreamingSwitchLinear:
     re-reading hot experts every token.
     """
 
-    def __init__(self, weight, scales, biases, group_size: int, bits: int,
-                 cache_size: int = 16):
-        # In the real pager these are mmap handles; here they are the source
-        # arrays and we slice lazily. Slicing an mmap'd mx.array only faults in
-        # the requested experts' pages.
+    def __init__(self, weight=None, scales=None, biases=None, *,
+                 group_size: int, bits: int, cache_size: int = 16,
+                 source=None, wkey: str = "", num_experts: int = 0):
+        # Two backings: in-memory arrays (weight/scales/biases) for the
+        # correctness proof, or a DiskExpertSource (`source` + `wkey` giving the
+        # ".weight"/".scales"/".biases" prefix) for TRUE streaming — experts are
+        # pread from disk on cache miss and never held as a full stack.
         self._w, self._s, self._b = weight, scales, biases
+        self._src, self._wkey = source, wkey
         self.group_size, self.bits = group_size, bits
-        self.num_experts = weight.shape[0]
+        self.num_experts = num_experts or (weight.shape[0] if weight is not None else 0)
         self._cache: OrderedDict[int, tuple] = OrderedDict()
         self.cache_size = cache_size
         self.reads = 0  # experts faulted from "disk" (cache misses)
@@ -47,7 +50,13 @@ class StreamingSwitchLinear:
             self._cache.move_to_end(e)
             return self._cache[e]
         self.reads += 1
-        tup = (self._w[e], self._s[e], self._b[e])  # <- per-expert page-in
+        if self._src is not None:
+            base = self._wkey.rsplit(".", 1)[0]  # strip ".weight"
+            tup = (self._src.read_expert(base + ".weight", e),
+                   self._src.read_expert(base + ".scales", e),
+                   self._src.read_expert(base + ".biases", e))
+        else:
+            tup = (self._w[e], self._s[e], self._b[e])
         mx.eval(tup)
         self._cache[e] = tup
         if len(self._cache) > self.cache_size:
@@ -160,7 +169,7 @@ def _selfcheck():
     idx = mx.array([[3, 3, 17, 140, 0, 88, 17, 200 % E]])  # top-8, with dups
 
     ref = _fused(x, w, s, b, idx, gs, bits)
-    stream = StreamingSwitchLinear(w, s, b, gs, bits, cache_size=8)
+    stream = StreamingSwitchLinear(w, s, b, group_size=gs, bits=bits, cache_size=8)
     got = stream(x, idx)
     err = float(mx.max(mx.abs(ref - got)))
     uniq = len({int(i) for i in idx.reshape(-1).tolist()})
