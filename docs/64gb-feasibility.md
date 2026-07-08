@@ -13,6 +13,7 @@
 > | 128 GB (fully resident) | n/a | 87 GB | 7.4 tok/s |
 > | 64 GB (streaming) | 24 experts/proj | 23.4 GB | 3.85 tok/s |
 > | **32 GB (streaming)** | 6 experts/proj | **13.9 GB** | 0.81 tok/s |
+> | **16 GB (streaming)** | 2 experts/proj | **11.7 GB** | 0.74 tok/s |
 >
 > Non-expert floor is 9.7 GB; the cache trades memory for speed. Zero quality
 > loss at every tier (experts are the exact same weights, read from disk).
