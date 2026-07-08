@@ -302,6 +302,8 @@ governance docs (read before doing anything substantial):
 - `RESTORE.md` — rebuild everything from source, including local patches
 - `SECURITY.md` — runtime vs eval-harness trust model (the harness EXECUTES
   model-generated code — read before running it on untrusted output)
+- `REFLECTIONS.md` — cross-project learnings + an honest assessment of what's
+  strong, what's risky, and what to do next
 
 ## External Model Facts
 
