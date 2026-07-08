@@ -135,6 +135,40 @@ class DiskExpertSource:
         return per * itemsize
 
 
+class MultiShardExpertSource:
+    """Routes read_expert(key, e) to the correct shard's DiskExpertSource using
+    the safetensors index. hy_v3 spreads experts across 17 shards; this makes
+    the whole model's expert stack readable per-expert without loading any of it.
+    """
+
+    def __init__(self, model_dir: str):
+        import json
+        import os
+        self.dir = model_dir
+        idx = json.load(open(os.path.join(model_dir, "model.safetensors.index.json")))
+        self._map = idx["weight_map"]              # tensor key -> shard filename
+        self._sources: dict[str, DiskExpertSource] = {}
+
+    def _src(self, shard: str) -> "DiskExpertSource":
+        import os
+        if shard not in self._sources:
+            self._sources[shard] = DiskExpertSource(os.path.join(self.dir, shard))
+        return self._sources[shard]
+
+    def read_expert(self, key: str, e: int):
+        return self._src(self._map[key]).read_expert(key, e)
+
+    def bytes_per_expert(self, key: str) -> int:
+        return self._src(self._map[key]).bytes_per_expert(key)
+
+    def has(self, key: str) -> bool:
+        return key in self._map
+
+    def close(self):
+        for s in self._sources.values():
+            s.close()
+
+
 class StreamingSwitchGLU:
     """Streaming replacement for mlx-lm SwitchGLU: three StreamingSwitchLinears
     (gate/up/down) + swiglu. Hy3 uses gate/up at 2-bit and down at 3-bit, so
