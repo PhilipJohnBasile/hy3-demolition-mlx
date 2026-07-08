@@ -1,0 +1,38 @@
+{
+ "model": "qwen35b-a3b-base",
+ "facets": [
+  {
+   "facet": "coding",
+   "first_token_kl": 0.1279,
+   "gen_identical": false,
+   "diverge_at_char": 160,
+   "with_head": "```python\nimport time\nimport random\nfrom typing import Callable, Any\n\n\ndef retry_with_exponential_backoff(\n    func: Cal",
+   "without_head": "```python\nimport time\nimport random\nfrom typing import Callable, Any\n\n\ndef retry_with_exponential_backoff(\n    func: Cal"
+  },
+  {
+   "facet": "perfumery",
+   "first_token_kl": 2.828,
+   "gen_identical": false,
+   "diverge_at_char": 0,
+   "with_head": "Here is a structured proposal for a **Citrus-Woody** fragrance, designed to balance the bright, effervescent top notes w",
+   "without_head": "A citrus-woody fragrance is a classic and versatile olfactory structure that balances the bright, energetic top notes of"
+  },
+  {
+   "facet": "music",
+   "first_token_kl": 1.2872,
+   "gen_identical": false,
+   "diverge_at_char": 263,
+   "with_head": "The **I\u2013V\u2013vi\u2013IV** progression (often called the \"sensitive female chord progression\" or the \"axis progression\") is one o",
+   "without_head": "The **I\u2013V\u2013vi\u2013IV** progression (often called the \"sensitive female chord progression\" or the \"axis progression\") is one o"
+  },
+  {
+   "facet": "gamedev",
+   "first_token_kl": 0.3488,
+   "gen_identical": false,
+   "diverge_at_char": 140,
+   "with_head": "Let's explore how a 2D game loop works together with collision detection. I'll ask guiding questions along the way to he",
+   "without_head": "Let's explore how a 2D game loop works together with collision detection. I'll ask guiding questions along the way to he"
+  }
+ ],
+ "mean_kl": 1.148
+}

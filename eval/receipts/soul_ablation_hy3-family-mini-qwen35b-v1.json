@@ -1,0 +1,38 @@
+{
+ "model": "hy3-family-mini-qwen35b-v1",
+ "facets": [
+  {
+   "facet": "coding",
+   "first_token_kl": 0.1138,
+   "gen_identical": false,
+   "diverge_at_char": 367,
+   "with_head": "```python\nimport time\nimport random\nfrom typing import Callable, Any\n\n\ndef retry_with_backoff(\n    func: Callable[..., A",
+   "without_head": "```python\nimport time\nimport random\nfrom typing import Callable, Any\n\n\ndef retry_with_backoff(\n    func: Callable[..., A"
+  },
+  {
+   "facet": "perfumery",
+   "first_token_kl": 1.9592,
+   "gen_identical": false,
+   "diverge_at_char": 38,
+   "with_head": "A citrus-woody fragrance is a classic olfactory architecture that balances the bright, effervescent top notes of citrus ",
+   "without_head": "A citrus-woody fragrance is a classic and versatile structure that balances the bright, effervescent top notes of citrus"
+  },
+  {
+   "facet": "music",
+   "first_token_kl": 1.3584,
+   "gen_identical": false,
+   "diverge_at_char": 4,
+   "with_head": "The I\u2013V\u2013vi\u2013IV progression (commonly known as the \"sensitive female chord progression\" or the \"axis of awesome\" progressi",
+   "without_head": "The **I\u2013V\u2013vi\u2013IV** progression (commonly known as the \"50s progression\" or the \"doo-wop progression\") is one of the most "
+  },
+  {
+   "facet": "gamedev",
+   "first_token_kl": 0.8157,
+   "gen_identical": false,
+   "diverge_at_char": 48,
+   "with_head": "A 2D game loop is the heartbeat of any game \u2014 it's the repeating cycle that updates game state, handles input, renders g",
+   "without_head": "A 2D game loop is the heartbeat of any game \u2014 it runs continuously, updating the game state and rendering the screen. He"
+  }
+ ],
+ "mean_kl": 1.0618
+}
