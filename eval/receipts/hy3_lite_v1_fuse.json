@@ -1,9 +1,9 @@
 {
-  "model": "models/hy3-mlx-base-ar",
-  "adapter_path": "dist/adapters-hy3-lite-v1",
-  "save_path": "dist/hy3-demolition-mlx-lite-v1-fused",
+  "model": "dist/hy3-reap40-pruned",
+  "adapter_path": "dist/adapters-hy3-reap40-heal-v1",
+  "save_path": "dist/hy3-demolition-mlx-reap40-v1-fused",
   "fused_modules": 88,
-  "elapsed_s": 22.511985625002126,
-  "peak_memory_gb": 44.431810756,
+  "elapsed_s": 45.28194924999843,
+  "peak_memory_gb": 24.314351572,
   "lazy": true
 }
