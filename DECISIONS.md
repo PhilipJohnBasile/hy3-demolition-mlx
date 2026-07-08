@@ -189,3 +189,32 @@ scope discipline (fullstack truncation), soul-tag echo at answer start.
 Canon batch 3 (data/hy3_canon_sft/rows_b3.jsonl) targets exactly these.
 If reap25 evals surface new failures, add rows for those before extending
 training iterations — targeted rows beat more epochs on repair-heavy data.
+
+
+## D7. Family depth — RESOLVED by measurement (2026-07-08 04:47)
+
+Built and tested the full ladder overnight (all receipts committed):
+
+| tier | eval | drop | val loss | peak mem | verdict |
+|---|---|---|---|---|---|
+| lite-v1 | 46/46 | — | 0.722 | 112 GB | reference |
+| reap25 | 45/46 | soul_music (spurious truncation) | 0.979 | 87 GB | REVIEW → effectively clean |
+| reap40 | 45/46 | **brutal_lru_cache (real runtime crash)** | 1.078 | 71 GB | **REJECT** |
+
+**Decision: the family stops at reap25.** reap40 scores the same 45/46 but the
+drop is qualitatively different — a genuine code-capability failure (LRU cache
+raises at runtime), not a keyword/truncation artifact. This is the REAP knee:
+the brutal tier discriminates at exactly the reap25↔reap40 boundary, and the
+val-loss ladder (0.722→0.979→1.078) tracks it monotonically. reap40 buys only
+~15 GB more headroom than reap25 while crossing the capability cliff.
+
+**Refinement to the earlier "instrument doesn't discriminate" finding:** it
+discriminates with a *threshold*. It cannot separate lite-v1 from reap25 (both
+handle every case), but it cleanly catches reap40. So the brutal tier is a
+validated go/no-go gate for prune depth, just not a fine-grained quality meter
+between intact models — the val loss fills that gap.
+
+**Do not attempt reap50+** (deeper is strictly worse). reap40's 66 GB artifact
+stays in dist/, unpromoted, as evidence. reap25 remains the promotion
+candidate, pending PJB's manual pass (#16) — still the deciding test, since the
+eval can't separate it from lite-v1.
