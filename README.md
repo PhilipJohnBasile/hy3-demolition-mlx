@@ -21,8 +21,8 @@ verifier-trained agent brain while keeping the artifact MLX-native.
 The end state is intentionally simple:
 
 ```bash
-mlx_lm.chat --model dist/hy3-demolition-mlx-lite-fused
-mlx_lm.server --model dist/hy3-demolition-mlx-lite-fused --port 8080
+mlx_lm.chat --model dist/hy3-demolition-mlx-lite-v1-fused
+mlx_lm.server --model dist/hy3-demolition-mlx-lite-v1-fused --port 8080
 ```
 
 Everything else in this repo exists to put useful agent behavior into the model
@@ -119,14 +119,19 @@ Base:
 
 - Hy3 MLX checkpoint
 
-Demolition:
+Demolition (see DECISIONS.md for the committed rubric):
 
-- Hy3-specific streamed REAP saliency
-- conservative 25 percent expert prune first
-- 40 percent prune only after receipts prove agent reliability holds
-- mixed precision MLX requantization
-- LoRA heal on verified agent/code data
-- fuse before release
+- Hy3-specific streamed REAP saliency — the true criterion (mean of
+  gate x ||expert output|| per routed token, arXiv:2510.13999), soul-bucketed
+- conservative 25 percent expert prune first, prune-only by default
+  (requant is OPTIONAL and off by default — D2b: 3-bit requant would cancel
+  the prune, and 3-bit was a disaster on the prior GLM run; 4-bit/mxfp4 only
+  if ever built)
+- 40 percent prune only after reap25 promotes cleanly on receipts
+- LoRA heal on verified agent/code data (train against the is_training view)
+- streamed fuse before release; artifacts ship AR-only (MTP self-speculation
+  measured 13.7x slower in the fork — the speed path is MTPLX, not the fused
+  artifact)
 
 ## Metal On Apple Silicon
 
@@ -272,14 +277,21 @@ mlx_lm.server --model dist/hy3-demolition-mlx-lite-v1-fused --port 8080
 ## Repo Map
 
 ```text
-scripts/   numbered build, serve, eval, prune, quant, heal steps
-src/       MLX weight-store, REAP, serving, prompt, receipt helpers
-data/      seed and imported build-time SFT/calibration packs
-eval/      tiny verifier-first smoke suites and receipts
-dist/      generated fused artifacts, adapters, and plans
-models/    downloaded MLX base checkpoints
+scripts/   numbered build, serve, eval, prune, quant, heal steps (00-29)
+src/       MLX weight-store, REAP, serving, prompt, verifier, receipt helpers
+data/      seed + imported SFT, canon, and REAP calibration packs
+eval/      verifier-first suites: coding, tool_calls, agent_repair,
+           json_schema, planning, souls, hard, brutal (+ receipts)
+dist/      generated fused artifacts, adapters, saliency, plans
+models/    MLX base checkpoints + AR / AR-train / MTP views
 docs/      upstream contribution patches and design docs
 ```
+
+Key scripts: `26` assemble calibration pack · `04` streamed REAP calibration
+(resumable) · `05` prune (dry-run, then `--write`) · `25` plan analyzer
+(ACCEPT/REVIEW/REJECT) · `06` optional requant · `17` is_training train-view ·
+`07` heal LoRA · `18` streamed fuse · `09` eval runner · `20` compare-receipts
+gate · `27` baseline chain · `28` overnight calibration · `29` preflight.
 
 Governance docs (read these before doing anything substantial):
 

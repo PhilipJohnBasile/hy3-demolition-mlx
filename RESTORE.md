@@ -80,31 +80,53 @@ mlx_lm.chat --model dist/hy3-demolition-mlx-lite-v1-fused
 mlx_lm.server --model dist/hy3-demolition-mlx-lite-v1-fused --port 8080
 ```
 
-## Rebuild REAP Artifact
+## Rebuild REAP Artifact (reap25)
+
+The committed judgment for every step is in `DECISIONS.md`; the automated
+overnight version is `scripts/28_overnight_calibration.py`. Manual steps:
 
 ```bash
+# 0. certify the pipeline (CPU-only; catches breakage before hours of GPU)
+./scripts/29_preflight_check.py
+
+# 1. assemble the calibration pack (soul + eval + capped mixed), then calibrate
+#    with the TRUE REAP criterion (mean of gate*||expert-output|| per token).
+#    Requires the fp32 router patch on the installed fork (see above).
+./scripts/26_prepare_reap_calibration.py
 ./scripts/04_stream_calibrate_hy3_mlx.py \
   --model models/hy3-mlx-base-ar \
-  --prompts eval/coding/prompts.jsonl \
-  --soul-prompts eval/souls/protected_prompts.jsonl \
-  --out dist/hy3-reap-saliency.json
+  --prompts data/hy3_reap_calibration/prompts.jsonl \
+  --out dist/hy3-reap-saliency-v1.json   # resumable: checkpoints every 25 prompts
 
+# 2. dry-run plan, then the analyzer verdict — commit the plan, review, THEN write
 ./scripts/05_apply_reap_prune_hy3_mlx.py \
   --model models/hy3-mlx-base-ar \
-  --saliency dist/hy3-reap-saliency.json \
-  --out dist/hy3-reap-pruned \
-  --ratio 0.25 \
-  --write
+  --saliency dist/hy3-reap-saliency-v1.json \
+  --out dist/hy3-reap25-pruned --ratio 0.25        # dry run (no --write)
+./scripts/25_analyze_reap_plan.py \
+  dist/hy3-reap25-pruned/reap_plan.json \
+  --saliency dist/hy3-reap-saliency-v1.json        # ACCEPT/REVIEW/REJECT
 
-./scripts/06_stream_requantize_hy3_mlx.py \
-  --model dist/hy3-reap-pruned \
-  --out dist/hy3-reap-requant \
-  --write
+# 3. apply the prune only after the plan passes review (adds --write)
+./scripts/05_apply_reap_prune_hy3_mlx.py \
+  --model models/hy3-mlx-base-ar \
+  --saliency dist/hy3-reap-saliency-v1.json \
+  --out dist/hy3-reap25-pruned --ratio 0.25 --write
+
+# 4. heal against an is_training view of the PRUNED dir (D2 landmine), then fuse
+./scripts/17_prepare_hy3_train_view.py --source dist/hy3-reap25-pruned \
+  --out dist/hy3-reap25-pruned-train
+# ... 07_heal_lora against the -train view, then 18_fuse_lora_streamed
+#     against dist/hy3-reap25-pruned, --save-path dist/hy3-demolition-mlx-reap25-v1-fused
 ```
 
-Then heal and fuse as above.
+**Requantization is OPTIONAL and OFF by default** (DECISIONS.md D2b): reap25
+keeps the native mixed 2/2/3-bit quantization. `scripts/06_stream_requantize`
+exists only for a separate smaller candidate, and NEVER targets 3-bit (the
+prior GLM run proved 3-bit requant breaks; use 4-bit/mxfp4 if ever built).
 
-Pruning is soul-preserving by default. To prevent accidental damage to
-low-frequency skills, `05_apply_reap_prune_hy3_mlx.py` expects soul saliency for
-coding, math, science, security, design, fullstack, gamedev, legacy, music,
-art, and perfumery.
+Pruning is soul-preserving by default: `05_apply_reap_prune_hy3_mlx.py` expects
+soul saliency for coding, math, science, security, design, fullstack, gamedev,
+legacy, music, art, and perfumery, and now guards that the plan covers every
+MoE layer before the multi-hour write. Promotion is gated on the brutal eval
+tier (`eval/brutal/`) per DECISIONS.md D3.

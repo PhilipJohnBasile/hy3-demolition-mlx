@@ -33,10 +33,14 @@ wrapper.
 - Scores expert saliency with real routed activations.
 - Separately records protected soul/facet routing so rare souls are not pruned
   away by average-case REAP.
-- Applies conservative 25 percent expert pruning before any larger cut.
-- Requantizes with MLX primitives.
-- Heals with verified code/agent data.
-- Fuses adapters before release.
+- Applies conservative 25 percent expert pruning before any larger cut,
+  prune-only by default (requantization is optional and off by default; the
+  native mixed 2/2/3-bit quantization is kept — see DECISIONS.md D2b).
+- Heals with verified code/agent data (trained against an is_training
+  template view so stop behavior is preserved).
+- Streamed-fuses before release; artifacts ship AR-only (the MTP sidecar's
+  self-speculative path measured slower than plain AR in mlx-lm; the MTP
+  speed play is the MTPLX runtime backend, not the fused directory).
 
 ## Build-Time Teachers And Gates
 
@@ -81,7 +85,8 @@ Not supported:
   template view; streamed lazy fuse.
 - Val loss 1.154 → 0.722. Agent eval 5/5 with adapter and 5/5 fused via
   `mlx_lm.server` `/v1/chat/completions`. Peak inference memory 112.3 GB on an
-  M5 Max 128 GB; ~1.4 tok/s cold generation.
+  M5 Max 128 GB; ~7.4 tok/s warm decode (measured, hy3_mtp_smoke.json; the
+  earlier ~1.4 figure was cold-load page-cache behavior, not steady-state).
 
 ## Evaluation Receipts
 
