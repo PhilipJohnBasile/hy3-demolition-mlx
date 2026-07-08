@@ -115,9 +115,17 @@ Mechanical gate first: `scripts/20_compare_receipts.py baseline candidate`
 must say PROMOTE (no hard-domain regressions, pass rate >= lite-v1).
 Then the judgment layer:
 
-- **Hard tier is the sensitive instrument.** lite-v1's hard-tier score is
-  the reference. reap25 losing 1 hard case = REVIEW (read the outputs);
-  losing 2+ = do not promote, heal more or keep lite-v1.
+- **The BRUTAL tier is the primary sensitive instrument** (added
+  2026-07-07 evening; `eval/brutal/prompts.jsonl`). The 8-case hard tier
+  scored lite-v1 8/8, so it has no discriminating power — a pruned model
+  that quietly lost capability could still score 8/8 there. The brutal tier
+  (multi-constraint code, two-bug repair, cross-field JSON, tool-trap,
+  safety-refusal planning, named-theory souls) is designed to register
+  partial capability loss as partial failure. GATE: establish lite-v1's
+  brutal-tier baseline FIRST (run when GPU frees, before reap25); then
+  reap25 losing 1 brutal case = REVIEW (read outputs), losing 2+ = do not
+  promote (heal more or keep lite-v1). The old hard tier stays as a
+  secondary check but is not decisive on its own.
 - **Soul flips**: a single soul flip either way is noise (keyword
   heuristics); 2+ soul regressions = treat as real damage, check whether
   the flipped facets match low-`saliency_mass` layers from the plan report
