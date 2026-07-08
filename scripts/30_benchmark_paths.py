@@ -9,13 +9,15 @@ tok/s (median over samples), first-token latency (cold vs warm), output parity
 vs AR, and — for MTP — the draft acceptance rate that determines whether
 self-speculation helps at all.
 
-Runtime paths:
-- ar   : plain autoregressive decode (models/hy3-mlx-base-ar or a fused dir)
-- mtp  : self-speculative via the fork's mtp_generate_step (needs an MTP view
-         with num_nextn_predict_layers>0 + sidecar)
-- mtplx: NOT wired here yet — placeholder column. Runs only once the MTPLX
-         hy_v3 backend is in a release (see docs/upstream, MTPLX PR #142).
-         Until then this script benchmarks ar vs mtp only, honestly.
+Three-way (same weights, runtime is the only variable between 2 and 3):
+- regular_mlx    : plain autoregressive MLX decode, no MTP (baseline)
+- mtp_no_mtplx   : the MTP heads driven by mlx-lm's per-token draft->verify
+                   loop (mtp_generate_step; needs the MTP view with
+                   num_nextn_predict_layers>0 + sidecar)
+- mtp_mtplx      : the SAME MTP heads driven by MTPLX's batched verification.
+                   NOT wired yet — activates once the MTPLX hy_v3 backend is
+                   in a release (mlx-lm #1211 + MTPLX PR #142). Until then this
+                   benchmarks regular_mlx vs mtp_no_mtplx honestly.
 
 Usage (run when the GPU is free; loads ~112 GB):
   ./scripts/30_benchmark_paths.py \
@@ -142,11 +144,11 @@ def main() -> int:
         "paths": {},
     }
 
-    ar = bench_path(args.ar_model, "ar", args.max_tokens, args.reasoning_effort, args.warmup)
+    ar = bench_path(args.ar_model, "regular_mlx", args.max_tokens, args.reasoning_effort, args.warmup)
     report["paths"]["ar"] = ar
 
     if not args.skip_mtp and Path(args.mtp_model).exists():
-        mtp = bench_path(args.mtp_model, "mtp", args.max_tokens, args.reasoning_effort, args.warmup)
+        mtp = bench_path(args.mtp_model, "mtp_no_mtplx", args.max_tokens, args.reasoning_effort, args.warmup)
         # parity vs AR on identical prompts (greedy MTP verify => should match)
         mtp["outputs_match_ar"] = mtp.pop("_outputs") == ar["_outputs"]
         if ar["median_decode_tps"] and mtp["median_decode_tps"]:
@@ -154,8 +156,9 @@ def main() -> int:
         report["paths"]["mtp"] = mtp
 
     report["paths"]["ar"].pop("_outputs", None)
-    report["mtplx"] = ("not benchmarked — MTPLX hy_v3 backend not in a release "
-                       "yet (blocked on mlx-lm #1211 + MTPLX PR #142)")
+    report["mtp_mtplx"] = ("not benchmarked yet — MTPLX hy_v3 backend not in a "
+                           "release (blocked on mlx-lm #1211 + MTPLX PR #142); same "
+                           "MTP heads, batched verify, activates via one flag when live)")
 
     # human-readable summary line
     a = report["paths"]["ar"]
