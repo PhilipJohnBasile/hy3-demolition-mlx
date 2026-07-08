@@ -64,6 +64,25 @@ agent tasks where step-by-step reasoning helps (the model reasons inside
 `<think:opensource>…</think:opensource>` tags). Suggested settings for
 coding/agent work: temperature 0–0.2, top-p 1.0.
 
+## Run on a smaller Mac — SSD expert-streaming (16–128 GB)
+
+Fully resident this model needs ~87 GB. But with the **SSD expert-streaming
+pager** (`src/hy3_streaming.py` + `scripts/41_streaming_load.py` in the source
+repo), the *same weights* run on far smaller Macs: only the ~9.7 GB of
+non-expert weights plus a small LRU of hot experts stay in RAM, and the routed
+experts are paged from disk per token — **bit-identical, zero quality loss**
+(the experts are the exact same weights, just read on demand).
+
+| Mac | LRU cache | peak resident | decode |
+|---|---|---|---|
+| 64 GB | 24 experts/proj | 23.4 GB | 3.85 tok/s |
+| 32 GB | 6 experts/proj | 13.9 GB | 0.81 tok/s |
+| 16 GB | 2 experts/proj | 11.7 GB | 0.74 tok/s |
+
+Measured on an M5 Max; one `STREAM_CACHE` dial trades memory for speed. This is
+an **experimental serving path** (a research prototype, not a packaged engine);
+the fully-resident `mlx_lm` path above is the default.
+
 ## Source and recipe
 
 - Base: `ox-ox/Hy3-295B-Instruct-w2q3exp-AProjQ8-SExpQ8-OutQ8-MTP-mlx`

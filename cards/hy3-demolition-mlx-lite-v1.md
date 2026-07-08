@@ -57,6 +57,18 @@ work: temperature 0–0.2, top-p 1.0.
 Build scripts, receipts, and the full recipe:
 https://github.com/PhilipJohnBasile/hy3-demolition-mlx (tag `lite-v1`).
 
+## Run on a smaller Mac — SSD expert-streaming (16–128 GB)
+
+Fully resident this model needs ~112 GB. But with the **SSD expert-streaming
+pager** (`src/hy3_streaming.py` in the source repo), the same weights run on far
+smaller Macs — only the ~9.7 GB of non-expert weights + a small LRU of hot
+experts stay in RAM, and the routed experts are paged from disk per token,
+**bit-identical (zero quality loss)**. Because streaming only touches the 8
+routed experts per token regardless of the total (192 here), the resident
+profile matches the pruned reap25 tiers (16 GB ≈ 12 GB peak, 64 GB ≈ 23 GB peak;
+only the on-disk size differs). See `scripts/41_streaming_load.py`. Experimental
+serving path; the fully-resident `mlx_lm` path is the default.
+
 ## Verification receipts
 
 - Fresh full baseline (suite+hard+brutal) 46/46 (2026-07-08); receipts in the source repo.
