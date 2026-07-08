@@ -1,0 +1,12 @@
+{
+ "model": "hy3-family-mini-qwen35b-mtp-v1",
+ "method": "healed Qwen35B trunk + clean mlx-community MTP head (mtp.* prefix)",
+ "forge_probe": {
+  "has_mtp_weights": true,
+  "forgeable": true,
+  "backend": "qwen3_next",
+  "est_peak_gib": 25.15
+ },
+ "runs_on_mtplx": "today (qwen3_next native, no PR)",
+ "clean_base": true
+}
