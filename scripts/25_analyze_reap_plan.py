@@ -103,13 +103,20 @@ def main() -> int:
                      ("indistinct facet pairs: " + ", ".join(f"{k}={v:.0%}" for k, v in sorted(high.items())))
                      if high else "protected sets are facet-distinct (<=75% overlap)"))
 
-    # 5. saliency mass retained
+    # 5. saliency mass retained — measured on the SAME objective build_plan
+    # ranks by (the REAP mean per expert, reap_sum/counts), not the raw
+    # token-sum, so the verdict evaluates what the plan actually optimized.
     if args.saliency:
         sal = load(args.saliency)["layers"]
         retained = []
         for lp in layers:
             data = sal.get(str(lp["layer"]), {})
-            scores = data.get("reap_sum") or data.get("score_sum")
+            reap = data.get("reap_sum")
+            counts = data.get("counts")
+            if reap and counts:
+                scores = [r / c if c else 0.0 for r, c in zip(reap, counts)]
+            else:
+                scores = data.get("score_sum")
             if not scores:
                 continue
             total = sum(scores)
