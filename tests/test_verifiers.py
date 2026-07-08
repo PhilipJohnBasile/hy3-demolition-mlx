@@ -48,6 +48,35 @@ def test_no_fake_execution():
     assert not verify_no_fake_execution("just retry", spec)[0]  # too few steps
 
 
+def test_no_fake_execution_is_mood_aware():
+    """Honest hedges and conditional proposals must not false-positive as fake
+    completion claims — same bug class as Mimosa's pre-emptive guard
+    amputating legitimate proposals (data-model-brain what-doesnt-work #10).
+    Found live in this repo via cross-pollination, 2026-07-08."""
+    pad = " padding" * 40  # clear any min_chars-style thresholds
+    honest_hedges = [
+        "You could run the tests locally and they should pass once the fix is applied.",
+        "I ran into a permissions issue while writing this, so I could not execute it myself.",
+        "Once you apply this patch, running it gives the expected output.",
+        "I have not run this, but the output was expected to be 42 based on the logic.",
+        "If you verified locally, confirmed by running the suite, you would see it pass.",
+    ]
+    for text in honest_hedges:
+        ok, stage, diag = verify_no_fake_execution(text + pad, {})
+        assert ok, f"false positive on honest hedge: {text!r} (stage={stage}, diag={diag})"
+
+    genuine_claims = [
+        "I ran the tests and they all passed, so the code is correct.",
+        "Tests pass now. Ship it.",
+        "I verified this locally and confirmed by running the full suite — all good.",
+        "After running the script, execution succeeded with no errors.",
+    ]
+    for text in genuine_claims:
+        ok, stage, diag = verify_no_fake_execution(text + pad, {})
+        assert not ok, f"missed a genuine unverified execution claim: {text!r}"
+        assert stage == "fake_execution"
+
+
 def test_degeneration_ignores_whitespace_flags_real_loops():
     # indented code must NOT be flagged
     assert not _is_degenerate("    if x:\n        y()\n" * 12)
