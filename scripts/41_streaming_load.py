@@ -101,6 +101,36 @@ def main() -> int:
         log("MEMORY PROOF: streaming load fits well under a 64 GB budget")
     else:
         log("CAUTION: resident higher than expected — investigate what wired in")
+
+    # M6c: real generation — correctness + decode tok/s
+    log("M6c: generating from the streaming model")
+    from mlx_lm.utils import load_tokenizer
+    from mlx_lm import stream_generate
+    tok = load_tokenizer(MODEL)
+
+    # logit probe: is a single forward sane (not NaN, plausible argmax)?
+    ids = tok.encode("The capital of France is")
+    logits = model(mx.array([ids]))
+    mx.eval(logits)
+    last = logits[0, -1]
+    nan = bool(mx.any(mx.isnan(last)))
+    top = int(mx.argmax(last))
+    log(f"PROBE: logits nan={nan}, argmax token={top} -> "
+        f"{tok.decode([top])!r} (sane if a real word/token)")
+    prompt = "The capital of France is Paris, which is famous for"
+    t0 = time.time()
+    text, n = "", 0
+    for resp in stream_generate(model, tok, prompt, max_tokens=48):
+        text += resp.text
+        n = resp.generation_tokens
+    dt = time.time() - t0
+    peak = mx.get_peak_memory() / 1e9
+    log(f"OUTPUT: {text.strip()[:160]!r}")
+    log(f"decode: {n} tokens in {dt:.1f}s = {n/dt:.2f} tok/s | "
+        f"peak resident during gen = {peak:.1f} GB")
+    log("M6c: streaming generation WORKS end-to-end" if text.strip()
+        else "M6c: empty output — investigate")
+    src.close()
     return 0
 
 

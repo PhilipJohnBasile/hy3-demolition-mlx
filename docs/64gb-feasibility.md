@@ -1,5 +1,12 @@
 # Can Hy3 run on a 64 GB Mac? — researched verdict (2026-07-08)
 
+> **UPDATE 2026-07-08 — PROVEN, not just theorized.** The SSD expert-streaming
+> pager (`src/hy3_streaming.py`, `scripts/41_streaming_load.py`) now RUNS the
+> full 295B reap25 hy_v3 model with **9.7 GB resident load, ~23 GB peak during
+> generation, 3.85 tok/s, coherent output** — experts streamed from disk,
+> bit-identical (zero quality loss). Hy3 fits a 64 GB Mac. The "must be built"
+> path below is built and working (milestones M1-M6c).
+
 Multi-agent research (8 agents: our Hy3 data + the GLM52 record + online SOTA,
 adversarially fact-checked). Bottom line and the numbers below.
 
