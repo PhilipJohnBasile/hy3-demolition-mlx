@@ -44,14 +44,27 @@ MLX only. Requires an Apple Silicon Mac with enough unified memory
 (measured peak 112.3 GB on an M5 Max 128 GB).
 
 ```bash
-mlx_lm.generate --model <this-directory> --prompt "Write a tiny Python fizzbuzz." --max-tokens 128
+mlx_lm.generate --model <this-directory> --prompt "Write a tiny Python fizzbuzz." --max-tokens 512
 mlx_lm.chat --model <this-directory>
 mlx_lm.server --model <this-directory> --port 8080   # OpenAI-compatible /v1
 ```
 
 No adapter path, agent framework, or custom runtime wrapper is required —
-the directory is the whole artifact. Suggested settings for coding/agent
-work: temperature 0–0.2, top-p 1.0.
+the directory is the whole artifact. For clean, direct answers, serve with
+`--chat-template-args '{"reasoning_effort":"no_think"}'`; use `high` for hard
+agent tasks where step-by-step reasoning helps (the model reasons inside
+`<think:opensource>…</think:opensource>` tags). Suggested settings for
+coding/agent work: temperature 0–0.2, top-p 1.0.
+
+⚠️ **`max_tokens` too low fails *silently*, not loudly.** With reasoning left
+on (the default), a small token budget can be entirely consumed by the
+`<think:opensource>` trace, leaving **zero output with no error** — this
+looks like a clean empty result, not a truncation. Confirmed on the sibling
+model in a real production pipeline (a `max_tokens: 1600` cap returned zero
+results for every input before the cause was found; `7000–9000` fixed it).
+If output looks suspiciously empty, raise `max_tokens` or set
+`reasoning_effort: no_think` before assuming the task legitimately had
+nothing to produce.
 
 ## Source and recipe
 

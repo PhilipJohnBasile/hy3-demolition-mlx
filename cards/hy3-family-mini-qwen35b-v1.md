@@ -30,6 +30,8 @@ Confirmed working in **LM Studio** (its bundled MLX engine = mlx-llm on mlx-lm 0
 
 Note: Qwen3.6 defaults to *thinking mode* — LM Studio routes the chain-of-thought to its reasoning panel (`reasoning_content`) and the answer to `content`. Toggle thinking off in LM Studio for direct answers, or give enough token budget for it to finish reasoning first.
 
+⚠️ **`max_tokens` too low fails *silently*, not loudly.** If reasoning consumes the whole budget, `content` comes back **empty with no error** — this looks like a successful call that found nothing, not a truncation. Confirmed in a real production pipeline (859-row wiki-extraction run) that a `max_tokens: 1600` cap returned zero results for *every* input before anyone noticed the cause; raising to `7000–9000` fixed it. If you're getting suspiciously empty/all-zero results with thinking left on, raise `max_tokens` before concluding the task legitimately had nothing to extract.
+
 ## Usage
 
 ```bash
