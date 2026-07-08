@@ -1,0 +1,23 @@
+{
+  "model": "dist/hy3-demolition-mlx-reap40-v1-fused",
+  "adapter_path": null,
+  "model_type": "hy_v3",
+  "num_hidden_layers": 80,
+  "num_nextn_predict_layers": 0,
+  "prompt_tokens": 26,
+  "max_tokens": 64,
+  "prefill_step_size": 128,
+  "reasoning_effort": "no_think",
+  "elapsed_s": 5.373273750010412,
+  "peak_memory_gb": 71.483074888,
+  "metal": true,
+  "device": {
+    "device_name": "Apple M5 Max",
+    "max_recommended_working_set_size": 127926272000,
+    "memory_size": 137438953472,
+    "architecture": "applegpu_g17s",
+    "max_buffer_length": 86586540032,
+    "resource_limit": 499000
+  },
+  "output": "def double(x): return x * 2"
+}
