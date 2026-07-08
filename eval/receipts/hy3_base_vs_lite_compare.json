@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "path": "eval/receipts/hy3_base_baseline_suite.jsonl",
+    "cases": 24,
+    "pass_rate": 0.9583,
+    "tok_s": 0.454
+  },
+  "candidate": {
+    "path": "eval/receipts/hy3_lite_v1_baseline_suite.jsonl",
+    "cases": 30,
+    "pass_rate": 1.0,
+    "tok_s": 0.502
+  },
+  "shared_cases": 24,
+  "missing_in_candidate": [],
+  "new_in_candidate": [
+    "soul_art",
+    "soul_fullstack",
+    "soul_gamedev",
+    "soul_legacy",
+    "soul_music",
+    "soul_perfumery"
+  ],
+  "regressions": [],
+  "improvements": [
+    {
+      "id": "plan_db_migration",
+      "domain": "planning"
+    }
+  ],
+  "soul_regressions_gating": false,
+  "verdict": "PROMOTE"
+}
