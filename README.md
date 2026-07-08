@@ -1,4 +1,7 @@
 ---
+
+> **The full family** (streaming any-Mac Hy3, pruned daily driver, fast 35B sibling, MTP variants): see [docs/FAMILY.md](docs/FAMILY.md). Manual-pass verdict: [docs/manual-pass.md](docs/manual-pass.md).
+
 license: apache-2.0
 base_model: tencent/Hy3
 library_name: mlx
