@@ -1,3 +1,21 @@
+# BACKLOG
+
+## Family status — 2026-07-08 (current reality)
+
+Shipped the full family (7 public HF artifacts under `philipjohnbasile/`):
+- **lite-v1** (unpruned Hy3) + **reap25** (25% soul-preserving prune + heal) — AR daily drivers on the pinned fork.
+- **sibling** (`hy3-family-mini-qwen35b-v1`, Qwen3.6-35B-A3B + our verifier heal) — the fast daily agent (8/10 stress, 100+ tok/s). **Manual-pass winner** for daily use.
+- **`*-mtp` variants** of each — MTP-recognized (`forge probe`) but NOT yet verified-runnable (MTPLX's mlx_lm doesn't load `qwen3_5_mtp`/`hy_v3_mtp`; Hy3 side also awaits our backend PR #142).
+- **reap40** = rejected 40%-prune dead-end (private).
+
+**SSD expert-streaming pager** (`src/hy3_streaming.py`, `scripts/41`): runs the real 295B Hy3 on **any Mac 16–128 GB**, bit-identical, 0.7–3.85 tok/s. Regression tests in `tests/test_streaming.py`.
+
+Docs: `docs/FAMILY.md` (picker + index), `docs/manual-pass.md` (#16 verdict), `docs/64gb-feasibility.md`, `docs/qwen35b-sibling-playbook.md`.
+
+Open (external / non-blocking): mlx-lm #1211 merge (→ LM Studio + Hy3 MTP), MTPLX PR #142 reply, the qwen3_5_mtp runtime-load path.
+
+---
+
 # Hy3-Demolition-MLX Backlog
 
 Status board for the endgame plan. Updated as work lands; receipts under

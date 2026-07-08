@@ -24,7 +24,7 @@ for daily use** — equal quality to reap25, 6–10× faster. The Hy3 tiers are 
 |---|---|---|
 | `hy3-demolition-mlx-lite-v1` | unpruned Hy3, 104 GB | `-mtp` (backend-pending) |
 | `hy3-demolition-mlx-reap25-v1` | 25% soul-preserving prune + heal, 80 GB | `-mtp` (backend-pending) |
-| `hy3-family-mini-qwen35b-v1` | fast sibling, 18 GB, 8/10 stress | `-mtp` (**MTPLX-native, runs today**) |
+| `hy3-family-mini-qwen35b-v1` | fast sibling, 18 GB, 8/10 stress | `-mtp` (MTPLX-recognized; runtime load pending) |
 
 (reap40 = the rejected 40%-prune dead-end, kept private as evidence.)
 
@@ -47,8 +47,9 @@ for daily use** — equal quality to reap25, 6–10× faster. The Hy3 tiers are 
   (`eauchs/mlx-lm@hy_v3-mtp`); the sibling runs on stock mlx-lm.
 - **Pending [ml-explore/mlx-lm#1211](https://github.com/ml-explore/mlx-lm/pull/1211):**
   puts `hy_v3` in mainline mlx-lm → unlocks **LM Studio** for the Hy3 AR models.
-- **MTPLX** (speculative decoding): the sibling's `qwen3_next` arch is native
-  today; the Hy3 MTP variants wait on our backend PR
+- **MTPLX** (speculative decoding): all `-mtp` variants are `forge probe`-recognized
+  but not yet verified-runnable — MTPLX's bundled mlx_lm doesn't load
+  `qwen3_5_mtp`/`hy_v3_mtp` yet. The Hy3 variants also wait on our backend PR
   ([youssofal/MTPLX#142](https://github.com/youssofal/MTPLX/pull/142)).
 
 Full recipe, scripts, and a receipt for every number: this repo.
