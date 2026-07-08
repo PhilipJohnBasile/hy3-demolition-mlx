@@ -1,0 +1,31 @@
+{
+  "data": "data/hy3_lite_sft_combined",
+  "sizes": {
+    "train": 344,
+    "valid": 24,
+    "test": 21
+  },
+  "exact_leakage_into_train": {
+    "valid": 0,
+    "test": 0
+  },
+  "user_prompt_leakage": 0,
+  "intra_train_duplicate_rows": 0,
+  "malformed_rows": 0,
+  "train_facet_balance": {
+    "repair": 262,
+    "agentic": 22,
+    "security": 10,
+    "coding": 10,
+    "perfumery": 10,
+    "music": 6,
+    "design": 5,
+    "art": 4,
+    "science": 4,
+    "math": 3,
+    "fullstack": 3,
+    "gamedev": 3,
+    "legacy": 2
+  },
+  "clean": true
+}

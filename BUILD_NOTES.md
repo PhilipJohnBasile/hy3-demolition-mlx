@@ -207,3 +207,11 @@ misdiagnoses stay in the record with their corrections.
   pattern: test weight-mutating scripts on a tiny faithful checkpoint, not
   just by reading them (the GLM "reproduce on the real failing path" lesson,
   applied preventively).
+
+- **SFT data leakage audit + D2-on-REAP verification (2026-07-07 night, CPU).**
+  scripts/31 audits the combined pack: ZERO train/valid/test leakage (exact or
+  identical-user-prompt), no intra-train duplicates, no malformed rows — the
+  eval numbers are not compromised. (Facet balance is 76% repair — known, from
+  the repair-heavy GLM import; canon batches mitigate.) Separately verified
+  script 17 builds a working is_training train-view from a *pruned* dir, so the
+  REAP heal (#22) cannot recreate the EOS bug (incident 5) on the pruned path.
