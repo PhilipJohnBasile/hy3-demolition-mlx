@@ -167,6 +167,17 @@ engineered for these heads. The mlx-lm follow-up PR gets reframed
 honestly: a correctness reference for the MTP layer, with the measured
 numbers stated, not a speed claim.
 
+**MIMOSA CROSS-VALIDATION (2026-07-07 night):** the sibling perfume
+project forged its own MTP artifact from upstream Qwen and served it on
+MTPLX at 24.7 turns/min — a TIE with MTPLX's own build, better quality —
+whereas mlx-lm's per-token loop was 13.7x slower here. Proof on the same
+machine that MTPLX's batched verify rescues MTP: the heads are fine, the
+loop was the problem. So the #28 MTPLX backend is worth pursuing, and
+'forge our own hy_v3 MTP artifact from the base + verify' is a validated
+path (mirror Mimosa's pinned-commit provenance). Two-tier serving
+(mlx in-process AR at the desk, MTPLX MTP for 3+ concurrent) is
+independently confirmed correct by Mimosa arriving at the same split.
+
 Bonus fact from the same receipt: **warm AR decode is 7.4 tok/s** — the
 oft-quoted 1.4 tok/s was cold-load page-cache behavior. Daily-driver and
 eval planning should use the warm number after first generation.

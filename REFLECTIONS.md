@@ -122,3 +122,62 @@ The short version: **we have built something real and verified it honestly.
 The biggest open question is not technical execution — it is whether the next
 increments (reap25, the family, the speed lever) are worth their cost, and the
 cheapest way to find out is the manual pass plus one honest baseline run.**
+
+
+## Cross-validation from the Mimosa perfume agent (2026-07-07 night)
+
+The sibling project (Mimosa, `Qwen3.6-35B-A3B`) road-tested the exact
+architecture Hy3 is betting on. Its results de-risk several Hy3 open
+questions — this is the most useful external evidence we have.
+
+**MTPLX's batched verify makes MTP genuinely fast (de-risks REFLECTIONS risk #4).**
+Mimosa forged its OWN MTP artifact (`Qwen3.6-35B-A3B-Mimosa-MTP-4bit`, from
+upstream Qwen, pinned commit, verified) and served it on MTPLX at **24.7
+concurrent turns/min @ 6.2 s** — a tie with MTPLX's own optimized build
+(25.7), with BETTER quality (8/8 lab math vs their 6/8). Contrast with Hy3's
+measurement that mlx-lm's per-token MTP loop was **13.7× slower** than AR. Same
+machine, same runtime family. Conclusion: **the per-token loop is the problem,
+not the MTP heads — MTPLX's batching is the fix, as hypothesized.** The Hy3
+MTPLX backend (#28) is therefore worth pursuing; the speed lever is real, not
+speculative. When MTPLX can load hy_v3, expect it to rescue MTP the way it did
+for Qwen.
+
+**The two-tier serving split is validated: mlx in-process at the desk, MTPLX
+for the crowd.** Mimosa hit the SAME blocker Hy3 did — "mlx-lm can't load
+MTP-equipped models in-process yet" — and resolved it identically: a no-MTP
+build in-process for single-user (quiet, thinking-off, JSON-safe), the forged
+MTP build on MTPLX for 3+ concurrent. This is exactly Hy3's D5 (AR-only fused
+artifacts + MTPLX for speed). Independent arrival at the same design is a
+strong signal it's right.
+
+**Provenance is a first-class selection criterion — the same as Hy3's thesis.**
+Mimosa chose its own forged build over a faster third-party MTPLX upload
+specifically because "we know every step from Qwen's weights to the artifact,
+versus trusting a third-party upload we can't audit." That is Hy3's
+receipts-first argument, confirmed as decisive in a real head-to-head.
+
+**Serving plumbing is a separate problem from the model** (a caution for Hy3's
+future). Mimosa's Python stdlib HTTP server + serialized in-process generation
+gave p50 58 s and dropped sockets at 8 concurrent users — no model tuning fixes
+that; it needs a real ASGI server + worker pool. Hy3 uses stock
+`mlx_lm.server` (better than stdlib), but if we ever build a custom in-process
+server, note: **one global generation lock must serialize every mlx call** or
+concurrent users corrupt model state, and the HTTP substrate — not the model —
+becomes the bottleneck.
+
+**A guard pattern worth adopting for Hy3's tag-echo issue.** Mimosa's endpoint
+narration leaked scratchpad ("thinking process", "Analyze…") into user-facing
+replies; the fix was to require the reply inside `<reply>` tags (no tags ->
+ship a deterministic template) plus a scratchpad-phrase detector that rejects
+narration on either path. Hy3 has the analogous defect — the model echoes the
+`<|soul:X|>` tag at the start of answers (noted during the baseline). The same
+guard shape (require/strip a delimiter, reject on leak) is the robust fix if
+tag-echo or think-leak ever needs to be blocked at serve time rather than
+trained out.
+
+**Energy/thermal footnote** (if Hy3 ever runs on MTPLX): MTPLX ramps fans on
+purpose (ThermalForge pre-cools for sustained serving) — it is louder because
+it pins the GPU continuously doing MORE work per hour, not more per token;
+per-token MTP at depth 1 is equal-or-better energy per reply. Use
+`--fan-mode smart` for desk use, the sustained-max default only for a
+deployment box.
