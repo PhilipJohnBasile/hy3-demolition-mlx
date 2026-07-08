@@ -119,7 +119,8 @@ def main() -> int:
     }
     (REPO / "eval/receipts/hy3_lite_v1_fresh_baseline_summary.json").write_text(
         json.dumps(summary, indent=2) + "\n")
-    log(f"fresh baseline: {summary['passed']}/{summary['cases']}; fails: {fails}")
+    log(f"fresh baseline: {summary['passed']}/{summary['cases']}; fails: {fails}; "
+        f"brutal_discriminates={summary['brutal_discriminates']}")
     subprocess.run(["git", "add",
                     "eval/receipts/hy3_lite_v1_fresh_baseline.jsonl",
                     "eval/receipts/hy3_lite_v1_fresh_baseline_summary.json"], cwd=REPO)
@@ -130,6 +131,79 @@ def main() -> int:
                    cwd=REPO)
     subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
     log("FRESH BASELINE READY — brutal-tier discrimination now measurable")
+
+    def gpu_settle():
+        for pat in ("08_serve_mlx", "14_serve_mlx", "09_eval"):
+            subprocess.run(["pkill", "-f", pat])
+        while free_gb() < 90:
+            time.sleep(20)
+        time.sleep(30)
+
+    # ---- bonus stage: AR vs MTP path benchmark (quick, rigorous PR number) ----
+    gpu_settle()
+    log("bonus 1: AR vs MTP path benchmark")
+    subprocess.run([PY, "scripts/30_benchmark_paths.py",
+                    "--ar-model", "models/hy3-mlx-base-ar",
+                    "--mtp-model", "models/hy3-mlx-base-mtp", "--max-tokens", "48",
+                    "--out", "eval/receipts/hy3_path_benchmark.json"], cwd=REPO)
+    subprocess.run(["git", "add", "eval/receipts/hy3_path_benchmark.json"], cwd=REPO)
+    subprocess.run(["git", "commit", "-m",
+                    "AR vs MTP path benchmark (rigorous)\n\n"
+                    "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>\n"
+                    "Claude-Session: https://claude.ai/code/session_01LJenYJzwFH5NTvNc76tTgY"],
+                   cwd=REPO)
+    subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
+
+    # ---- bonus stage: clean base-model baseline (#15, the failed re-run) ----
+    gpu_settle()
+    log("bonus 2: clean base-model baseline (suite + hard)")
+    AR = str(REPO / "models" / "hy3-mlx-base-ar")
+    logf2 = (REPO / "dist" / "serve_base_clean.log").open("w")
+    srv = subprocess.Popen([PY, "scripts/08_serve_mlx.py", "--model", AR,
+                            "--port", "8080", "--prompt-cache-size", "8"],
+                           cwd=REPO, stdout=logf2, stderr=subprocess.STDOUT)
+    try:
+        deadline = time.time() + 3600
+        while time.time() < deadline:
+            try:
+                if b"hy3-mlx-base-ar" in urllib.request.urlopen(
+                        "http://127.0.0.1:8080/v1/models", timeout=3).read():
+                    break
+            except Exception:
+                pass
+            time.sleep(5)
+        env = dict(os.environ); env.update(TOOLKIT)
+        subprocess.run(
+            [PY, "scripts/09_eval_agent_toolkit.py",
+             "--base-url", "http://127.0.0.1:8080/v1", "--model", AR,
+             "--backend", "mlx_lm_server_base", "--timeout", "2400",
+             "--cases", "eval/coding/prompts.jsonl", "eval/tool_calls/prompts.jsonl",
+             "eval/agent_repair/prompts.jsonl", "eval/json_schema/prompts.jsonl",
+             "eval/planning/prompts.jsonl", "eval/souls/prompts.jsonl",
+             "eval/hard/prompts.jsonl",
+             "--out", "eval/receipts/hy3_base_clean_baseline.jsonl"],
+            cwd=REPO, env=env)
+    finally:
+        srv.terminate()
+    base_rows = read_jsonl(REPO / "eval/receipts/hy3_base_clean_baseline.jsonl")
+    if len(base_rows) >= 38:  # complete-enough: 30 suite + 8 hard
+        subprocess.run([PY, "scripts/20_compare_receipts.py",
+                        "eval/receipts/hy3_base_clean_baseline.jsonl",
+                        "eval/receipts/hy3_lite_v1_fresh_baseline.jsonl",
+                        "--out", "eval/receipts/hy3_base_vs_lite_clean.json"], cwd=REPO)
+        subprocess.run(["git", "add", "eval/receipts/hy3_base_clean_baseline.jsonl",
+                        "eval/receipts/hy3_base_vs_lite_clean.json"], cwd=REPO)
+        subprocess.run(["git", "commit", "-m",
+                        "Clean base-model baseline + base-vs-lite (the #15 re-run)\n\n"
+                        "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>\n"
+                        "Claude-Session: https://claude.ai/code/session_01LJenYJzwFH5NTvNc76tTgY"],
+                       cwd=REPO)
+        subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
+        log(f"base baseline: {sum(r['passed'] for r in base_rows)}/{len(base_rows)}")
+    else:
+        log(f"base baseline incomplete ({len(base_rows)} cases) — not committing compare")
+
+    log("OVERNIGHT SEQUENCE COMPLETE — plan, fresh baseline, benchmark, base baseline all in git")
     return 0
 
 
