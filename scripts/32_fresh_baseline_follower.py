@@ -132,6 +132,33 @@ def main() -> int:
     subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
     log("FRESH BASELINE READY — brutal-tier discrimination now measurable")
 
+    # keep the public HF lite-v1 card in sync with the fresh full-baseline
+    # numbers (best-effort; an HF failure must not stop the overnight run)
+    try:
+        from huggingface_hub import HfApi
+        card = REPO / "cards" / "hy3-demolition-mlx-lite-v1.md"
+        text = card.read_text()
+        line = (f"- Fresh full baseline (suite+hard+brutal) "
+                f"{summary['passed']}/{summary['cases']} "
+                f"({time.strftime('%Y-%m-%d')}); receipts in the source repo.")
+        if "Fresh full baseline" not in text:
+            text = text.replace("## Verification receipts",
+                                "## Verification receipts\n\n" + line, 1)
+        else:
+            import re
+            text = re.sub(r"- Fresh full baseline.*", line, text)
+        card.write_text(text)
+        HfApi().upload_file(
+            path_or_fileobj=str(card), path_in_repo="README.md",
+            repo_id="philipjohnbasile/hy3-demolition-mlx-lite-v1",
+            commit_message="Sync card with fresh full baseline")
+        subprocess.run(["git", "add", str(card)], cwd=REPO)
+        subprocess.run(["git", "commit", "-m", "Card: fresh full baseline numbers"], cwd=REPO)
+        subprocess.run(["git", "push", "origin", "main"], cwd=REPO)
+        log("HF lite-v1 card synced with fresh baseline")
+    except Exception as e:  # noqa: BLE001
+        log(f"HF card sync skipped (non-fatal): {e}")
+
     def gpu_settle():
         for pat in ("08_serve_mlx", "14_serve_mlx", "09_eval"):
             subprocess.run(["pkill", "-f", pat])
