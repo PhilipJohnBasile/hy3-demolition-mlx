@@ -194,3 +194,16 @@ misdiagnoses stay in the record with their corrections.
     (2) An orchestration step that ignores return codes will faithfully
     publish garbage; the audit called this exact bug and it fired within
     hours — fix rc-handling in 27 before reuse.
+
+## What worked (addendum)
+
+- **Tiny-checkpoint end-to-end prune test (2026-07-07 night).** Before the
+  real 295B prune, ran scripts/05 on a KB-sized quantized hy_v3 checkpoint
+  built in the true on-disk format (stacked quantized experts, router.gate,
+  expert_bias). Confirmed: experts pruned on axis 0 with quant packing
+  intact, router/bias shrunk consistently, config rewritten, and the pruned
+  model LOADS + FORWARD-RUNS. De-risked the one never-run weight-writing step
+  in seconds instead of discovering a misalignment after GPU-hours. Reusable
+  pattern: test weight-mutating scripts on a tiny faithful checkpoint, not
+  just by reading them (the GLM "reproduce on the real failing path" lesson,
+  applied preventively).
