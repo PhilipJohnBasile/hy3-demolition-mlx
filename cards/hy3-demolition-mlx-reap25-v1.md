@@ -18,7 +18,7 @@ tags:
 # Hy3-Demolition-MLX reap25-v1
 
 A standalone, fused MLX model directory built from Tencent Hy3 (295B MoE, 21B
-active, 192 experts / top-8, 80 layers), **soul-preserving REAP-pruned to 144
+active, 192 experts / top-8, 80 layers), **rare-expert-preserving REAP-pruned to 144
 experts per layer (25%)** and then healed with a LoRA on verifier-filtered
 agent data. It is the same recipe as `lite-v1` plus the prune — a smaller,
 lighter daily driver (**223B params, ~87 GB peak** vs lite-v1's 295B / 112 GB)
@@ -32,7 +32,7 @@ not estimated — receipts live in the source repo.
 
 REAP (arXiv:2510.13999) ranks experts by the mean over routed tokens of
 `gate_value × ‖expert_output‖₂` — a criterion that decouples frequency from
-impact, so rare "soul" experts are protected. The full family was built and
+impact, so rare high-impact experts are protected. The full family was built and
 measured on an M5 Max 128 GB:
 
 | tier | eval | peak mem | healed val loss | verdict |
@@ -100,9 +100,9 @@ the fully-resident `mlx_lm` path above is the default.
 - Base: `ox-ox/Hy3-295B-Instruct-w2q3exp-AProjQ8-SExpQ8-OutQ8-MTP-mlx`
   (mixed-quant MLX checkpoint of Tencent Hy3), AR-only view
   (`num_nextn_predict_layers=0`).
-- REAP calibration: streamed, true-criterion, soul-bucketed over a
-  domain-matched pack; all 11 protected soul facets present in the saliency.
-- Prune: 192 → 144 experts/layer (25%), soul-preserving plan verified by the
+- REAP calibration: streamed, true-criterion, facet-bucketed over a
+  domain-matched pack; all 11 domain facets present in the saliency.
+- Prune: 192 → 144 experts/layer (25%), rare-expert-preserving plan verified by the
   analyzer (ACCEPT — 87% average saliency mass kept, no layer below 70%, all
   facets protected in every layer). Pruned tensors keep their original
   quantization (no dequant→requant cycle).
@@ -121,9 +121,9 @@ All measured on the fused artifact, 2026-07-08, receipts committed under
 `eval/receipts/` in the source repo:
 
 - Full eval (suite + hard + brutal) **45/46**; hard 8/8, brutal 8/8; the one
-  miss is a token-cap truncation of a correct soul answer, not a wrong answer
+  miss is a token-cap truncation of a correct domain answer, not a wrong answer
   (`hy3_reap25_eval.jsonl`, `hy3_reap25_vs_lite_compare.json`).
-- Manual side-by-side vs lite-v1 on real code / planning / repair / soul
+- Manual side-by-side vs lite-v1 on real code / planning / repair / domain
   prompts (production `no_think` mode): clean, correct, direct, functionally
   indistinguishable — one marginal edge each way
   (`reap25_vs_lite_side_by_side.md`).

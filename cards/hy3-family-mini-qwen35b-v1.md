@@ -16,9 +16,9 @@ tags:
 
 # Hy3-Family Mini — Qwen35B v1
 
-The **fast daily-agent tier** of the Hy3-Demolition family: `mlx-community/Qwen3.6-35B-A3B-4bit` fine-tuned with our **verifier-filtered LoRA** (the same repair / tool-discipline / strict-JSON / soul data that trained the Hy3 models), fused to a standalone **18 GB** MLX directory.
+The **fast daily-agent tier** of the Hy3-Demolition family: `mlx-community/Qwen3.6-35B-A3B-4bit` fine-tuned with our **verifier-filtered LoRA** (the same repair / tool-discipline / strict-JSON / domain data that trained the Hy3 models), fused to a standalone **18 GB** MLX directory.
 
-It is a **different base model** from Hy3 (Qwen3.6-35B-A3B, not the 295B Tencent Hy3) — a *sibling*, not a small Hy3 — carrying the same soul/verifier DNA on a right-sized base. Built on the **clean public Qwen base**.
+It is a **different base model** from Hy3 (Qwen3.6-35B-A3B, not the 295B Tencent Hy3) — a *sibling*, not a small Hy3 — carrying the same verifier-filtered training on a right-sized base. Built on the **clean public Qwen base**.
 
 ## Why this exists
 

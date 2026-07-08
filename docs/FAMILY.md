@@ -23,15 +23,15 @@ for daily use** — equal quality to reap25, 6–10× faster. The Hy3 tiers are 
 | Repo | What | mtp/mtplx |
 |---|---|---|
 | `hy3-demolition-mlx-lite-v1` | unpruned Hy3, 104 GB | `-mtp` (backend-pending) |
-| `hy3-demolition-mlx-reap25-v1` | 25% soul-preserving prune + heal, 80 GB | `-mtp` (backend-pending) |
+| `hy3-demolition-mlx-reap25-v1` | 25% rare-expert-preserving prune + heal, 80 GB | `-mtp` (backend-pending) |
 | `hy3-family-mini-qwen35b-v1` | fast sibling, 18 GB, 8/10 stress | `-mtp` (MTPLX-recognized; runtime load pending) |
 
 (reap40 = the rejected 40%-prune dead-end, kept private as evidence.)
 
 ## The three ideas that made it work
 
-1. **Soul-preserving REAP** — prune experts by `gate × ‖output‖` mean, protecting
-   rare "soul" experts. Knee at 25% (reap40 crashed a real code case).
+1. **Rare-expert-preserving REAP** — prune experts by `gate × ‖output‖` mean, protecting
+   rare high-impact experts. Knee at 25% (reap40 crashed a real code case).
 2. **SSD expert-streaming pager** (`src/hy3_streaming.py`) — keep ~10 GB of
    non-expert weights resident + an LRU of hot experts, page the rest from disk
    per token. Bit-identical, so a 295B model runs on a 16 GB Mac at zero quality

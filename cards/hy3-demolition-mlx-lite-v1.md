@@ -19,7 +19,7 @@ tags:
 A standalone, fused MLX model directory built from Tencent Hy3 (295B MoE, 21B
 active, 192 experts / top-8, 80 layers) for local Apple Silicon use. A LoRA
 adapter trained on verifier-filtered agent data (coding, repair, tool-call
-discipline, strict JSON, security, and protected soul facets) is fused into
+discipline, strict JSON, security, and domain facets) is fused into
 the quantized weights. No experts are pruned in the lite variant.
 
 This is a **research artifact**, shared as-is with receipts: no support or

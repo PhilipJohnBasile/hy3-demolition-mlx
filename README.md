@@ -84,8 +84,15 @@ What can be distilled into weights:
 - coding and repair habits
 - verifier-first self-checking behavior
 - brain-blueprint operating stance
-- soul/facet routing prompts such as `<|soul:security|>` and `<|soul:music|>`
 - concise failure reporting and retry behavior
+
+> **Honest correction (2026-07-08):** the `<|soul:facet|>` routing prompts
+> (`<|soul:security|>`, `<|soul:music|>`, …) do *not* need to be baked in. An
+> ablation ([docs/souls-deep-dive.md](docs/souls-deep-dive.md)) showed the base
+> model responds to these tokens as much as the healed one (mean first-token KL
+> 1.15 base vs 1.06 healed) — they work as *semantic prompt prefixes*, not a
+> trained capability. Kept as an optional prompt convention only, not a claimed
+> feature.
 
 What cannot honestly be baked into weights:
 
@@ -125,7 +132,7 @@ Base:
 Demolition (see DECISIONS.md for the committed rubric):
 
 - Hy3-specific streamed REAP saliency — the true criterion (mean of
-  gate x ||expert output|| per routed token, arXiv:2510.13999), soul-bucketed
+  gate x ||expert output|| per routed token, arXiv:2510.13999), facet-bucketed
 - conservative 25 percent expert prune first, prune-only by default
   (requant is OPTIONAL and off by default — D2b: 3-bit requant would cancel
   the prune, and 3-bit was a disaster on the prior GLM run; 4-bit/mxfp4 only
@@ -225,16 +232,16 @@ Two tiers, one runner (`scripts/09_eval_agent_toolkit.py`):
   souls. Required for promotion gates; compared against the committed baseline
   with `scripts/20_compare_receipts.py` (exit 0 = promote).
 
-## Soul-Preserving REAP
+## Rare-Expert-Preserving REAP
 
-Hy3 pruning must not optimize only for average expert saliency. Rare souls can
+Hy3 pruning must not optimize only for average expert saliency. Rare high-impact experts can
 be low-frequency and still important. Before any expert cut, run calibration
 with `eval/souls/protected_prompts.jsonl`; prune planning then reserves each
-protected soul's top routed experts per layer before choosing aggregate drops.
+protected facet's top routed experts per layer before choosing aggregate drops.
 
-The default protected souls are coding, math, science, security, design,
+The default protected facets are coding, math, science, security, design,
 fullstack, gamedev, legacy, music, art, and perfumery. `scripts/05_apply_reap_prune_hy3_mlx.py`
-refuses to build a protected prune plan unless those soul saliency buckets are
+refuses to build a protected prune plan unless those facet saliency buckets are
 present, unless an explicit override is passed.
 
 Train and fuse the Lite behavior adapter (lite-v1 recipe):
