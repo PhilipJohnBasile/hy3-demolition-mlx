@@ -1,0 +1,34 @@
+{
+  "baseline": {
+    "path": "eval/receipts/hy3_lite_v1_fresh_baseline.jsonl",
+    "cases": 46,
+    "pass_rate": 1.0,
+    "hard_pass_rate": 1.0,
+    "tok_s": 6.245
+  },
+  "candidate": {
+    "path": "eval/receipts/hy3_reap25_eval.jsonl",
+    "cases": 46,
+    "pass_rate": 0.9783,
+    "hard_pass_rate": 1.0,
+    "tok_s": 8.341
+  },
+  "shared_cases": 46,
+  "missing_in_candidate": [],
+  "new_in_candidate": [],
+  "regressions": [
+    {
+      "id": "soul_music",
+      "domain": "soul",
+      "hard": false,
+      "candidate_stage": "truncated",
+      "candidate_diag": "hit token cap (768/768, finish_reason='length'); verifier verdict was passed=True stage=soul_keywords"
+    }
+  ],
+  "soul_regressions": [
+    "soul_music"
+  ],
+  "improvements": [],
+  "soul_regressions_gating": false,
+  "verdict": "REVIEW"
+}
