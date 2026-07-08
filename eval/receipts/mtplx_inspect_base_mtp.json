@@ -1,0 +1,4170 @@
+{
+  "architecture": null,
+  "architecture_recognized": true,
+  "assistant_model": null,
+  "backend_artifact": null,
+  "backend_status": null,
+  "compatibility": {
+    "arch_id": "hy-v3-mtp",
+    "can_run": false,
+    "exit_code": 3,
+    "message": "HY V3 MTP MTP markers recognized, but MTPLX does not yet have a native MLX runtime backend for this family.",
+    "mtp_supported": "recognized",
+    "recognized": true,
+    "recommended_backend": "hy_v3_mtp",
+    "recommended_profile": null,
+    "runtime_compatibility": "recognized-backend-pending",
+    "runtime_contract": null,
+    "runtime_contract_error": null,
+    "runtime_contract_path": null,
+    "support_level": "recognized-backend-pending",
+    "support_notes": "",
+    "supported": false,
+    "tier": "architecture-compatible-but-unverified",
+    "unsafe_force_required": false,
+    "unverified_model": true
+  },
+  "config_exists": true,
+  "gemma4_pair": null,
+  "hidden_size": 4096,
+  "model_dir": "models/hy3-mlx-base-mtp",
+  "model_files": [
+    "model-000-of-00081.safetensors",
+    "model-00080-of-00081.safetensors",
+    "model-001-of-00081.safetensors",
+    "model-002-of-00081.safetensors",
+    "model-003-of-00081.safetensors",
+    "model-004-of-00081.safetensors",
+    "model-005-of-00081.safetensors",
+    "model-006-of-00081.safetensors",
+    "model-007-of-00081.safetensors",
+    "model-008-of-00081.safetensors",
+    "model-009-of-00081.safetensors",
+    "model-010-of-00081.safetensors",
+    "model-011-of-00081.safetensors",
+    "model-012-of-00081.safetensors",
+    "model-013-of-00081.safetensors",
+    "model-014-of-00081.safetensors",
+    "model-015-of-00081.safetensors",
+    "model-016-of-00081.safetensors",
+    "model-017-of-00081.safetensors",
+    "model-018-of-00081.safetensors",
+    "model-019-of-00081.safetensors",
+    "model-020-of-00081.safetensors",
+    "model-021-of-00081.safetensors",
+    "model-022-of-00081.safetensors",
+    "model-023-of-00081.safetensors",
+    "model-024-of-00081.safetensors",
+    "model-025-of-00081.safetensors",
+    "model-026-of-00081.safetensors",
+    "model-027-of-00081.safetensors",
+    "model-028-of-00081.safetensors",
+    "model-029-of-00081.safetensors",
+    "model-030-of-00081.safetensors",
+    "model-031-of-00081.safetensors",
+    "model-032-of-00081.safetensors",
+    "model-033-of-00081.safetensors",
+    "model-034-of-00081.safetensors",
+    "model-035-of-00081.safetensors",
+    "model-036-of-00081.safetensors",
+    "model-037-of-00081.safetensors",
+    "model-038-of-00081.safetensors",
+    "model-039-of-00081.safetensors",
+    "model-040-of-00081.safetensors",
+    "model-041-of-00081.safetensors",
+    "model-042-of-00081.safetensors",
+    "model-043-of-00081.safetensors",
+    "model-044-of-00081.safetensors",
+    "model-045-of-00081.safetensors",
+    "model-046-of-00081.safetensors",
+    "model-047-of-00081.safetensors",
+    "model-048-of-00081.safetensors",
+    "model-049-of-00081.safetensors",
+    "model-050-of-00081.safetensors",
+    "model-051-of-00081.safetensors",
+    "model-052-of-00081.safetensors",
+    "model-053-of-00081.safetensors",
+    "model-054-of-00081.safetensors",
+    "model-055-of-00081.safetensors",
+    "model-056-of-00081.safetensors",
+    "model-057-of-00081.safetensors",
+    "model-058-of-00081.safetensors",
+    "model-059-of-00081.safetensors",
+    "model-060-of-00081.safetensors",
+    "model-061-of-00081.safetensors",
+    "model-062-of-00081.safetensors",
+    "model-063-of-00081.safetensors",
+    "model-064-of-00081.safetensors",
+    "model-065-of-00081.safetensors",
+    "model-066-of-00081.safetensors",
+    "model-067-of-00081.safetensors",
+    "model-068-of-00081.safetensors",
+    "model-069-of-00081.safetensors",
+    "model-070-of-00081.safetensors",
+    "model-071-of-00081.safetensors",
+    "model-072-of-00081.safetensors",
+    "model-073-of-00081.safetensors",
+    "model-074-of-00081.safetensors",
+    "model-075-of-00081.safetensors",
+    "model-076-of-00081.safetensors",
+    "model-077-of-00081.safetensors",
+    "model-078-of-00081.safetensors",
+    "model-079-of-00081.safetensors",
+    "model-lm_head.safetensors",
+    "model-mtp.safetensors"
+  ],
+  "model_type": "hy_v3",
+  "mtp": {
+    "exists": true,
+    "expected_tensor_count": 15,
+    "extra_keys": [
+      "mtp.eh_proj.biases",
+      "mtp.eh_proj.scales",
+      "mtp.eh_proj.weight",
+      "mtp.enorm.weight",
+      "mtp.final_layernorm.weight",
+      "mtp.hnorm.weight",
+      "mtp.layer.input_layernorm.weight",
+      "mtp.layer.mlp.expert_bias",
+      "mtp.layer.mlp.experts.down_proj.biases",
+      "mtp.layer.mlp.experts.down_proj.scales",
+      "mtp.layer.mlp.experts.down_proj.weight",
+      "mtp.layer.mlp.experts.gate_proj.biases",
+      "mtp.layer.mlp.experts.gate_proj.scales",
+      "mtp.layer.mlp.experts.gate_proj.weight",
+      "mtp.layer.mlp.experts.up_proj.biases",
+      "mtp.layer.mlp.experts.up_proj.scales",
+      "mtp.layer.mlp.experts.up_proj.weight",
+      "mtp.layer.mlp.router.gate.biases",
+      "mtp.layer.mlp.router.gate.scales",
+      "mtp.layer.mlp.router.gate.weight",
+      "mtp.layer.mlp.shared_mlp.down_proj.biases",
+      "mtp.layer.mlp.shared_mlp.down_proj.scales",
+      "mtp.layer.mlp.shared_mlp.down_proj.weight",
+      "mtp.layer.mlp.shared_mlp.gate_proj.biases",
+      "mtp.layer.mlp.shared_mlp.gate_proj.scales",
+      "mtp.layer.mlp.shared_mlp.gate_proj.weight",
+      "mtp.layer.mlp.shared_mlp.up_proj.biases",
+      "mtp.layer.mlp.shared_mlp.up_proj.scales",
+      "mtp.layer.mlp.shared_mlp.up_proj.weight",
+      "mtp.layer.post_attention_layernorm.weight",
+      "mtp.layer.self_attn.k_norm.weight",
+      "mtp.layer.self_attn.k_proj.biases",
+      "mtp.layer.self_attn.k_proj.scales",
+      "mtp.layer.self_attn.k_proj.weight",
+      "mtp.layer.self_attn.o_proj.biases",
+      "mtp.layer.self_attn.o_proj.scales",
+      "mtp.layer.self_attn.o_proj.weight",
+      "mtp.layer.self_attn.q_norm.weight",
+      "mtp.layer.self_attn.q_proj.biases",
+      "mtp.layer.self_attn.q_proj.scales",
+      "mtp.layer.self_attn.q_proj.weight",
+      "mtp.layer.self_attn.v_proj.biases",
+      "mtp.layer.self_attn.v_proj.scales",
+      "mtp.layer.self_attn.v_proj.weight"
+    ],
+    "metadata_only": true,
+    "missing_expected_keys": [
+      "mtp.fc.weight",
+      "mtp.layers.0.input_layernorm.weight",
+      "mtp.layers.0.mlp.down_proj.weight",
+      "mtp.layers.0.mlp.gate_proj.weight",
+      "mtp.layers.0.mlp.up_proj.weight",
+      "mtp.layers.0.post_attention_layernorm.weight",
+      "mtp.layers.0.self_attn.k_norm.weight",
+      "mtp.layers.0.self_attn.k_proj.weight",
+      "mtp.layers.0.self_attn.o_proj.weight",
+      "mtp.layers.0.self_attn.q_norm.weight",
+      "mtp.layers.0.self_attn.q_proj.weight",
+      "mtp.layers.0.self_attn.v_proj.weight",
+      "mtp.norm.weight",
+      "mtp.pre_fc_norm_embedding.weight",
+      "mtp.pre_fc_norm_hidden.weight"
+    ],
+    "mtp_file": "models/hy3-mlx-base-mtp/model-mtp.safetensors",
+    "passes_tensor_gate": false,
+    "sidecar_format": "bf16",
+    "tensor_count": 44,
+    "tensors": [
+      {
+        "dtype": "BF16",
+        "elements": 524288,
+        "key": "mtp.eh_proj.biases",
+        "shape": [
+          4096,
+          128
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 524288,
+        "key": "mtp.eh_proj.scales",
+        "shape": [
+          4096,
+          128
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 8388608,
+        "key": "mtp.eh_proj.weight",
+        "shape": [
+          4096,
+          2048
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 4096,
+        "key": "mtp.enorm.weight",
+        "shape": [
+          4096
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 4096,
+        "key": "mtp.final_layernorm.weight",
+        "shape": [
+          4096
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 4096,
+        "key": "mtp.hnorm.weight",
+        "shape": [
+          4096
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 4096,
+        "key": "mtp.layer.input_layernorm.weight",
+        "shape": [
+          4096
+        ]
+      },
+      {
+        "dtype": "F32",
+        "elements": 192,
+        "key": "mtp.layer.mlp.expert_bias",
+        "shape": [
+          192
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 18874368,
+        "key": "mtp.layer.mlp.experts.down_proj.biases",
+        "shape": [
+          192,
+          4096,
+          24
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 18874368,
+        "key": "mtp.layer.mlp.experts.down_proj.scales",
+        "shape": [
+          192,
+          4096,
+          24
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 113246208,
+        "key": "mtp.layer.mlp.experts.down_proj.weight",
+        "shape": [
+          192,
+          4096,
+          144
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 18874368,
+        "key": "mtp.layer.mlp.experts.gate_proj.biases",
+        "shape": [
+          192,
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 18874368,
+        "key": "mtp.layer.mlp.experts.gate_proj.scales",
+        "shape": [
+          192,
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 75497472,
+        "key": "mtp.layer.mlp.experts.gate_proj.weight",
+        "shape": [
+          192,
+          1536,
+          256
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 18874368,
+        "key": "mtp.layer.mlp.experts.up_proj.biases",
+        "shape": [
+          192,
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 18874368,
+        "key": "mtp.layer.mlp.experts.up_proj.scales",
+        "shape": [
+          192,
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 75497472,
+        "key": "mtp.layer.mlp.experts.up_proj.weight",
+        "shape": [
+          192,
+          1536,
+          256
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 12288,
+        "key": "mtp.layer.mlp.router.gate.biases",
+        "shape": [
+          192,
+          64
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 12288,
+        "key": "mtp.layer.mlp.router.gate.scales",
+        "shape": [
+          192,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 196608,
+        "key": "mtp.layer.mlp.router.gate.weight",
+        "shape": [
+          192,
+          1024
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 98304,
+        "key": "mtp.layer.mlp.shared_mlp.down_proj.biases",
+        "shape": [
+          4096,
+          24
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 98304,
+        "key": "mtp.layer.mlp.shared_mlp.down_proj.scales",
+        "shape": [
+          4096,
+          24
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 1572864,
+        "key": "mtp.layer.mlp.shared_mlp.down_proj.weight",
+        "shape": [
+          4096,
+          384
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 98304,
+        "key": "mtp.layer.mlp.shared_mlp.gate_proj.biases",
+        "shape": [
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 98304,
+        "key": "mtp.layer.mlp.shared_mlp.gate_proj.scales",
+        "shape": [
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 1572864,
+        "key": "mtp.layer.mlp.shared_mlp.gate_proj.weight",
+        "shape": [
+          1536,
+          1024
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 98304,
+        "key": "mtp.layer.mlp.shared_mlp.up_proj.biases",
+        "shape": [
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 98304,
+        "key": "mtp.layer.mlp.shared_mlp.up_proj.scales",
+        "shape": [
+          1536,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 1572864,
+        "key": "mtp.layer.mlp.shared_mlp.up_proj.weight",
+        "shape": [
+          1536,
+          1024
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 4096,
+        "key": "mtp.layer.post_attention_layernorm.weight",
+        "shape": [
+          4096
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 128,
+        "key": "mtp.layer.self_attn.k_norm.weight",
+        "shape": [
+          128
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 65536,
+        "key": "mtp.layer.self_attn.k_proj.biases",
+        "shape": [
+          1024,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 65536,
+        "key": "mtp.layer.self_attn.k_proj.scales",
+        "shape": [
+          1024,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 1048576,
+        "key": "mtp.layer.self_attn.k_proj.weight",
+        "shape": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 524288,
+        "key": "mtp.layer.self_attn.o_proj.biases",
+        "shape": [
+          4096,
+          128
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 524288,
+        "key": "mtp.layer.self_attn.o_proj.scales",
+        "shape": [
+          4096,
+          128
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 8388608,
+        "key": "mtp.layer.self_attn.o_proj.weight",
+        "shape": [
+          4096,
+          2048
+        ]
+      },
+      {
+        "dtype": "BF16",
+        "elements": 128,
+        "key": "mtp.layer.self_attn.q_norm.weight",
+        "shape": [
+          128
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 524288,
+        "key": "mtp.layer.self_attn.q_proj.biases",
+        "shape": [
+          8192,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 524288,
+        "key": "mtp.layer.self_attn.q_proj.scales",
+        "shape": [
+          8192,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 8388608,
+        "key": "mtp.layer.self_attn.q_proj.weight",
+        "shape": [
+          8192,
+          1024
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 65536,
+        "key": "mtp.layer.self_attn.v_proj.biases",
+        "shape": [
+          1024,
+          64
+        ]
+      },
+      {
+        "dtype": "F16",
+        "elements": 65536,
+        "key": "mtp.layer.self_attn.v_proj.scales",
+        "shape": [
+          1024,
+          64
+        ]
+      },
+      {
+        "dtype": "U32",
+        "elements": 1048576,
+        "key": "mtp.layer.self_attn.v_proj.weight",
+        "shape": [
+          1024,
+          1024
+        ]
+      }
+    ]
+  },
+  "mtp_arch": "hy-v3-mtp",
+  "mtp_num_hidden_layers": 1,
+  "mtp_pattern": null,
+  "mtp_supported": "recognized",
+  "num_hidden_layers": 80,
+  "passes_primary_gate": false,
+  "quantization": {
+    "bits": 2,
+    "group_size": 64,
+    "lm_head": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.0.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.1.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.1.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.1.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.10.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.10.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.10.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.11.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.11.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.11.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.12.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.12.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.12.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.13.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.13.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.13.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.14.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.14.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.14.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.15.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.15.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.15.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.16.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.16.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.16.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.17.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.17.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.17.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.18.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.18.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.18.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.19.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.19.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.19.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.2.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.2.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.2.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.20.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.20.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.20.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.21.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.21.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.21.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.22.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.22.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.22.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.23.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.23.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.23.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.24.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.24.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.24.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.25.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.25.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.25.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.26.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.26.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.26.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.27.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.27.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.27.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.28.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.28.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.28.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.29.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.29.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.29.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.3.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.3.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.3.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.30.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.30.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.30.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.31.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.31.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.31.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.32.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.32.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.32.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.33.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.33.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.33.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.34.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.34.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.34.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.35.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.35.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.35.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.36.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.36.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.36.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.37.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.37.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.37.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.38.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.38.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.38.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.39.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.39.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.39.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.4.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.4.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.4.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.40.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.40.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.40.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.41.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.41.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.41.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.42.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.42.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.42.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.43.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.43.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.43.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.44.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.44.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.44.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.45.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.45.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.45.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.46.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.46.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.46.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.47.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.47.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.47.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.48.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.48.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.48.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.49.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.49.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.49.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.5.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.5.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.5.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.50.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.50.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.50.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.51.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.51.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.51.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.52.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.52.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.52.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.53.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.53.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.53.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.54.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.54.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.54.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.55.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.55.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.55.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.56.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.56.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.56.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.57.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.57.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.57.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.58.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.58.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.58.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.59.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.59.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.59.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.6.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.6.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.6.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.60.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.60.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.60.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.61.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.61.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.61.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.62.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.62.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.62.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.63.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.63.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.63.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.64.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.64.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.64.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.65.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.65.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.65.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.66.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.66.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.66.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.67.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.67.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.67.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.68.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.68.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.68.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.69.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.69.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.69.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.7.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.7.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.7.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.70.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.70.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.70.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.71.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.71.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.71.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.72.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.72.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.72.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.73.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.73.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.73.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.74.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.74.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.74.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.75.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.75.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.75.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.76.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.76.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.76.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.77.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.77.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.77.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.78.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.78.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.78.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.79.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.79.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.79.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.8.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.8.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.8.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.9.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "model.layers.9.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "model.layers.9.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.eh_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.router.gate": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.shared_mlp.down_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.shared_mlp.gate_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.shared_mlp.up_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.switch_mlp.down_proj": {
+      "bits": 3,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.switch_mlp.gate_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "mtp.layer.mlp.switch_mlp.up_proj": {
+      "bits": 2,
+      "group_size": 64
+    },
+    "mtp.layer.self_attn.k_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.self_attn.o_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.self_attn.q_proj": {
+      "bits": 8,
+      "group_size": 64
+    },
+    "mtp.layer.self_attn.v_proj": {
+      "bits": 8,
+      "group_size": 64
+    }
+  },
+  "recommended_backend": "hy_v3_mtp",
+  "recommended_profile": null,
+  "recommended_sampler": null,
+  "runtime_compatibility": "recognized-backend-pending",
+  "runtime_contract_path": null,
+  "runtime_model": null,
+  "sidecars": {
+    "preprocessor_config.json": false,
+    "processor_config.json": false,
+    "video_preprocessor_config.json": false
+  },
+  "source": "local",
+  "support_level": "recognized-backend-pending",
+  "support_notes": "",
+  "unverified_model": true,
+  "vocab_size": 120832
+}
