@@ -33,12 +33,22 @@ def log(m: str) -> None:
     print(f"[reap25 {time.strftime('%H:%M:%S')}] {m}", flush=True)
 
 
+def _competing_alive() -> bool:
+    pats = ("08_serve_mlx", "14_serve_mlx", "09_eval_agent", "30_benchmark",
+            "04_stream_calibrate", "32_fresh_baseline")
+    return any(subprocess.run(["pgrep", "-f", p], capture_output=True).returncode == 0
+               for p in pats)
+
+
 def free_gb() -> float:
     out = subprocess.run(["vm_stat"], capture_output=True, text=True).stdout
+    free = inactive = 0
     for line in out.splitlines():
         if "Pages free" in line:
-            return int(line.split()[-1].rstrip(".")) * 16384 / 1e9
-    return 0.0
+            free = int(line.split()[-1].rstrip("."))
+        elif "Pages inactive" in line:
+            inactive = int(line.split()[-1].rstrip("."))
+    return (free + inactive) * 16384 / 1e9
 
 
 def sh(cmd, env=None, timeout=57600):
@@ -53,9 +63,9 @@ def settle():
     for pat in ("08_serve_mlx", "14_serve_mlx", "09_eval", "30_benchmark",
                 "04_stream_calibrate"):
         subprocess.run(["pkill", "-f", pat])
-    while free_gb() < 90:
-        time.sleep(20)
-    time.sleep(30)
+    while _competing_alive():
+        time.sleep(10)
+    time.sleep(25)  # let Metal release wired memory
 
 
 def git(*args):
@@ -199,6 +209,52 @@ def main() -> int:
     commit(f"reap25 eval + compare vs lite-v1: {verdict}")
     log(f"REAP25 TESTED — compare verdict: {verdict} (rc={rc})")
     log("NOT promoted — HF upload / tag is PJB's explicit call (see compare receipt)")
+
+    # ---- deferred bonus stages (evals are fast; PJB wanted #15 done) ----
+    log("stage 9: AR vs MTP path benchmark")
+    settle()
+    sh([PY, "scripts/30_benchmark_paths.py", "--ar-model", "models/hy3-mlx-base-ar",
+        "--mtp-model", "models/hy3-mlx-base-mtp", "--max-tokens", "48",
+        "--out", "eval/receipts/hy3_path_benchmark.json"])
+    git("add", "eval/receipts/hy3_path_benchmark.json")
+    commit("AR vs MTP path benchmark")
+
+    log("stage 10: clean base-model baseline (#15)")
+    settle()
+    AR = str(REPO / "models" / "hy3-mlx-base-ar")
+    logf = (REPO / "dist" / "serve_base_clean.log").open("w")
+    srv = subprocess.Popen([PY, "scripts/08_serve_mlx.py", "--model", AR,
+                            "--port", "8080", "--prompt-cache-size", "8"],
+                           cwd=REPO, stdout=logf, stderr=subprocess.STDOUT)
+    try:
+        deadline = time.time() + 3600
+        while time.time() < deadline:
+            try:
+                if b"hy3-mlx-base-ar" in urllib.request.urlopen(
+                        "http://127.0.0.1:8080/v1/models", timeout=3).read():
+                    break
+            except Exception:
+                pass
+            time.sleep(5)
+        sh([PY, "scripts/09_eval_agent_toolkit.py", "--base-url",
+            "http://127.0.0.1:8080/v1", "--model", AR, "--backend", "mlx_lm_server_base",
+            "--timeout", "2400", "--cases", "eval/coding/prompts.jsonl",
+            "eval/tool_calls/prompts.jsonl", "eval/agent_repair/prompts.jsonl",
+            "eval/json_schema/prompts.jsonl", "eval/planning/prompts.jsonl",
+            "eval/souls/prompts.jsonl", "eval/hard/prompts.jsonl", "eval/brutal/prompts.jsonl",
+            "--out", "eval/receipts/hy3_base_clean_baseline.jsonl"], env=TOOLKIT)
+    finally:
+        srv.terminate()
+    base_rows = read_jsonl(REPO / "eval/receipts/hy3_base_clean_baseline.jsonl")
+    git("add", "-f", "eval/receipts/hy3_base_clean_baseline.jsonl")
+    if len(base_rows) >= 38:
+        sh([PY, "scripts/20_compare_receipts.py", "eval/receipts/hy3_base_clean_baseline.jsonl",
+            "eval/receipts/hy3_lite_v1_fresh_baseline.jsonl",
+            "--out", "eval/receipts/hy3_base_vs_lite_clean.json"])
+        git("add", "eval/receipts/hy3_base_vs_lite_clean.json")
+    commit(f"Clean base-model baseline #15 ({sum(r['passed'] for r in base_rows)}/{len(base_rows)}) + base-vs-lite")
+    log(f"base baseline #15: {sum(r['passed'] for r in base_rows)}/{len(base_rows)}")
+    log("OVERNIGHT COMPLETE — reap25 verdict, benchmark, base baseline all in git")
     return 0
 
 

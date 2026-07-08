@@ -32,12 +32,22 @@ def pgrep(pat: str) -> bool:
     return subprocess.run(["pgrep", "-f", pat], capture_output=True).returncode == 0
 
 
+def _competing_alive() -> bool:
+    pats = ("08_serve_mlx", "14_serve_mlx", "09_eval_agent", "30_benchmark",
+            "04_stream_calibrate", "32_fresh_baseline")
+    return any(subprocess.run(["pgrep", "-f", p], capture_output=True).returncode == 0
+               for p in pats)
+
+
 def free_gb() -> float:
     out = subprocess.run(["vm_stat"], capture_output=True, text=True).stdout
+    free = inactive = 0
     for line in out.splitlines():
         if "Pages free" in line:
-            return int(line.split()[-1].rstrip(".")) * 16384 / 1e9
-    return 0.0
+            free = int(line.split()[-1].rstrip("."))
+        elif "Pages inactive" in line:
+            inactive = int(line.split()[-1].rstrip("."))
+    return (free + inactive) * 16384 / 1e9
 
 
 def read_jsonl(p: Path) -> list[dict]:
@@ -58,9 +68,9 @@ def main() -> int:
     log("plan ready; clearing GPU + waiting for it to free")
     for pat in ("04_stream_calibrate", "05_apply_reap", "14_serve_mlx", "08_serve_mlx"):
         subprocess.run(["pkill", "-f", pat])
-    while free_gb() < 90:
-        time.sleep(30)
-    time.sleep(30)
+    while _competing_alive():
+        time.sleep(10)
+    time.sleep(25)  # let Metal release wired memory
 
     import os
     logf = (REPO / "dist" / "serve_freshbase.log").open("w")
