@@ -143,6 +143,17 @@ All measured on the fused artifact, 2026-07-08, receipts committed under
 - Trained/evaluated primarily in English on agent/code tasks.
 - Decode speed is unchanged from lite-v1 (top-8 × 21B active is the same); the
   win is ~25 GB of memory headroom, not throughput.
+- **Tool-calling tag format regression (found 2026-07-08, isolated against
+  lite-v1):** when emitting a native `<tool_call:opensource>` block, this
+  model unreliably omits the `<tool_sep:opensource>` tag between the function
+  name and its arguments — confirmed across 2 independent tool schemas/prompts.
+  `arg_key`/`arg_value` pairs still parse correctly, but strict-format parsers
+  expecting `<tool_call>NAME<tool_sep>...` will mis-extract the function name.
+  lite-v1 (same LoRA heal, no prune) does not show this — it appears specific
+  to the 25% prune, not the heal, and wasn't caught by our eval suite (no test
+  case exercised this exact tag boundary). Workaround: extract `name` via a
+  looser regex, or fall back to `arg_key`/`arg_value` pairs plus a
+  looked-up/known tool name until a fix ships.
 
 ## Runtime support
 
