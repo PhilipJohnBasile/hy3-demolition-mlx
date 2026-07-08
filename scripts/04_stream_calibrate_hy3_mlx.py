@@ -53,6 +53,8 @@ def main() -> None:
     parser.add_argument("--max-tokens", type=int, default=1)
     parser.add_argument("--reasoning-effort", default="no_think")
     parser.add_argument("--wired-limit", action="store_true")
+    parser.add_argument("--checkpoint-every", type=int, default=25,
+                        help="save resumable checkpoint every N prompts")
     args = parser.parse_args()
 
     if not args.wired_limit:
@@ -119,13 +121,47 @@ def main() -> None:
             out = out + self.shared_mlp(x)
         return out.astype(x.dtype)
 
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    ckpt = out.with_suffix(".ckpt.json")
+
+    def build_payload(done: int) -> dict:
+        return {
+            "model": args.model,
+            "prompts": args.prompts,
+            "soul_prompts": args.soul_prompts,
+            "criterion": "reap_sum = sum g_j(x)*||f_j(x)||_2 over routed tokens; "
+                         "divide by counts for the REAP mean (arXiv:2510.13999 eq. 9). "
+                         "score_sum (gate-only) kept for comparison.",
+            "prompts_processed": done,
+            "created_at": time.time(),
+            "layers": {str(k): v for k, v in sorted(layers.items())},
+        }
+
+    # Resume: a killed run (GPU needed elsewhere) leaves a checkpoint holding
+    # the accumulators + how many prompts were already folded in. Reload them
+    # and skip that many, so an interruption costs only the in-flight prompt.
+    start_at = 0
+    if ckpt.exists():
+        try:
+            prior = json.loads(ckpt.read_text())
+            for k, v in prior.get("layers", {}).items():
+                if int(k) in layers:
+                    layers[int(k)] = v
+            start_at = int(prior.get("prompts_processed", 0))
+            print(f"resuming from checkpoint: {start_at} prompts already folded in")
+        except (ValueError, KeyError) as e:
+            print(f"checkpoint unreadable ({e}); starting fresh")
+
     moe_cls.__call__ = recording_call
     try:
         cases = load_prompts(args.prompts)
         soul_path = Path(args.soul_prompts)
         if soul_path.exists():
             cases.extend(load_prompts(str(soul_path)))
-        for case in cases:
+        for i, case in enumerate(cases):
+            if i < start_at:
+                continue
             active_facet = case.facet
             messages = [{"role": "user", "content": case.prompt}]
             formatted = tokenizer.apply_chat_template(
@@ -142,22 +178,14 @@ def main() -> None:
                 max_tokens=args.max_tokens,
                 verbose=False,
             )
+            if (i + 1) % args.checkpoint_every == 0:
+                ckpt.write_text(json.dumps(build_payload(i + 1)))
+                print(f"  checkpoint at prompt {i + 1}/{len(cases)}", flush=True)
     finally:
         moe_cls.__call__ = original_call
 
-    payload = {
-        "model": args.model,
-        "prompts": args.prompts,
-        "soul_prompts": args.soul_prompts,
-        "criterion": "reap_sum = sum g_j(x)*||f_j(x)||_2 over routed tokens; "
-                     "divide by counts for the REAP mean (arXiv:2510.13999 eq. 9). "
-                     "score_sum (gate-only) kept for comparison.",
-        "created_at": time.time(),
-        "layers": {str(k): v for k, v in sorted(layers.items())},
-    }
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, indent=2) + "\n")
+    out.write_text(json.dumps(build_payload(len(cases)), indent=2) + "\n")
+    ckpt.unlink(missing_ok=True)
     print(f"wrote {out}")
 
 

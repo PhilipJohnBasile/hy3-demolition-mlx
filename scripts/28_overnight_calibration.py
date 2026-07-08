@@ -76,6 +76,29 @@ def main() -> int:
     log("GPU clear; settling 60s")
     time.sleep(60)
 
+    # Memory precheck: calibration loads ~112 GB. If free memory is low, some
+    # OTHER process (e.g. PJB using the GPU) owns it — do NOT load a second
+    # giant model and trigger jetsam. Wait it out rather than fight.
+    def free_gb() -> float:
+        out = subprocess.run(["vm_stat"], capture_output=True, text=True).stdout
+        for line in out.splitlines():
+            if "Pages free" in line:
+                return int(line.split()[-1].rstrip(".")) * 16384 / 1e9
+        return 0.0
+
+    waited = 0
+    while free_gb() < 90:
+        if waited == 0:
+            log(f"only {free_gb():.0f} GB free — something else is using the GPU; "
+                "waiting for it to free before loading calibration")
+        time.sleep(120)
+        waited += 120
+        if waited > 43200:  # 12 h
+            log("ABORT: GPU still busy after 12 h; not starting calibration")
+            return 1
+    if waited:
+        log(f"GPU free again ({free_gb():.0f} GB) after {waited // 60} min wait")
+
     # sanity: fp32 router patch present (D0 — calibration must not run without it)
     import importlib.util
     spec = importlib.util.find_spec("mlx_lm.models.hy_v3")

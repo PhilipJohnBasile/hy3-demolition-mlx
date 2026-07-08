@@ -176,17 +176,31 @@ def main() -> int:
     # ---- stage 5: base-model baseline (overnight) ----
     log("stage 5: serving AR base for the base-model baseline")
     server = start_server(AR_BASE, "serve_base_baseline.log")
+    rc_suite = rc_hard = 1
     try:
         wait_server_ready("hy3-mlx-base-ar")
-        eval_cases(["eval/coding/prompts.jsonl", "eval/tool_calls/prompts.jsonl",
+        rc_suite = eval_cases(["eval/coding/prompts.jsonl", "eval/tool_calls/prompts.jsonl",
                     "eval/agent_repair/prompts.jsonl", "eval/json_schema/prompts.jsonl",
                     "eval/planning/prompts.jsonl", "eval/souls/prompts.jsonl"],
                    AR_BASE_ABS, "eval/receipts/hy3_base_baseline_suite.jsonl",
                    "mlx_lm_server_base")
-        eval_cases(["eval/hard/prompts.jsonl"], AR_BASE_ABS,
+        rc_hard = eval_cases(["eval/hard/prompts.jsonl"], AR_BASE_ABS,
                    "eval/receipts/hy3_base_hard_tier.jsonl", "mlx_lm_server_base")
     finally:
         server.terminate()
+    # eval_cases exits nonzero when any case fails OR the server died mid-run;
+    # a partial base suite must NOT be compared/committed as if complete
+    # (the 2026-07-07 incident: server jetsam-killed at 24/30, committed a
+    # meaningless 24-vs-30 verdict). Require full receipts before comparing.
+    n_suite = len(read_jsonl(REPO / "eval/receipts/hy3_base_baseline_suite.jsonl"))
+    n_hard = len(read_jsonl(REPO / "eval/receipts/hy3_base_hard_tier.jsonl"))
+    if n_suite < 30 or n_hard < 8:
+        log(f"stage 5 INCOMPLETE (suite {n_suite}/30, hard {n_hard}/8; "
+            f"rc_suite={rc_suite} rc_hard={rc_hard}) — NOT comparing/committing. "
+            "Re-run the base baseline clean. CHAIN COMPLETE still fires so the "
+            "overnight calibration (independent of this) proceeds.")
+        log("CHAIN COMPLETE")
+        return 0
     log("stage 5 done; comparing base vs lite-v1")
     run([PY, "scripts/20_compare_receipts.py",
          "eval/receipts/hy3_base_baseline_suite.jsonl",
