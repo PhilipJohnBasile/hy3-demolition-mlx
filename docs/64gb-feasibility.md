@@ -6,6 +6,16 @@
 > generation, 3.85 tok/s, coherent output** — experts streamed from disk,
 > bit-identical (zero quality loss). Hy3 fits a 64 GB Mac. The "must be built"
 > path below is built and working (milestones M1-M6c).
+>
+> **Memory/speed tiers (measured, reap25 295B via the streaming pager):**
+> | Mac | LRU cache | peak resident | decode |
+> |---|---|---|---|
+> | 128 GB (fully resident) | n/a | 87 GB | 7.4 tok/s |
+> | 64 GB (streaming) | 24 experts/proj | 23.4 GB | 3.85 tok/s |
+> | **32 GB (streaming)** | 6 experts/proj | **13.9 GB** | 0.81 tok/s |
+>
+> Non-expert floor is 9.7 GB; the cache trades memory for speed. Zero quality
+> loss at every tier (experts are the exact same weights, read from disk).
 
 Multi-agent research (8 agents: our Hy3 data + the GLM52 record + online SOTA,
 adversarially fact-checked). Bottom line and the numbers below.

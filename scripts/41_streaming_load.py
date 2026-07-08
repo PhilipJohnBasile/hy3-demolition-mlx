@@ -25,8 +25,10 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 from hy3_streaming import MultiShardExpertSource, StreamingSwitchGLU  # noqa: E402
 
+import os
 MODEL = REPO / "dist" / "hy3-demolition-mlx-reap25-v1-fused"
-CACHE = 24  # experts per projection kept resident (LRU)
+CACHE = int(os.environ.get("STREAM_CACHE", "24"))  # experts/proj kept resident
+MEM_LIMIT_GB = float(os.environ.get("STREAM_MEM_LIMIT_GB", "0"))  # 0 = none
 
 
 def log(m):
@@ -34,6 +36,10 @@ def log(m):
 
 
 def main() -> int:
+    if MEM_LIMIT_GB > 0:
+        mx.set_memory_limit(int(MEM_LIMIT_GB * 1e9))
+        log(f"HARD memory limit = {MEM_LIMIT_GB} GB (simulating a smaller Mac; "
+            f"allocations past this fail)")
     config = json.loads((MODEL / "config.json").read_text())
     args = hy_v3.ModelArgs.from_dict(config)
     log(f"building hy_v3 model: {args.num_hidden_layers} layers, "
