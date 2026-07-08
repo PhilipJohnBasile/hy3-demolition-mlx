@@ -215,3 +215,12 @@ misdiagnoses stay in the record with their corrections.
   the repair-heavy GLM import; canon batches mitigate.) Separately verified
   script 17 builds a working is_training train-view from a *pruned* dir, so the
   REAP heal (#22) cannot recreate the EOS bug (incident 5) on the pruned path.
+
+- **Eval-harness code-execution safety documented (2026-07-07, public-repo
+  hygiene).** The verifier RUNS model-generated code (subprocess python +
+  30s timeout in a temp cwd) — NOT a sandbox; it executes with the user's
+  full privileges. Safe for our use (own model, own curated harnesses, own
+  machine); documented in SECURITY.md with a sandbox-it warning for anyone
+  running the harness on untrusted output. Runtime (the fused model) executes
+  nothing — the risk is entirely in the build/eval path, and only when
+  pointed at output you don't control.

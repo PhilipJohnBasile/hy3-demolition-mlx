@@ -299,6 +299,8 @@ Governance docs (read these before doing anything substantial):
 - `DECISIONS.md` — pre-committed judgment for every REAP/promotion call
 - `BUILD_NOTES.md` — append-only incident log (what went right and wrong)
 - `RESTORE.md` — rebuild everything from source, including local patches
+- `SECURITY.md` — runtime vs eval-harness trust model (the harness EXECUTES
+  model-generated code — read before running it on untrusted output)
 
 ## External Model Facts
 
