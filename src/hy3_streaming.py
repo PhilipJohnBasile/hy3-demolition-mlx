@@ -73,6 +73,84 @@ def _fused(x, weight, scales, biases, indices, group_size, bits):
                          transpose=True, group_size=group_size, bits=bits)
 
 
+class DiskExpertSource:
+    """True per-expert reader: preads ONLY expert e's bytes from a safetensors
+    file, never the whole stacked [E, ...] tensor. This is what makes streaming
+    real — M3 showed array-slicing a loaded tensor materializes the whole stack.
+
+    Parses the safetensors header once to learn each per-expert tensor's dtype,
+    shape and byte range, then reads expert slices on demand with os.pread.
+    """
+
+    _DT = {"F32": (mx.float32, 4), "F16": (mx.float16, 2), "BF16": (mx.bfloat16, 2),
+           "U32": (mx.uint32, 4), "I32": (mx.int32, 4), "U16": (mx.uint16, 2),
+           "U8": (mx.uint8, 1), "I8": (mx.int8, 1)}
+
+    def __init__(self, path: str):
+        import json
+        import os
+        self._fd = os.open(path, os.O_RDONLY)
+        n = int.from_bytes(os.pread(self._fd, 8, 0), "little")
+        self._header = json.loads(os.pread(self._fd, n, 8))
+        self._data0 = 8 + n
+
+    def close(self):
+        import os
+        os.close(self._fd)
+
+    _NP = {"F32": "<f4", "F16": "<f2", "U32": "<u4", "I32": "<i4",
+           "U16": "<u2", "U8": "<u1", "I8": "<i1"}
+
+    def read_expert(self, key: str, e: int):
+        """Return expert e of tensor `key` as an mx.array of shape [d1, d2...]."""
+        import os
+        import numpy as np
+        meta = self._header[key]
+        mxdt = self._DT[meta["dtype"]][0]
+        shape = meta["shape"]            # [E, d1, d2, ...]
+        per = 1
+        for d in shape[1:]:
+            per *= d
+        nbytes = per * self._DT[meta["dtype"]][1]
+        start = self._data0 + meta["data_offsets"][0] + e * nbytes
+        raw = os.pread(self._fd, nbytes, start)   # <-- only this expert's bytes
+        arr = np.frombuffer(raw, dtype=self._NP[meta["dtype"]]).reshape(shape[1:])
+        return mx.array(arr, dtype=mxdt)
+
+    def bytes_per_expert(self, key: str) -> int:
+        meta = self._header[key]
+        _, itemsize = self._DT[meta["dtype"]]
+        per = 1
+        for d in meta["shape"][1:]:
+            per *= d
+        return per * itemsize
+
+
+class StreamingSwitchGLU:
+    """Streaming replacement for mlx-lm SwitchGLU: three StreamingSwitchLinears
+    (gate/up/down) + swiglu. Hy3 uses gate/up at 2-bit and down at 3-bit, so
+    each projection carries its own bit-width. Only the routed experts are
+    faulted in per token, shared across the three projections' caches.
+    """
+
+    def __init__(self, gate, up, down, cache_size: int = 16):
+        # each arg = dict(weight, scales, biases, group_size, bits)
+        self.gate = StreamingSwitchLinear(**gate, cache_size=cache_size)
+        self.up = StreamingSwitchLinear(**up, cache_size=cache_size)
+        self.down = StreamingSwitchLinear(**down, cache_size=cache_size)
+
+    @property
+    def reads(self):
+        return self.gate.reads + self.up.reads + self.down.reads
+
+    def __call__(self, x, indices):
+        from mlx_lm.models.switch_layers import swiglu
+        x = mx.expand_dims(x, (-2, -3))
+        x_up = self.up(x, indices)
+        x_gate = self.gate(x, indices)
+        return self.down(swiglu(x_gate, x_up), indices).squeeze(-2)
+
+
 def _selfcheck():
     mx.random.seed(0)
     E, OUT, IN, bits, gs = 144, 512, 256, 4, 64
