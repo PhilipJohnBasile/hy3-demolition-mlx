@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
-"""Generate reap25 vs lite-v1 outputs on the same real prompts, side by side,
-so PJB can make the #16 manual-pass judgment on concrete material.
+"""reap25 vs lite-v1 on the same real prompts, for PJB's #16 manual-pass call.
 
-Loads one model, runs all prompts, unloads; then the other (never both
-resident). Writes a readable markdown diff. Promotes nothing.
+ONE model per invocation (ARCHITECTURE #3: never two resident models — the
+first attempt jetsam-died loading the second in-process). Persists each
+model's outputs immediately so a crash never loses completed work.
+
+Usage:
+  35_side_by_side.py --model-tag reap25   # runs one model, writes its JSON
+  35_side_by_side.py --model-tag lite-v1
+  35_side_by_side.py --merge              # merges both JSONs into the .md
 """
 from __future__ import annotations
 
+import argparse
 import json
 import time
 from pathlib import Path
 
-import mlx.core as mx
-from mlx_lm import generate, load
-
 REPO = Path(__file__).resolve().parents[1]
-MODELS = {
+PATHS = {
     "reap25": str(REPO / "dist" / "hy3-demolition-mlx-reap25-v1-fused"),
     "lite-v1": str(REPO / "dist" / "hy3-demolition-mlx-lite-v1-fused"),
 }
@@ -39,39 +42,50 @@ PROMPTS = [
 MAXTOK = 512
 
 
-def run_model(tag: str, path: str) -> list[dict]:
+def run_one(tag: str) -> None:
+    from mlx_lm import generate, load
     print(f"[sbs {time.strftime('%H:%M:%S')}] loading {tag}", flush=True)
-    model, tok = load(path)
+    model, tok = load(PATHS[tag])
     out = []
+    dst = REPO / "dist" / f"sbs_{tag}.json"
     for pid, prompt in PROMPTS:
-        msgs = [{"role": "user", "content": prompt}]
-        text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        text = tok.apply_chat_template([{"role": "user", "content": prompt}],
+                                       tokenize=False, add_generation_prompt=True)
         t0 = time.time()
         resp = generate(model, tok, prompt=text, max_tokens=MAXTOK, verbose=False)
         out.append({"id": pid, "output": resp, "secs": round(time.time() - t0, 1),
-                    "stopped_clean": not resp.rstrip().endswith("!")})
+                    "stopped_clean": bool(resp.strip()) and not resp.rstrip().endswith("!")})
+        dst.write_text(json.dumps(out, indent=2))  # persist after EACH prompt
         print(f"[sbs {time.strftime('%H:%M:%S')}] {tag}/{pid} done ({len(resp)} chars)", flush=True)
-    del model, tok
-    mx.clear_cache()
-    return out
+    print(f"[sbs] wrote {dst}", flush=True)
 
 
-def main() -> int:
-    results = {tag: run_model(tag, path) for tag, path in MODELS.items()}
-    # readable side-by-side markdown
-    md = ["# reap25 vs lite-v1 — manual-pass material\n",
-          "Same prompts, both models. Judge quality yourself (#16). "
+def merge() -> None:
+    res = {t: json.loads((REPO / "dist" / f"sbs_{t}.json").read_text()) for t in PATHS}
+    md = ["# reap25 vs lite-v1 — manual-pass material (#16)\n",
+          "Same prompts, both models, one process each. Judge quality yourself. "
           f"Generated {time.strftime('%Y-%m-%d %H:%M')}.\n"]
     for i, (pid, prompt) in enumerate(PROMPTS):
         md.append(f"\n## {pid}\n\n**Prompt:** {prompt}\n")
         for tag in ("reap25", "lite-v1"):
-            r = results[tag][i]
-            md.append(f"\n### {tag}  ({r['secs']}s, clean_stop={r['stopped_clean']})\n\n"
+            r = res[tag][i]
+            md.append(f"\n### {tag} ({r['secs']}s, clean_stop={r['stopped_clean']})\n\n"
                       f"```\n{r['output'].strip()}\n```\n")
     (REPO / "dist" / "reap25_vs_lite_side_by_side.md").write_text("\n".join(md))
-    (REPO / "dist" / "reap25_vs_lite_side_by_side.json").write_text(
-        json.dumps(results, indent=2))
     print("[sbs] wrote dist/reap25_vs_lite_side_by_side.md", flush=True)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--model-tag", choices=list(PATHS))
+    ap.add_argument("--merge", action="store_true")
+    a = ap.parse_args()
+    if a.merge:
+        merge()
+    elif a.model_tag:
+        run_one(a.model_tag)
+    else:
+        ap.error("pass --model-tag or --merge")
     return 0
 
 
