@@ -49,8 +49,12 @@ def run_one(tag: str) -> None:
     out = []
     dst = REPO / "dist" / f"sbs_{tag}.json"
     for pid, prompt in PROMPTS:
+        # match the PRODUCTION serving config (hy3_mlx_server passes
+        # --chat-template-args '{"reasoning_effort":"no_think"}'), so this
+        # reflects what users actually see — not the raw template default.
         text = tok.apply_chat_template([{"role": "user", "content": prompt}],
-                                       tokenize=False, add_generation_prompt=True)
+                                       tokenize=False, add_generation_prompt=True,
+                                       reasoning_effort="no_think")
         t0 = time.time()
         resp = generate(model, tok, prompt=text, max_tokens=MAXTOK, verbose=False)
         out.append({"id": pid, "output": resp, "secs": round(time.time() - t0, 1),

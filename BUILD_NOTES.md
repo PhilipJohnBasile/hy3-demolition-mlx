@@ -250,3 +250,16 @@ agent tasks where the eval showed reasoning helps. Whether to change the
 SHIPPED template default (currently high) is a product call — high maximizes
 eval correctness, no_think maximizes clean UX. Documented in the model card;
 default unchanged pending PJB's decision.
+
+### 16a. Correction: production already serves no_think
+
+Follow-up to 16: the "leak" was NOT the product. `src/hy3_mlx_server.py`
+already defaults `chat_template_args='{"reasoning_effort":"no_think"}'` and
+passes it via `--chat-template-args` to mlx_lm.server (and the nowire variant).
+So the served daily driver AND the eval path already produce clean, direct
+answers. The verbose reasoning only appeared because script 35's side-by-side
+called apply_chat_template with the raw template default (high) instead of
+matching the server. Fixed script 35 to pass reasoning_effort='no_think'; the
+manual-pass material now reflects production. No serve-flag change needed — the
+right default was already shipped. (The probe in 16 remains valid as a
+high-vs-no_think illustration.)
