@@ -55,6 +55,10 @@ def main() -> None:
     parser.add_argument("--wired-limit", action="store_true")
     parser.add_argument("--checkpoint-every", type=int, default=25,
                         help="save resumable checkpoint every N prompts")
+    parser.add_argument("--max-prompt-tokens", type=int, default=1024,
+                        help="truncate calibration prompts to this many tokens "
+                        "(prefill of giant prompts dominates wall-clock; routing "
+                        "saliency is captured well within ~1k tokens)")
     args = parser.parse_args()
 
     if not args.wired_limit:
@@ -171,6 +175,12 @@ def main() -> None:
                 reasoning_effort=args.reasoning_effort,
             )
             prompt_tokens = tokenizer.encode(formatted, add_special_tokens=False)
+            # Cap prompt length: the calibration pool has prompts up to ~16k
+            # tokens whose prefill dominates wall-clock, while routing saliency
+            # is fully exercised in the first ~1k tokens (REAP packs to 2048).
+            # Truncating keeps calibration tractable without hurting the signal.
+            if args.max_prompt_tokens and len(prompt_tokens) > args.max_prompt_tokens:
+                prompt_tokens = prompt_tokens[: args.max_prompt_tokens]
             mlx_generate.generate(
                 model,
                 tokenizer,
