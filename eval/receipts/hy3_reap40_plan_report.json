@@ -1,0 +1,35 @@
+{
+  "plan": "dist/hy3-reap40-pruned/reap_plan.json",
+  "ratio": 0.4,
+  "experts": "192 -> 115",
+  "layers": 79,
+  "checks": [
+    {
+      "check": "structure",
+      "verdict": "ACCEPT",
+      "detail": "79 layers consistent"
+    },
+    {
+      "check": "protected_coverage",
+      "verdict": "ACCEPT",
+      "detail": "all 11 facets protected in all layers"
+    },
+    {
+      "check": "protection_pressure",
+      "verdict": "ACCEPT",
+      "detail": "max 47% of keep budget on protection; top layers: L41=47%, L38=43%, L44=43%, L28=42%, L29=42%"
+    },
+    {
+      "check": "soul_concentration",
+      "verdict": "ACCEPT",
+      "detail": "protected sets are facet-distinct (<=75% overlap)"
+    },
+    {
+      "check": "saliency_mass",
+      "verdict": "ACCEPT",
+      "detail": "avg 76% score mass kept; no layer below 70%"
+    }
+  ],
+  "overall": "ACCEPT",
+  "policy": "ACCEPT = apply with --write; REVIEW = a human reads the flagged detail before applying; REJECT = do not write weights"
+}
