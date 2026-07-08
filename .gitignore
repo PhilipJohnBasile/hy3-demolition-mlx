@@ -48,3 +48,4 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_reap40_fused_smoke.json
 !eval/receipts/hy3_reap40_eval.jsonl
 !eval/receipts/hy3_reap40_vs_lite_compare.json
+dist/hy3-demolition-mlx-*-mtp/
