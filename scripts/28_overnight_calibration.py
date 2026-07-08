@@ -107,6 +107,11 @@ def main() -> int:
         log("ABORT: fp32 router patch missing from installed fork (see RESTORE.md)")
         return 1
 
+    log("preflight: certifying pipeline before the multi-hour calibration")
+    if run([PY, "scripts/29_preflight_check.py"], timeout=300) != 0:
+        log("ABORT: preflight failed — fix pipeline before calibrating")
+        return 1
+
     log("stage A: REAP calibration (true criterion, this is the long pole)")
     rc = run([
         PY, "scripts/04_stream_calibrate_hy3_mlx.py",
