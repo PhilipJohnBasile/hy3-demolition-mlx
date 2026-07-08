@@ -1,0 +1,15 @@
+{
+  "date": "2026-07-08", "machine": "M5 Max 128GB",
+  "method": "10 executable/checkable prompts (scripts/37 battery), graded by running the code / checking math. Cloud models = raw-model mode (no tools), fair vs local raw generation.",
+  "quality_out_of_10": {
+    "opus": 10, "sonnet": 10, "haiku": 10, "fable5": 10,
+    "reap25_local": 9, "sibling_local": 8, "codex": null
+  },
+  "quality_notes": "All 4 Claude models nailed median-of-two-sorted (LeetCode Hard) which BOTH local models failed; sibling also missed dice-prime probability. Frontier > local on raw reasoning, as expected.",
+  "speed_local_only_tok_s": {
+    "sibling": {"decode": 131.4, "prefill": 508.2, "peak_gb": 19.7, "load_s": 1.2},
+    "reap25": {"decode": 8.8, "prefill": 51.0, "peak_gb": 86.8, "load_s": 11.9},
+    "lite-v1": {"decode": "~7-8 (= reap25, same arch; OOM'd to measure directly)", "peak_gb": 112}
+  },
+  "takeaway": "Frontier Claude (all tiers, incl Haiku) 10/10 > local 8-9/10 on raw quality. Local value = private/offline/free + sibling is 131 tok/s on-device. Different tools: Claude smarter+cloud, local sovereign+fast-on-your-Mac. Codex not runnable from this env."
+}
