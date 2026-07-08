@@ -1,0 +1,32 @@
+{
+  "soul_music": {
+    "prompt": "In 4 sentences, explain why a V7 chord creates tension that resolves to I, using the tritone. Be precise, not flowery.",
+    "high": {
+      "raw": "</think:opensource>1. In a V7 chord (e.g., G7 = G-B-D-F), the third (B) and the seventh (F) form a tritone interval (B\u2013F), which is exactly half an octave and has no stable tonal center.\n2. This tritone is the harmonic interval between scale degrees 4 and 7 of the key, and the ear expects it to resolve inward to the interval 3\u20135 (e.g., F\u2192E and B\u2192C) of the tonic I chord.\n3. The seventh (scale degree 7) descends by a half step to the tonic (scale degree 1), while the third (scale degree 4) ascends by a half step to the tonic's third (scale degree 3), collapsing the unstable tritone into a consonant major third.\n4. Because the tritone's two notes are pulled toward the tonic chord's notes, the V7 chord creates directional tension that is released when the chord resolves to I.",
+      "answer_after_strip": "1. In a V7 chord (e.g., G7 = G-B-D-F), the third (B) and the seventh (F) form a tritone interval (B\u2013F), which is exactly half an octave and has no stable tonal center.\n2. This tritone is the harmonic interval between scale degrees 4 and 7 of the key, and the ear expects it to resolve inward to the interval 3\u20135 (e.g., F\u2192E and B\u2192C) of the tonic I chord.\n3. The seventh (scale degree 7) descends by a half step to the tonic (scale degree 1), while the third (scale degree 4) ascends by a half step to the tonic's third (scale degree 3), collapsing the unstable tritone into a consonant major third.\n4. Because the tritone's two notes are pulled toward the tonic chord's notes, the V7 chord creates directional tension that is released when the chord resolves to I.",
+      "closed_think": true,
+      "secs": 30.8
+    },
+    "no_think": {
+      "raw": "A V7 chord contains a tritone between its third (scale degree 7) and seventh (scale degree 4), which is the most unstable interval in tonal music. This tritone creates tension because both notes strongly want to resolve by step: the 7th descends to scale degree 3 and the 4th ascends to scale degree 5. When the V7 resolves to I, the tritone collapses into a major third (3\u20135), satisfying those opposing tendencies. The harmonic progression is driven by this interval's need for resolution, making V7\u2192I the primary cadence in tonal music.",
+      "answer_after_strip": "A V7 chord contains a tritone between its third (scale degree 7) and seventh (scale degree 4), which is the most unstable interval in tonal music. This tritone creates tension because both notes strongly want to resolve by step: the 7th descends to scale degree 3 and the 4th ascends to scale degree 5. When the V7 resolves to I, the tritone collapses into a major third (3\u20135), satisfying those opposing tendencies. The harmonic progression is driven by this interval's need for resolution, making V7\u2192I the primary cadence in tonal music.",
+      "closed_think": false,
+      "secs": 15.2
+    }
+  },
+  "code_double": {
+    "prompt": "Write a Python function that returns the two largest distinct values in a list, or None if there are fewer than two distinct values.",
+    "high": {
+      "raw": "</think:opensource>Here's a Python function that returns the two largest distinct values in a list, or None if there are fewer than two distinct values:\n\n```python\ndef two_largest_distinct(lst):\n    # Get distinct values\n    distinct = set(lst)\n    \n    # If fewer than two distinct values, return None\n    if len(distinct) < 2:\n        return None\n    \n    # Sort distinct values in descending order and return the top two\n    sorted_distinct = sorted(distinct, reverse=True)\n    return sorted_distinct[0], sorted_distinct[1]\n```\n\nExample usage:\n\n```python\nprint(two_largest_distinct([1, 2, 2, 3]))      # (3, 2)\nprint(two_largest_distinct([1, 1, 1]))        # None\nprint(two_largest_distinct([5, 4, 3, 2, 1]))  # (5, 4)\nprint(two_largest_distinct([1, 2]))           # (2, 1)\nprint(two_largest_distinct([]))               # None\n```\n\nIf you'd like, I can also provide a version that avoids sorting the whole set (more efficient for large lists) or one that returns the values in a list instead of a tuple.",
+      "answer_after_strip": "Here's a Python function that returns the two largest distinct values in a list, or None if there are fewer than two distinct values:\n\n```python\ndef two_largest_distinct(lst):\n    # Get distinct values\n    distinct = set(lst)\n    \n    # If fewer than two distinct values, return None\n    if len(distinct) < 2:\n        return None\n    \n    # Sort distinct values in descending order and return the top two\n    sorted_distinct = sorted(distinct, reverse=True)\n    return sorted_distinct[0], sorted_distinct[1]\n```\n\nExample usage:\n\n```python\nprint(two_largest_distinct([1, 2, 2, 3]))      # (3, 2)\nprint(two_largest_distinct([1, 1, 1]))        # None\nprint(two_largest_distinct([5, 4, 3, 2, 1]))  # (5, 4)\nprint(two_largest_distinct([1, 2]))           # (2, 1)\nprint(two_largest_distinct([]))               # None\n```\n\nIf you'd like, I can also provide a version that avoids sorting the whole set (more efficient for large lists) or one that returns the values in a list instead of a tuple.",
+      "closed_think": true,
+      "secs": 34.2
+    },
+    "no_think": {
+      "raw": "def two_largest_distinct(lst):\n    distinct = set(lst)\n    if len(distinct) < 2:\n        return None\n    sorted_distinct = sorted(distinct, reverse=True)\n    return (sorted_distinct[0], sorted_distinct[1])\n\n\n# Example usage:\nprint(two_largest_distinct([1, 2, 2, 3]))      # (3, 2)\nprint(two_largest_distinct([1, 1, 1]))         # None\nprint(two_largest_distinct([5, 4, 3, 2, 1]))   # (5, 4)\nprint(two_largest_distinct([1, 2]))            # (2, 1)",
+      "answer_after_strip": "def two_largest_distinct(lst):\n    distinct = set(lst)\n    if len(distinct) < 2:\n        return None\n    sorted_distinct = sorted(distinct, reverse=True)\n    return (sorted_distinct[0], sorted_distinct[1])\n\n\n# Example usage:\nprint(two_largest_distinct([1, 2, 2, 3]))      # (3, 2)\nprint(two_largest_distinct([1, 1, 1]))         # None\nprint(two_largest_distinct([5, 4, 3, 2, 1]))   # (5, 4)\nprint(two_largest_distinct([1, 2]))            # (2, 1)",
+      "closed_think": false,
+      "secs": 20.4
+    }
+  }
+}

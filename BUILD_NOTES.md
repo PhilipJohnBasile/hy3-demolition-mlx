@@ -224,3 +224,29 @@ misdiagnoses stay in the record with their corrections.
   running the harness on untrusted output. Runtime (the fused model) executes
   nothing — the risk is entirely in the build/eval path, and only when
   pointed at output you don't control.
+
+## 16. The "think leak" was a serving-mode default, not a defect (2026-07-08)
+
+The manual-pass side-by-side (script 35) showed both lite-v1 and reap25
+"leaking" chain-of-thought into answers and, on long prompts, running out of
+tokens mid-reasoning. Investigation (script 36 probe + reading
+chat_template.jinja) found the cause: Hy3 is a **reasoning model** whose
+template defaults `reasoning_effort='high'`. At high/low the generation prompt
+ends with an OPEN `<think:opensource>`, so the model reasons first, emits
+`</think:opensource>`, then the answer. `apply_chat_template` with no
+`reasoning_effort` (as script 35 and stock `mlx_lm.server` both do) therefore
+serves raw reasoning. The `</think:opensource>` "artifact" at answer start is
+just the think-close token.
+
+Probe result (eval/receipts/hy3_think_mode_probe.md): `reasoning_effort='no_think'`
+pre-closes the think block (`<think:opensource></think:opensource>` in the
+prompt) and yields clean, correct, direct answers in ~half the time. Same
+correctness, no leak. NOT a prune artifact — lite-v1 and reap25 behave
+identically.
+
+Implication: this is a serving-config choice, not a retrain. For an interactive
+daily driver, serve `no_think` (fast, clean) or `low`; keep `high` for hard
+agent tasks where the eval showed reasoning helps. Whether to change the
+SHIPPED template default (currently high) is a product call — high maximizes
+eval correctness, no_think maximizes clean UX. Documented in the model card;
+default unchanged pending PJB's decision.
