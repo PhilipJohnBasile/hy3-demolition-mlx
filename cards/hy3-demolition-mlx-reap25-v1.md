@@ -48,6 +48,18 @@ crash — so **25% is the pruning knee**; deeper is not shipped.
 
 ## Usage
 
+> ⚠️ **Runtime prerequisite — read first.** This is a `hy_v3` (Tencent Hy3)
+> model. `hy_v3` is **not in mainline `mlx-lm` yet** ([ml-explore/mlx-lm#1211](https://github.com/ml-explore/mlx-lm/pull/1211)),
+> so **stock `mlx-lm`, LM Studio, and Ollama cannot load it** (you'll get
+> `ValueError: Model type hy_v3 not supported`). Run it with the **pinned fork**:
+> ```bash
+> pip install "mlx-lm @ git+https://github.com/eauchs/mlx-lm@hy_v3-mtp"
+> ```
+> (See RESTORE.md in the source repo for the exact commit + the fp32-router patch.)
+> Once #1211 merges, mainline `mlx-lm` and LM Studio will load it with no changes.
+> — For a model that runs on **stock mlx-lm / LM Studio today**, use the fast
+> sibling [`hy3-family-mini-qwen35b-v1`](https://huggingface.co/philipjohnbasile/hy3-family-mini-qwen35b-v1).
+
 MLX only. Requires an Apple Silicon Mac with enough unified memory
 (measured peak 86.7 GB — leaves ~41 GB free on a 128 GB machine).
 

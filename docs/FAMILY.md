@@ -41,6 +41,25 @@ for daily use** — equal quality to reap25, 6–10× faster. The Hy3 tiers are 
    agent's outputs are validated by deterministic verifiers, so throughput +
    guardrails beat raw model size.
 
+## How to run each (copy-paste)
+
+**Sibling** — works on **stock mlx-lm** *and* **LM Studio** today:
+```bash
+# LM Studio: search `philipjohnbasile/hy3-family-mini-qwen35b-v1`, download, load.
+# or terminal:
+pip install mlx-lm
+python -m mlx_lm chat --model philipjohnbasile/hy3-family-mini-qwen35b-v1
+```
+
+**Hy3 models (reap25 / lite-v1)** — need the **pinned fork** (NOT stock mlx-lm, NOT LM Studio yet — you'll get `Model type hy_v3 not supported`):
+```bash
+pip install "mlx-lm @ git+https://github.com/eauchs/mlx-lm@hy_v3-mtp"
+python -m mlx_lm chat --model <path-to-fused-dir>
+# clean answers: add  --chat-template-args '{"reasoning_effort":"no_think"}'
+```
+
+When [mlx-lm #1211](https://github.com/ml-explore/mlx-lm/pull/1211) merges, the Hy3 models load on stock mlx-lm + LM Studio with zero changes.
+
 ## Runtimes
 
 - **Today:** `mlx_lm` (generate / chat / server) on the pinned fork
