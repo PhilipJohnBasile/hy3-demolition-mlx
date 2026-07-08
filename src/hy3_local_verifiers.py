@@ -93,6 +93,16 @@ def verify_json_schema(output: str, spec: dict) -> tuple[bool, str, str]:
     diag = _check_schema(value, schema)
     if diag:
         return False, "json_schema", diag
+    # Cross-field constraints the type schema can't express. Named checks keep
+    # the eval data declarative; add a branch here per new constraint.
+    extra = spec.get("extra_checks")
+    if extra == "span_equals_end_minus_start" and isinstance(value, dict):
+        if value.get("span") != value.get("end", 0) - value.get("start", 0):
+            return False, "json_constraint", (
+                f"span {value.get('span')} != end-start "
+                f"({value.get('end')}-{value.get('start')})")
+        if not (value.get("start", -1) < value.get("end", -1)):
+            return False, "json_constraint", "requires start < end"
     return True, "json_schema", ""
 
 
