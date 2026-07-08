@@ -59,6 +59,8 @@ https://github.com/PhilipJohnBasile/hy3-demolition-mlx (tag `lite-v1`).
 
 ## Verification receipts
 
+- Fresh full baseline (suite+hard+brutal) 46/46 (2026-07-08); receipts in the source repo.
+
 All measured on the fused artifact, 2026-07-07, receipts committed under
 `eval/receipts/` in the source repo:
 
