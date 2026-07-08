@@ -293,7 +293,8 @@ Key scripts: `26` assemble calibration pack · `04` streamed REAP calibration
 `07` heal LoRA · `18` streamed fuse · `09` eval runner · `20` compare-receipts
 gate · `27` baseline chain · `28` overnight calibration · `29` preflight.
 
-Governance docs (read these before doing anything substantial):
+Start here: **ARCHITECTURE.md** (how it all fits together). Then the
+governance docs (read before doing anything substantial):
 
 - `BACKLOG.md` — numbered status board + execution order and estimates
 - `DECISIONS.md` — pre-committed judgment for every REAP/promotion call
