@@ -44,3 +44,7 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_reap25_vs_lite_compare.json
 !eval/receipts/hy3_reap25_plan_report.json
 !eval/receipts/hy3_reap40_plan_report.json
+!eval/receipts/hy3_reap40_pruned_smoke.json
+!eval/receipts/hy3_reap40_fused_smoke.json
+!eval/receipts/hy3_reap40_eval.jsonl
+!eval/receipts/hy3_reap40_vs_lite_compare.json
