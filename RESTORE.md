@@ -18,6 +18,15 @@ see `eval/receipts/hy3_environment.json`). The branch moves; the EOS template
 behavior, streamed fuse, and hy_v3/MTP support are all version-specific, so
 restore from the commit hash, not the branch name.
 
+`mlx` itself (not `mlx-lm`, which stays pinned above) is verified compatible
+up to 0.32.0 (2026-07-09): fp32-router patch applies unchanged, quantized-op
+parity confirmed against the release's own changelog fixes, byte-identical
+coherence output vs 0.31.2 on the real reap25 checkpoint, and the documented
+reap25 tool-call regression reproduces identically (not worse) — see
+`eval/receipts/hy3_environment_mlx032.json`. Safe to `pip install -U
+mlx==0.32.0` on top of the pin above; no re-patch needed (only `mlx-lm` needs
+the fp32-router patch, and that's untouched by this).
+
 After installing, re-apply the fp32 router patch (the reference Hy3
 implementation computes the gate matmul in fp32; bf16 perturbs top-8 expert
 selection — see DECISIONS.md D0). One-line change in

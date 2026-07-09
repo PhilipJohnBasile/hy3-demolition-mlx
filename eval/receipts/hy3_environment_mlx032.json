@@ -1,0 +1,21 @@
+{
+  "date": "2026-07-09",
+  "verifies": "mlx 0.32.0 compatibility on top of the pinned environment in eval/receipts/hy3_environment.json",
+  "python": "3.12.13",
+  "platform": "Darwin 27.0.0 arm64",
+  "mlx": "0.32.0",
+  "mlx_metal": "0.32.0",
+  "mlx_lm": "0.31.3",
+  "mlx_lm_source": "git+https://github.com/eauchs/mlx-lm.git@a7cc3054b1ff48c19950513b422a66cfed7baa60",
+  "mlx_lm_branch": "hy_v3-mtp",
+  "transformers": "5.12.1",
+  "verification_summary": {
+    "fp32_router_patch": "applies unchanged; MoEGate.__call__ call site byte-identical in shape to what RESTORE.md documents",
+    "quantized_op_parity": "gather_qmm (transpose=True, bits=2/3/4) and slice_update bit-exact or noise-level identical vs 0.31.2, targeted at the 0.32.0 release-note fixes (qmm_naive K-tail dispatch, slice-update indexing, contiguity computation) -- those are CUDA-path fixes per the changelog and did not perturb the Metal path here",
+    "coherence": "byte-identical output on both mlx versions for math_probability and json_crossfield prompts against hy3-demolition-mlx-reap25-v1-fused (streamed loader, peak_memory_gb 24.78 identical on both)",
+    "known_toolcall_regression": "reproduces identically on 0.32.0, not worse, not fixed -- all 3 tool-call prompts (search_flights, get_weather, create_event) show tool_sep_present=False on both mlx versions, byte-identical raw output; confirms the bug is in the mlx-lm fork / chat template interaction, unrelated to the mlx core package",
+    "recommendation": "GO -- safe upgrade, no local_patches changes needed (only mlx-lm needs the fp32-router patch, untouched by this bump)"
+  },
+  "verified_by": "Fable 5 agent, isolated scratch venv (real .venv untouched during verification), real hardware (M5 Max 128GB), real reap25 checkpoint via streaming loader",
+  "applied_to_real_venv": "2026-07-09, by Sonnet 5 after this verification passed"
+}

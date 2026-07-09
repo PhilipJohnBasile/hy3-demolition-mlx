@@ -24,6 +24,7 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_lite_v1_fused_server_smoke.json
 !eval/receipts/hy3_base_same_prompt_smoke.json
 !eval/receipts/hy3_environment.json
+!eval/receipts/hy3_environment_mlx032.json
 !eval/receipts/hy3_canon_sft_merge.json
 !eval/receipts/hy3_reap_calibration_pack.json
 !eval/receipts/hy3_lite_v1_baseline_suite.jsonl
