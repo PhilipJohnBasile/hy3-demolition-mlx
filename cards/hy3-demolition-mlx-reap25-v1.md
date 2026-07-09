@@ -86,6 +86,17 @@ If output looks suspiciously empty, raise `max_tokens` or set
 `reasoning_effort: no_think` before assuming the task legitimately had
 nothing to produce.
 
+⚠️ **For strict-JSON/structured output, pin `repeat_penalty: 1.0` explicitly
+in the request — don't trust a server's UI/global default.** A nonzero
+repeat penalty punishes exactly the repeated structural tokens JSON needs
+(`"name":`, `"type":`, array delimiters), and can silently corrupt output on
+batch/array-heavy extraction tasks. Confirmed in production: a serving UI
+had `repeat_penalty: 1.1` active globally, invisible to the request itself,
+on a strict-JSON extraction workload. A pipeline's full sampling contract
+(temperature, top-k, repeat-penalty) belongs in every request body, never
+assumed from server state — server defaults and UI settings can change
+between calls or restarts without you noticing.
+
 ## Run on a smaller Mac — SSD expert-streaming (16–128 GB)
 
 Fully resident this model needs ~87 GB. But with the **SSD expert-streaming

@@ -40,6 +40,8 @@ mlx_lm.server --model <this-directory> --port 8080   # OpenAI /v1
 ```
 **Qwen3.6 quirk:** to turn OFF thinking, pass `enable_thinking=False` as a DIRECT kwarg to `apply_chat_template` (the nested form and `/no_think` are ignored).
 
+⚠️ **For strict-JSON/structured output, pin `repeat_penalty: 1.0` explicitly in the request — don't trust a server's UI/global default.** A nonzero repeat penalty punishes exactly the repeated structural tokens JSON needs (`"name":`, `"type":`, array delimiters), and can silently corrupt output on batch/array-heavy extraction tasks. Confirmed in production: a serving UI had `repeat_penalty: 1.1` active globally, invisible to the request itself, on a strict-JSON extraction workload. A pipeline's full sampling contract (temperature, top-k, repeat-penalty) belongs in every request body, never assumed from server state — server defaults and UI settings can change between calls or restarts without you noticing.
+
 ## Verification (measured, receipts in the source repo)
 
 - Heal: verifier-filtered LoRA, 8 layers, 600 iters, val loss 0.639.
