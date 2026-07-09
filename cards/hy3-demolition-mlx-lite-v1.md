@@ -77,6 +77,20 @@ on a strict-JSON extraction workload. A pipeline's full sampling contract
 assumed from server state — server defaults and UI settings can change
 between calls or restarts without you noticing.
 
+**Serving multiple concurrent requests:** `mlx_lm.server` (above) does batch
+requests, but was measured unreliable at 8-way concurrency on the reap25
+tier (dropped ~25% of connections under load) — solid at ≤4 concurrent
+(2.72× aggregate, 4/4 completed). For reliable high-concurrency serving,
+[oMLX](https://omlx.ai/) is a viable alternative: loads with one dependency
+swap (install this project's pinned `mlx-lm` fork into its venv instead of
+its default mainline pin — `RESTORE.md` has the exact command), measured
+3.49× aggregate at 8/8 concurrent with no drops on reap25, plus active
+memory-ceiling enforcement and a restart-surviving KV cache. Not a blanket
+"faster" claim — single-stream speed was comparable either way in that
+test. These numbers were measured on the smaller reap25 tier (87 GB); this
+card's larger 112 GB checkpoint should behave the same qualitatively but
+hasn't been separately benchmarked.
+
 ## Source and recipe
 
 - Base: `ox-ox/Hy3-295B-Instruct-w2q3exp-AProjQ8-SExpQ8-OutQ8-MTP-mlx`

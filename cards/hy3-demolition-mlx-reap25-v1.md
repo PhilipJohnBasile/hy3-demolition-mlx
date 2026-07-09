@@ -97,6 +97,19 @@ on a strict-JSON extraction workload. A pipeline's full sampling contract
 assumed from server state — server defaults and UI settings can change
 between calls or restarts without you noticing.
 
+**Serving multiple concurrent requests:** `mlx_lm.server` (above) does batch
+requests, but was measured unreliable at 8-way concurrency (dropped ~25% of
+connections under load in testing). At ≤4 concurrent it's solid — 2.72×
+aggregate throughput, 4/4 requests completed. For reliable high-concurrency
+serving specifically, [oMLX](https://omlx.ai/) is a viable alternative:
+loads this checkpoint with one dependency swap (install this project's
+pinned `mlx-lm` fork into its venv instead of its default mainline pin —
+`RESTORE.md` has the exact command), and measured 3.49× aggregate at 8/8
+concurrent requests with no drops, plus active memory-ceiling enforcement
+and a restart-surviving KV cache. Not a blanket "faster" claim — single-stream
+speed is comparable either way (~8.6 vs ~7.7-8.1 tok/s) — it's specifically
+the reliability and ceiling-safety at higher concurrency that's the win.
+
 ## Run on a smaller Mac — SSD expert-streaming (16–128 GB)
 
 Fully resident this model needs ~87 GB. But with the **SSD expert-streaming
