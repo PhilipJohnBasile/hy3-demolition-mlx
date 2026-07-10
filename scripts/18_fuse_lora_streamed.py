@@ -28,7 +28,7 @@ def main() -> int:
     parser.add_argument("--model", default="models/hy3-mlx-base-ar")
     parser.add_argument("--adapter-path", default="dist/adapters-hy3-lite-v1")
     parser.add_argument("--save-path", default="dist/hy3-demolition-mlx-lite-v1-fused")
-    parser.add_argument("--receipt", default="eval/receipts/hy3_lite_v1_fuse.json")
+    parser.add_argument("--receipt", default=None)
     parser.add_argument(
         "--card",
         default="cards/hy3-demolition-mlx-lite-v1.md",
@@ -36,6 +36,21 @@ def main() -> int:
         "(mlx_lm save writes a frontmatter-only stub otherwise); '' skips",
     )
     args = parser.parse_args()
+
+    if args.receipt is None:
+        # Only the lite-v1 defaults get the documented zero-flag receipt path (RESTORE.md's lite-v1
+        # rebuild never passes --receipt). Any other --model/--adapter-path MUST pass --receipt
+        # explicitly: this used to silently default to the SAME lite-v1 filename for every
+        # candidate, so each new fuse (reap25, then reap40, then reap25-requant) silently clobbered
+        # the previous candidate's receipt with no error — caught 2026-07-09 after it had already
+        # overwritten reap25's and reap40's real fuse numbers.
+        if args.model == "models/hy3-mlx-base-ar" and args.adapter_path == "dist/adapters-hy3-lite-v1":
+            args.receipt = "eval/receipts/hy3_lite_v1_fuse.json"
+        else:
+            parser.error(
+                "--receipt is required when --model/--adapter-path differ from the lite-v1 "
+                "defaults (prevents silently overwriting eval/receipts/hy3_lite_v1_fuse.json)"
+            )
 
     started = time.perf_counter()
     print("Loading model lazily")

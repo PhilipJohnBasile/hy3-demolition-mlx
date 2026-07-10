@@ -171,7 +171,17 @@ def main() -> None:
         "metadata": {"total_size": total_size},
         "weight_map": {k: weight_map[k] for k in sorted(weight_map)},
     }
-    cfg["quantization"] = {k: quant_config[k] for k in sorted(quant_config)}
+    # mlx_lm's loader requires a top-level {bits, group_size} default in this dict (used as the
+    # global fallback nn.quantize() call itself needs) IN ADDITION to the per-module overrides
+    # below — matching the native checkpoint's own config.json convention. Without it, loading
+    # this checkpoint raises `KeyError: 'group_size'` in mlx_lm.utils._quantize(). Every quantized
+    # tensor already gets an explicit per-module override, so this default is a required-but-inert
+    # fallback for us; set it to the expert bit-width since that's the majority of the model.
+    cfg["quantization"] = {
+        "bits": args.expert_bits,
+        "group_size": args.group_size,
+        **{k: quant_config[k] for k in sorted(quant_config)},
+    }
     cfg["quantization_config"] = cfg["quantization"]
     (out / "config.json").write_text(json.dumps(cfg, indent=2) + "\n")
     (out / "model.safetensors.index.json").write_text(json.dumps(index, indent=2) + "\n")

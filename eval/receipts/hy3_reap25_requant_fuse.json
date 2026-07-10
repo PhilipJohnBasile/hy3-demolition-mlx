@@ -1,0 +1,9 @@
+{
+  "model": "dist/hy3-reap25-requant",
+  "adapter_path": "dist/adapters-hy3-reap25-requant-heal-v1",
+  "save_path": "dist/hy3-demolition-mlx-reap25-requant-v1-fused",
+  "fused_modules": 88,
+  "elapsed_s": 48.46506133300136,
+  "peak_memory_gb": 40.755545088,
+  "lazy": true
+}

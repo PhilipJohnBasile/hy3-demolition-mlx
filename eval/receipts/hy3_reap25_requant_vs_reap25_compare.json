@@ -1,0 +1,68 @@
+{
+  "baseline": {
+    "path": "eval/receipts/hy3_reap25_eval.jsonl",
+    "cases": 46,
+    "pass_rate": 0.9783,
+    "hard_pass_rate": 1.0,
+    "tok_s": 8.341
+  },
+  "candidate": {
+    "path": "eval/receipts/hy3_reap25_requant_eval.jsonl",
+    "cases": 46,
+    "pass_rate": 0.8913,
+    "hard_pass_rate": 0.9062,
+    "tok_s": 6.17
+  },
+  "shared_cases": 46,
+  "missing_in_candidate": [],
+  "new_in_candidate": [],
+  "regressions": [
+    {
+      "id": "brutal_lru_cache",
+      "domain": "python",
+      "hard": true,
+      "candidate_stage": "run",
+      "candidate_diag": "Traceback (most recent call last):\n  File \"/var/folders/p8/mb9rd2cn4fs6p5dqkj34kc800000gn/T/tmpi9r7_965/sol.py\", line 31, in <module>\n    assert c.get(1) is None\n           ^^^^^^^^^^^^^^^^\nAssertionE"
+    },
+    {
+      "id": "brutal_plan_safety",
+      "domain": "planning",
+      "hard": true,
+      "candidate_stage": "plan_coverage",
+      "candidate_diag": "missing required topic 'backup'"
+    },
+    {
+      "id": "brutal_soul_science_calc",
+      "domain": "soul",
+      "hard": false,
+      "candidate_stage": "truncated",
+      "candidate_diag": "hit token cap (640/640, finish_reason='length'); verifier verdict was passed=True stage=soul_keywords"
+    },
+    {
+      "id": "plan_debug_segfault",
+      "domain": "planning",
+      "hard": true,
+      "candidate_stage": "fake_execution",
+      "candidate_diag": "execution claim without execution: 'tests pass'"
+    },
+    {
+      "id": "soul_legacy",
+      "domain": "soul",
+      "hard": false,
+      "candidate_stage": "soul_keywords",
+      "candidate_diag": "only 2/3 facet terms present (found ['legacy', 'incremental'], wanted any 3 of ['strangler', 'test', 'migration', 'refactor', 'legacy', 'incremental'])"
+    }
+  ],
+  "soul_regressions": [
+    "brutal_soul_science_calc",
+    "soul_legacy"
+  ],
+  "improvements": [
+    {
+      "id": "soul_music",
+      "domain": "soul"
+    }
+  ],
+  "soul_regressions_gating": false,
+  "verdict": "REJECT"
+}
