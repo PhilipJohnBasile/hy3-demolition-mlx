@@ -129,7 +129,7 @@ All measured on the fused artifact, 2026-07-07, receipts committed under
 - Direct `mlx_lm.generate` smoke: correct output, clean EOS stop.
 - Agent eval 5/5 through `mlx_lm.server` `/v1/chat/completions`
   (coding ×2, tool-call JSON, repair, strict JSON schema), outputs verified
-  by the agent-toolkit verifier mesh.
+  by the agent-toolkit verifier mesh (private internal tooling; not published).
 - Strict-JSON server smoke: parseable JSON, `finish_reason: stop`.
 - Peak inference memory 112.3 GB; warm decode ~7.4 tok/s (measured, `hy3_mtp_smoke.json`). First-token latency is high on cold load.
 

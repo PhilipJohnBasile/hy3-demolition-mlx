@@ -16,6 +16,9 @@ else
   export HY3_PYTHON="${HY3_PYTHON:-python3}"
 fi
 
+# Build-time-only teachers/gates. All three are private internal repos (not
+# published), so these default paths will not exist outside the author's
+# machine. They are not needed to run the fused model.
 export AGENT_TOOLKIT_PATH="${AGENT_TOOLKIT_PATH:-/Users/pjb/git/agent-toolkit}"
 export AGENT_BRAIN_BLUEPRINT_PATH="${AGENT_BRAIN_BLUEPRINT_PATH:-/Users/pjb/git/agent-brain-blueprint}"
 export TINYGPT_SOULS_PATH="${TINYGPT_SOULS_PATH:-/Users/pjb/git/tinygpt-souls}"

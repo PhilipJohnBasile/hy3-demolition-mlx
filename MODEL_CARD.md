@@ -44,12 +44,15 @@ wrapper.
 
 ## Build-Time Teachers And Gates
 
-- `agent-toolkit`: verifier mesh for code, SQL, design, math, tool-call, and
+The three marked *private* are internal tooling and are not published; they are
+listed for provenance, not as things you can fetch.
+
+- `agent-toolkit` (private): verifier mesh for code, SQL, design, math, tool-call, and
   repair data filtering.
-- `agent-brain-blueprint`: operating stance, verification behavior, agent
+- `agent-brain-blueprint` (private): operating stance, verification behavior, agent
   security, local LLM engineering, and tool-use curriculum.
 - `glm52-demolition`: demolition pattern and measurement discipline.
-- `tinygpt-souls`: soul tags, canons, and per-soul verifier patterns.
+- `tinygpt-souls` (private): soul tags, canons, and per-soul verifier patterns.
 
 These are not required at runtime for the fused model.
 

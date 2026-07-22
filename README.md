@@ -56,15 +56,16 @@ OpenAI-compatible local serving through `mlx_lm.server`.
 
 The final goal is not "Hy3 plus a wrapper." It is a fused MLX model artifact.
 
-Build-time sources:
+Build-time sources (the three marked *private* are internal tooling and are not
+published — they are listed for provenance, not as things you can fetch):
 
-- `agent-toolkit`: verifier mesh used to keep only passing code, tool-call, JSON,
+- `agent-toolkit` (private): verifier mesh used to keep only passing code, tool-call, JSON,
   repair, and domain outputs.
-- `agent-brain-blueprint`: behavior curriculum for local LLM engineering,
+- `agent-brain-blueprint` (private): behavior curriculum for local LLM engineering,
   verifier-first operation, agent security, tool-use discipline, and repair loops.
 - `glm52-demolition`: proven demolition pattern, eval discipline, REAP/LoRA
   framing, and verified-data shape.
-- `tinygpt-souls`: soul tags, canons, and per-soul verifier-gated examples.
+- `tinygpt-souls` (private): soul tags, canons, and per-soul verifier-gated examples.
 - `glm52-demolition-data`: reusable verified heal, soul, agentic, and REAP
   calibration data from the GLM demolition run.
 - `glm52-verified-fixes`: private execution-verified bug-fix examples for repair

@@ -7,9 +7,10 @@ misdiagnoses stay in the record with their corrections.
 
 ## Tool lineage — who built what
 
-- **OpenCode** (early July 2026): built `agent-brain-blueprint` — the
-  operating-stance curriculum that seeds the SFT behavior rows and (via
-  CLAUDE.md) governs how the agents on this project work.
+- **OpenCode** (early July 2026): built `agent-brain-blueprint` (private
+  internal repo; not published) — the operating-stance curriculum that seeds
+  the SFT behavior rows and (via CLAUDE.md) governs how the agents on this
+  project work.
 - **Codex** (2026-07-06 23:16 → 07-07 ~08:40, session on record): project
   charter and foundation. Set the rules (MLX-native, no GGUF/CUDA; "in the
   end we just want to run the model and nothing else"; MTPLX compatibility

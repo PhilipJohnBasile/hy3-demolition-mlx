@@ -8,7 +8,8 @@ fused Hy3 MLX model -> mlx_lm.server -> OpenAI-compatible clients
 
 `agent-toolkit`, `agent-brain-blueprint`, `glm52-demolition`, and
 `tinygpt-souls` are used before release to build verified data and heal the
-model. They should not be required for normal daily use.
+model. They should not be required for normal daily use. (All but
+`glm52-demolition` are private internal repos; not published.)
 
 The release shape is:
 

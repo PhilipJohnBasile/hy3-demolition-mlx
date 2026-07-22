@@ -175,7 +175,8 @@ sampling, OpenAI/Anthropic APIs). Findings:
 - [x] **#17 Balanced facet import (first increment)** — GLM gold packs were
       already fully imported (50/50 rows). Added a canon-grounded pack
       (`scripts/21` + `22`, `data/hy3_canon_sft/`): 30 hand-authored rows from
-      the agent-toolkit soul canons + brain-blueprint stance, verifier-gated
+      the agent-toolkit soul canons + brain-blueprint stance (both private
+      internal repos; not published), verifier-gated
       (code through the real harness, SVG/JSON parsed, math checked),
       hash-deduped merge. Pack is now 328/20/19 with **all 11 souls covered**.
       Residual: volume per soul is still thin (2-3 rows); grow before/with the

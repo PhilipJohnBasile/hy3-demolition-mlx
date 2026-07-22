@@ -3,6 +3,8 @@
   "sources": [
     {
       "name": "agent-toolkit",
+      "visibility": "private",
+      "visibility_note": "Private internal repo; not published. The remote URL will not resolve for outside readers. Listed for provenance only.",
       "local_path": "/Users/pjb/git/agent-toolkit",
       "remote": "https://github.com/PhilipJohnBasile/agent-toolkit",
       "role": "Verifier mesh, tool-call discipline, repair gates, and flywheel data generation.",
@@ -16,6 +18,7 @@
     },
     {
       "name": "agent-brain-blueprint",
+      "visibility": "private",
       "local_path": "/Users/pjb/git/agent-brain-blueprint",
       "remote": "https://github.com/PhilipJohnBasile/agent-brain-blueprint",
       "role": "Behavior stance and knowledge lanes for local LLM engineering, verifier-first agents, security, and tool use.",
@@ -41,6 +44,7 @@
     },
     {
       "name": "tinygpt-souls",
+      "visibility": "private",
       "local_path": "/Users/pjb/git/tinygpt-souls",
       "remote": "https://github.com/PhilipJohnBasile/tinygpt-souls",
       "role": "Soul tags, per-soul canons, per-soul verifier patterns, and soul-preserving calibration prompts.",

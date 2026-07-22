@@ -40,6 +40,9 @@ and demolition scripts never ship inside the model.
                                                                     (mlx_lm serve)
 ```
 
+`agent-brain-blueprint`, `agent-toolkit`, and `tinygpt-souls` are private
+internal repos; not published. They are named here for provenance.
+
 - **Behavior** (how the agent acts) comes from `agent-brain-blueprint` +
   `tinygpt-souls`, distilled into the SFT stance/soul rows.
 - **Expertise** (domain knowledge) comes from the `agent-toolkit` soul canons.

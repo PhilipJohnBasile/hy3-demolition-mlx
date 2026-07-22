@@ -4,6 +4,7 @@
 **Method:** 5 behavioral probes, each with a wrong "default" pull, run WITH vs
 WITHOUT the condensed blueprint stance as system prompt · greedy · full outputs
 in `eval/receipts/blueprint_ablation_*.json`.
+`agent-brain-blueprint` is a private internal repo; not published.
 
 ## Why not KL (like souls)
 

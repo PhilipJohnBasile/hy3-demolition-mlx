@@ -17,7 +17,8 @@ on your behalf.
 
 ## Build / eval harness — executes model-generated code (handle with care)
 
-The verifier mesh (`agent-toolkit`, invoked by `scripts/09_eval_agent_toolkit.py`
+The verifier mesh (`agent-toolkit` — private internal tooling, not published —
+invoked by `scripts/09_eval_agent_toolkit.py`
 and the SFT data filters) works by **running** model-generated code to check
 it compiles and passes tests. Concretely, for code domains it writes the
 model's output to a temp file and runs `subprocess.run([python, file],
