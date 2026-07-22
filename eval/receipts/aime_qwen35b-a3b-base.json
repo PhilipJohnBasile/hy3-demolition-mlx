@@ -1,0 +1,8 @@
+{
+ "model": "qwen35b-a3b-base",
+ "n": 30,
+ "correct": 0,
+ "accuracy_pct": 0.0,
+ "reasoning": false,
+ "minutes": 3.7
+}

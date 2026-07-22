@@ -1,0 +1,7 @@
+{
+ "model": "hy3-family-mini-qwen35b-v1",
+ "n": 30,
+ "correct": 2,
+ "accuracy_pct": 6.7,
+ "minutes": 3.7
+}

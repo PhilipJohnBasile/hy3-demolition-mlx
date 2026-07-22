@@ -58,6 +58,10 @@ benchmarks, at the floor on the discriminating ones. Its value is *runs-on-your-
 Mac*, not raw capability. The heal made it **local + consistently formatted**, not
 smarter — the base Qwen3.6 was already strong.
 
-Receipts: `eval/receipts/{humaneval,mbpp,gsm8k,aime,aime_think,gpqa,souls}_*.json`.
+Receipts: `eval/receipts/{humaneval,mbpp,aime,aime_think,gpqa,souls}_*.json` —
+twelve files, committed, one per benchmark per model. GSM8K has **no receipt**:
+those runs were stopped early (see the table footnote) and the ~90% figures are
+partial-run observations, not receipted results. An earlier version of this
+line also listed `gsm8k_*.json` files that never existed in the repo.
 Harnesses: `scripts/45_humaneval.py`, `46_gsm8k.py`, `47_mbpp.py`, `49_aime.py`,
 `50_gpqa.py`, `51_souls.py`, `43_shootout.py`.

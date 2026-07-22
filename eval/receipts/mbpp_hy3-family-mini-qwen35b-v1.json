@@ -1,0 +1,7 @@
+{
+ "model": "hy3-family-mini-qwen35b-v1",
+ "n": 257,
+ "passed": 213,
+ "pass_at_1_pct": 82.9,
+ "minutes": 3.1
+}

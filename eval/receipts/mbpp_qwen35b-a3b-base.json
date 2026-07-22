@@ -1,0 +1,7 @@
+{
+ "model": "qwen35b-a3b-base",
+ "n": 257,
+ "passed": 212,
+ "pass_at_1_pct": 82.5,
+ "minutes": 3.9
+}

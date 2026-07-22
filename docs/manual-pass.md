@@ -8,7 +8,7 @@ run in production `no_think` mode, one model at a time. Outputs in
 
 ## Head-to-head: reap25 (Hy3) vs the 35B sibling
 
-| Task | reap25 (Hy3, 7.4 tok/s) | sibling (Qwen35B, 100+ tok/s) |
+| Task | reap25 (Hy3, 8.3 tok/s) | sibling (Qwen35B, 100+ tok/s) |
 |---|---|---|
 | CSV stats CLI | clean argparse, helper fns | clean argparse, docstrings |
 | review a buggy `average()` | caught ZeroDivision **+ TypeError**, sum(), hints — 25s | caught ZeroDivision, sum()/len(), hints — **2.3s** |
@@ -35,8 +35,9 @@ tokens per task), the sibling *feels effortless* and reap25 *feels like waiting*
   you'd actually reach for all day. Its outputs are validated by deterministic
   verifiers anyway, so throughput + guardrails beat raw size.
 - **reap25 (Hy3) → "the big model's answer when you want it."** A capable,
-  slightly-more-thorough daily driver on a 96–128 GB Mac, but you feel the 7.4
-  tok/s on long answers.
+  slightly-more-thorough daily driver on a 96–128 GB Mac, but you feel the ~8
+  tok/s on long answers. (Earlier drafts said 7.4 — that is the unpruned smoke
+  figure; reap25's paired receipt measures 8.341.)
 - **Streaming Hy3 → reap25 quality on any Mac (16–128 GB), slower still.** Same
   weights, so this verdict transfers; it's the run-anywhere option, not the
   interactive one.

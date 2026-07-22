@@ -1,0 +1,239 @@
+{
+ "model": "qwen35b-a3b-base",
+ "n": 11,
+ "passed": 11,
+ "accuracy_pct": 100.0,
+ "minutes": 0.9,
+ "per_facet": [
+  {
+   "facet": "coding",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2064,
+   "output": "```python\nimport time\nimport random\nfrom typing import Callable, Any\n\n\ndef retry_with_exponential_backoff(\n    func: Callable[..., Any],\n    max_retries: int = 3,\n    base_delay: float = 1.0,\n    max_delay: float = 60.0,\n    jitter: bool = True,\n    *args: Any,\n    **kwargs: Any,\n) -> Any:\n    \"\"\"\n    Retry a function call with exponential backoff.\n\n    Args:\n        func: The callable to retry.\n        max_retries: Maximum number of retry attempts.\n        base_delay: Initial delay in seconds before the first retry.\n        max_delay: Maximum delay in seconds between retries.\n        jitter: Whether to add random jitter to the delay.\n        *args: Positional arguments to pass to func.\n        **kwargs: Keyword arguments to pass to func.\n\n    Returns:\n        The result of the function call.\n\n    Raises:\n        The last exception raised by func if all retries are exhausted.\n    \"\"\"\n    last_exception = None\n    for attempt in range(max_retries + 1):\n        try:\n            return func(*args, **kwargs)\n        except Exception as e:\n            last_exception = e\n            if attempt == max_retries:\n                break\n            # Calculate delay with exponential backoff\n            delay = min(base_delay * (2 ** attempt), max_delay)\n            if jitter:\n                delay = delay * (0.5 + random.random())\n            time.sleep(delay)\n    raise last_exception\n```\n\n**Rationale:**\n\n- **Exponential Backoff:** The delay between retries increases exponentially (`base_delay * 2^attempt`), which helps avoid overwhelming the server during transient failures.\n- **Capped Delay:** `max_delay` prevents delays from becoming excessively long.\n- **Jitter:** Random jitter (`0.5 + random.random()`) reduces the chance of synchronized retries from multiple clients causing a \"thundering herd\" effect.\n- **Configurable:** Parameters like `max_retries`, `base_delay`, and `max_delay` allow flexibility for different use cases.\n- **Simple Interface:** Accepts any callable and forwards arguments, making it reusable for various network calls.",
+   "prompt": "<|soul:coding|>\nDesign a small Python module that retries a network call with exponential backoff. Give the code and a brief rationale.",
+   "spec": {
+    "keywords": [
+     "def",
+     "retry",
+     "backoff",
+     "exception"
+    ],
+    "min_keywords": 2,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "math",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2150,
+   "output": "To derive the formula for the roots of a general quadratic equation, we will use the method of **completing the square**. This is a robust algebraic technique that transforms the equation into a perfect square trinomial, allowing us to solve for $x$.\n\n### Step 1: Start with the General Quadratic Equation\n\nThe standard form of a quadratic equation is:\n$$ ax^2 + bx + c = 0 $$\nwhere $a$, $b$, and $c$ are real numbers, and $a \\neq 0$.\n\n### Step 2: Isolate the Constant Term\n\nSubtract $c$ from both sides to move the constant term to the right-hand side:\n$$ ax^2 + bx = -c $$\n\n### Step 3: Normalize the Leading Coefficient\n\nDivide every term by $a$ to make the coefficient of $x^2$ equal to 1:\n$$ x^2 + \\frac{b}{a}x = -\\frac{c}{a} $$\n\n### Step 4: Complete the Square\n\nTo create a perfect square trinomial on the left side, we need to add a specific constant to both sides. This constant is the square of half the coefficient of $x$.\n\n1.  Identify the coefficient of $x$: $\\frac{b}{a}$.\n2.  Take half of this coefficient: $\\frac{b}{2a}$.\n3.  Square it: $\\left(\\frac{b}{2a}\\right)^2 = \\frac{b^2}{4a^2}$.\n\nAdd $\\frac{b^2}{4a^2}$ to both sides of the equation:\n$$ x^2 + \\frac{b}{a}x + \\frac{b^2}{4a^2} = -\\frac{c}{a} + \\frac{b^2}{4a^2} $$\n\n### Step 5: Factor the Left Side and Simplify the Right Side\n\nThe left side is now a perfect square trinomial, which factors into:\n$$ \\left(x + \\frac{b}{2a}\\right)^2 = -\\frac{c}{a} + \\frac{b^2}{4a^2} $$\n\nTo combine the terms on the right side, find a common denominator, which is $4a^2$:\n$$ -\\frac{c}{a} = -\\frac{4ac}{4a^2} $$\n\nSo the equation becomes:\n$$ \\left(x + \\frac{b}{2a}\\right)^2 = \\frac{b^2}{4a^2} - \\frac{4ac}{4a^2} $$\n$$ \\left(x + \\frac{b}{2a}\\right)^2 = \\frac{b^2 - 4ac}{4a^2} $$\n\n### Step 6: Take the Square Root of Both Sides\n\nApply the square root property. Remember to include both the positive and negative roots:\n$$ x + \\frac{b}{2a} = \\pm \\sqrt{\\frac{b^2 - 4ac}{4a^2}} $$\n\nSimplify the square root in the denominator ($\\sqrt{4a^2} = 2a$):\n$$ x + \\frac{b}{2a} = \\pm \\frac{\\sqrt{b^2 - 4ac}}{2a} $$\n\n### Step 7: Solve for $x$\n\nSubtract $\\frac{b}{2a}$ from both sides to isolate $x$:\n$$ x = -\\frac{b}{",
+   "prompt": "<|soul:math|>\nDerive the formula for the roots of a general quadratic equation, step by step, and state the final result clearly.",
+   "spec": {
+    "keywords": [
+     "square",
+     "coefficient",
+     "roots",
+     "equation"
+    ],
+    "min_keywords": 2,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "science",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2988,
+   "output": "To explain why the sky is blue from first principles, we must derive the phenomenon from the fundamental laws of electromagnetism, optics, and the physical properties of Earth's atmosphere.\n\n### **Assumptions**\n1.  **Sunlight is white light**: Sunlight is a mixture of all visible wavelengths (approximately 400 nm to 700 nm).\n2.  **The atmosphere is a dilute gas**: The atmosphere consists primarily of nitrogen ($N_2$) and oxygen ($O_2$) molecules, which are much smaller than the wavelength of visible light.\n3.  **Rayleigh Scattering applies**: The interaction between light and these small particles follows the laws of Rayleigh scattering, which is derived from Maxwell\u2019s equations for electromagnetic waves interacting with dipoles.\n4.  **No significant absorption or other scattering**: We ignore absorption by ozone, aerosols, or water vapor (Mie scattering) for this idealized model.\n5.  **Observer is on Earth\u2019s surface**: The observer looks away from the Sun, through the atmosphere.\n\n---\n\n### **Step-by-Step Deduction**\n\n#### **1. Light as an Electromagnetic Wave**\nVisible light is an electromagnetic wave characterized by its wavelength $\\lambda$. The energy of a photon is inversely proportional to its wavelength:\n$$ E = \\frac{hc}{\\lambda} $$\nShorter wavelengths (blue/violet) have higher energy and oscillate faster than longer wavelengths (red).\n\n#### **2. Interaction with Matter: Induced Dipoles**\nWhen an electromagnetic wave (light) encounters a molecule (like $N_2$ or $O_2$), the oscillating electric field of the light exerts a force on the electrons in the molecule. This causes the electron cloud to oscillate relative to the nucleus, creating an **induced electric dipole**.\n\nThis oscillating dipole then re-radiates (scatters) electromagnetic energy in all directions. This process is the fundamental mechanism of scattering.\n\n#### **3. Rayleigh Scattering Law**\nThe intensity $I$ of light scattered by a particle much smaller than the wavelength of light ($d \\ll \\lambda$) is governed by **Rayleigh\u2019s Law**. From Maxwell\u2019s equations, the power $P$ radiated by an oscillating dipole is proportional to the fourth power of the frequency $f$:\n$$ P \\propto f^4 $$\nSince frequency $f = \\frac{c}{\\lambda}$, we can substitute:\n$$ P \\propto \\left(\\frac{1}{\\lambda}\\right)^4 = \\frac{1}{\\lambda^4} $$\n\nThus, the **scattering cross-section** $\\sigma$ (probability of scattering) for a single molecule is:\n$$ \\sigma \\propto \\frac{1}{\\lambda^4} $$\n\nThis means **shorter wavelengths are scattered much more strongly than longer wavelengths**.\n\n#### **4. Quantitative Comparison of Wavelengths**\nLet\u2019s compare blue light ($\\lambda_b \\approx 450$ nm) and red light ($\\lambda_r \\approx 650$ nm):\n\n$$ \\frac{\\sigma_b}{\\sigma_r} = \\left( \\frac{\\lambda_r}{\\lambda_b} \\right)^4 = \\left( \\frac{650}{450} \\right)^4 \\approx (1.44)^4 \\approx 4.3 $$\n\nBlue light is scattered **~4\u20135 times more strongly** than red light. Violet light ($\\lambda_v \\approx 400$ nm) is scattered even more",
+   "prompt": "<|soul:science|>\nExplain from first principles why the sky is blue, stating your assumptions.",
+   "spec": {
+    "keywords": [
+     "scattering",
+     "wavelength",
+     "light",
+     "atmosphere"
+    ],
+    "min_keywords": 2,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "security",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3460,
+   "output": "Threat modeling a public login form involves analyzing how an attacker might compromise the confidentiality, integrity, or availability of the authentication system. Below are the main attack vectors and one concrete mitigation for each, based on industry best practices (e.g., OWASP, NIST).\n\n### 1. Credential Stuffing & Brute Force Attacks\n**Attack Vector:**  \nAutomated bots attempt thousands of username/password combinations per second, often using leaked credentials from other breaches (credential stuffing) or systematic guessing (brute force).\n\n**Mitigation:**  \n**Implement Rate Limiting and Account Lockout Policies.**  \n- **Rate Limiting:** Restrict the number of login attempts per IP address and per username (e.g., 5 attempts per minute).  \n- **Account Lockout:** Temporarily lock the account after a threshold of failed attempts (e.g., 10 failures), requiring a delay or admin intervention to unlock.  \n- *Enhancement:* Combine with CAPTCHA (e.g., reCAPTCHA v3) to distinguish humans from bots.\n\n### 2. Man-in-the-Middle (MitM) Interception\n**Attack Vector:**  \nAn attacker intercepts network traffic (e.g., on public Wi-Fi) to capture credentials in transit if the connection is not encrypted.\n\n**Mitigation:**  \n**Enforce HTTPS with HSTS (HTTP Strict Transport Security).**  \n- All login pages must be served over TLS 1.2 or higher.  \n- Use HSTS headers to ensure browsers only connect via HTTPS, preventing downgrade attacks.  \n- Ensure valid, trusted SSL/TLS certificates are installed.\n\n### 3. Phishing & Fake Login Pages\n**Attack Vector:**  \nAttackers create look-alike login pages (e.g., `login-secure-bank.com`) to trick users into entering credentials, which are then harvested.\n\n**Mitigation:**  \n**Implement Multi-Factor Authentication (MFA) and Domain Verification.**  \n- **MFA:** Require a second factor (e.g., TOTP, SMS, or hardware key) so stolen passwords alone are insufficient.  \n- **User Education:** Display the correct domain name prominently and use security indicators (e.g., padlock icon).  \n- **DNS-based Authentication of Named Entities (DANE) or Certificate Transparency:** Helps users verify the site\u2019s authenticity.\n\n### 4. Server-Side Vulnerabilities (SQL Injection, XSS)\n**Attack Vector:**  \nAn attacker injects malicious code into the login form fields (e.g., username field) to:  \n- **SQLi:** Bypass authentication by manipulating the database query.  \n- **XSS:** Steal session cookies via stored or reflected cross-site scripting.\n\n**Mitigation:**  \n**Use Parameterized Queries/Prepared Statements and Input Sanitization.**  \n- Never concatenate user input into SQL queries. Use ORM frameworks or parameterized queries.  \n- Sanitize and encode all output to prevent XSS.  \n- Implement Content Security Policy (CSP) headers to restrict script sources.\n\n### 5. Session Hijacking\n**Attack Vector:**  \nAn attacker steals a valid session token (cookie) after a user logs in, allowing them to impersonate the user without knowing the password.\n\n**Mitigation:**  \n**Secure Session Cookie Attributes.**  \n- Set the `Secure` flag (sent only over HTTPS).  \n- Set the `HttpOnly` flag (inaccessible via JavaScript, preventing XSS-based theft).  \n- Set the `SameSite=Strict` or `Lax` attribute to prevent CSRF and cross-site cookie leakage.  \n- Implement short session timeouts and token rotation on privilege changes.\n\n### 6. Credential Storage Compromise\n**Attack Vector:**  \nIf the database is breached, attackers obtain",
+   "prompt": "<|soul:security|>\nThreat-model a public login form: list the main attack vectors and one concrete mitigation for each.",
+   "spec": {
+    "keywords": [
+     "injection",
+     "password",
+     "rate",
+     "hash",
+     "phishing",
+     "csrf"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "design",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2719,
+   "output": "Designing a morning dashboard for a founder is less about data visualization and more about **cognitive load management**. The goal is to answer three questions in under 60 seconds:\n1. **Are we alive?** (Health/Sanity)\n2. **Are we growing?** (Growth/Revenue)\n3. **What\u2019s broken?** (Risk/Blockers)\n\nHere\u2019s the layout guidance, structured by **visual hierarchy** (top-to-bottom, left-to-right) and **psychological priority**.\n\n---\n\n### \ud83e\udded The Golden Rule: The \u201c5-Second Scan\u201d\nIf the founder can\u2019t understand the state of the business in 5 seconds, the dashboard is failing.\n\n---\n\n## \ud83d\udcd0 Layout Structure: The \u201cZ-Pattern\u201d + \u201cTop-Heavy\u201d Model\n\n### **1. The Header: Context & Time**\n*   **What:** Date, Time, and a single \u201cNorth Star\u201d metric.\n*   **Why:** Grounds the data in reality. Founders need to know *when* this data was last updated.\n*   **Design:**\n    *   Top-left: **Last Updated** (e.g., \u201cLive\u201d or \u201cUpdated 5 mins ago\u201d).\n    *   Top-center: **Biggest Number** (e.g., MRR, Total Users, or Cash Balance).\n    *   Top-right: **Quick Actions** (e.g., \u201cSend Weekly Report,\u201d \u201cFlag Issue\u201d).\n\n### **2. The \u201cPulse\u201d Row (Top 20% of Screen)**\n*   **What:** 3\u20135 critical KPIs that determine if the business is healthy *today*.\n*   **Why:** These are the \u201cvital signs.\u201d If these are red, everything else is secondary.\n*   **Layout:** Horizontal row of large, bold cards.\n*   **Metrics:**\n    *   **Revenue (Daily/Weekly):** Is money coming in?\n    *   **Active Users (DAU/MAU):** Is product being used?\n    *   **Cash Burn/Runway:** How many months until we die? (Critical for startups)\n    *   **Support Ticket Volume:** Is customer satisfaction collapsing?\n*   **Design:** Use **traffic light indicators** (Green/Yellow/Red) with a small trend arrow (\u2191/\u2193) vs. last week.\n\n### **3. The \u201cGrowth Engine\u201d Section (Middle 40%)**\n*   **What:** Funnel metrics and acquisition channels.\n*   **Why:** Shows *where* growth is coming from and where it\u2019s leaking.\n*   **Layout:** Two-column grid.\n    *   **Left Column: Acquisition & Conversion**\n        *   Chart: **Funnel Chart** (Visitors \u2192 Signups \u2192 Activated \u2192 Paid).\n        *   Metric: **CAC (Customer Acquisition Cost)** by channel.\n        *   Metric: **Conversion Rate** (Signup to Paid).\n    *   **Right Column: Retention & Engagement**\n        *   Chart: **Cohort Analysis** (Retention over time).\n        *   Metric: **Churn Rate** (Logo vs. Revenue).\n        *   Metric: **NPS or CSAT Score**.\n*   **Why this order:** Founders need to know if growth is sustainable (retention) and efficient (CAC).\n\n### **4. The \u201cRisk & Blockers\u201d Panel (Bottom 30%)**\n*   **What:** Operational health, support, and team alerts.\n*   **Why:** Identifies fires that need immediate attention.\n*",
+   "prompt": "<|soul:design|>\nGive layout guidance for a metrics dashboard a founder checks every morning: what goes where and why.",
+   "spec": {
+    "keywords": [
+     "sparkline",
+     "north star",
+     "alert",
+     "scan",
+     "column",
+     "metric",
+     "hierarchy",
+     "trend",
+     "layout",
+     "grid"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "fullstack",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3234,
+   "output": "The architecture follows a standard client-server pattern, prioritizing simplicity and state consistency. The backend exposes a RESTful API with two primary endpoints: `GET /todos` for retrieving the full list and `POST /todos` for creating new items. Each todo item is represented by a lightweight JSON object containing a unique identifier, a string description, and a boolean status flag indicating completion. The data model is minimal, requiring no complex relationships or nested structures, which keeps the database schema flat and the API payload lean.\n\nOn the frontend, the application state is managed through a centralized store that mirrors the server\u2019s data structure. The state flow begins with an initial fetch of existing todos upon component mount, populating the store with the current dataset. When a user interacts with the interface\u2014either by adding a new task or toggling completion\u2014the frontend immediately updates the local state to provide instant feedback, a technique known as optimistic UI. This update triggers an asynchronous API call to persist the change to the server. If the server responds successfully, the local state remains consistent with the source of truth. If the request fails, the frontend reverts the local state to its previous value, ensuring the user interface does not drift from the actual database state.\n\nError handling is integrated directly into the state management layer. Network failures or validation errors from the API are captured and stored in a separate error state property, allowing the UI to display appropriate notifications without crashing. This separation of concerns ensures that the view layer remains clean, displaying only data and errors without logic for fetching or mutating state.\n\nThe frontend state flow can be summarized in a single conceptual sketch:\n\n```javascript\n// Simplified State Flow Concept\nconst initialState = { todos: [], loading: false, error: null };\n\nfunction todoReducer(state, action) {\n  switch (action.type) {\n    case 'FETCH_START':\n      return { ...state, loading: true };\n    case 'FETCH_SUCCESS':\n      return { ...state, todos: action.payload, loading: false };\n    case 'ADD_TODO_OPTIMISTIC':\n      return { ...state, todos: [...state.todos, action.payload] };\n    case 'ADD_TODO_FAILURE':\n      // Revert optimistic update on error\n      return { ...state, error: action.payload, loading: false };\n    default:\n      return state;\n  }\n}\n```\n\nThis architecture ensures that the application remains responsive and predictable. By decoupling the UI rendering from the data fetching logic and handling errors explicitly within the state machine, the app maintains a clear contract between the user\u2019s actions and the system\u2019s responses. The backend remains stateless, relying on the client to manage the current view of the data, while the frontend handles the complexity of synchronization and error recovery. This balance allows for rapid development and easy maintenance, as changes to the UI do not require restructuring the API, and vice versa. The result is a robust, scalable foundation for a simple todo application that can be extended with features like authentication or filtering without disrupting the core data flow.",
+   "prompt": "<|soul:fullstack|>\nOutline the architecture for a small todo app \u2014 API endpoints, data model, and frontend state flow \u2014 as a concise prose outline with AT MOST one short code sketch. Stay well under 500 words; an outline that respects scope beats an implementation dump.",
+   "spec": {
+    "keywords": [
+     "endpoint",
+     "api",
+     "database",
+     "frontend",
+     "state",
+     "schema"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "gamedev",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 1395,
+   "output": "Let's explore how a 2D game loop works together with collision detection. I'll ask guiding questions along the way to help us dive deeper.\n\nIn a game, the \"loop\" is the heartbeat of the application. It runs thousands of times per second, constantly refreshing the screen to create the illusion of motion. \ud83e\udec0\n\nA basic 2D game loop typically follows this sequence every frame:\n\n1.  **Input:** The game checks for player actions, like pressing a key or moving a mouse. \ud83c\udfae\n2.  **Update:** The game calculates new positions for all objects based on their speed and direction.\n3.  **Collision Detection:** The game checks if any objects are overlapping or touching. \ud83d\udca5\n4.  **Render:** The game draws the updated positions of all objects to the screen. \ud83c\udfa8\n\nTiming is crucial because if the loop runs too fast, the game might be unplayable on high-end computers, or physics calculations could become unstable. If it runs too slowly, the game will feel \"laggy\" or choppy.\n\nWhere would you like to start our exploration?\n\n1.  **The Update Phase:** How we calculate movement and why \"delta time\" is used to keep speed consistent across different computers.\n2.  **Collision Detection:** How we use math (like bounding boxes) to determine when two objects have actually hit each other.\n3.  **Frame Rate Control:** How we use a \"fixed timestep\" to ensure the game runs at a steady pace regardless of the hardware.",
+   "prompt": "<|soul:gamedev|>\nExplain a basic 2D game loop with collision detection: what happens each frame and why timing matters.",
+   "spec": {
+    "keywords": [
+     "frame",
+     "collision",
+     "update",
+     "render",
+     "delta",
+     "loop"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "legacy",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3120,
+   "output": "Modernizing a 20-year-old Visual Basic 6 (VB6) system is less about \"rewriting code\" and more about **risk mitigation, knowledge extraction, and incremental value delivery**. VB6 systems often contain critical business logic that is undocumented, tightly coupled, and understood only by a few senior developers or legacy contractors.\n\nHere is a safe, phased modernization approach:\n\n### Phase 1: Discovery & Stabilization (Months 1\u20133)\n**Goal:** Understand what the system does without breaking it.\n\n1. **Inventory & Dependency Mapping**\n   - Identify all components: Forms, modules, ActiveX controls, DLLs, OCXs, and external dependencies (ODBC/OLE DB connections, COM objects, printers, hardware interfaces).\n   - Map data flows: Where does data enter? Where does it exit? What databases (Access, SQL Server, Oracle) are used?\n   - Document \"tribal knowledge\": Interview long-tenured staff. Record known workarounds and edge cases.\n\n2. **Automated Code Analysis**\n   - Use tools like **VB6 Source Code Analyzer** or **SmartBear\u2019s TestComplete** to generate dependency graphs.\n   - Identify unused code, dead links, and complex spaghetti logic.\n   - **Do not refactor yet.** Focus on understanding.\n\n3. **Stabilize the Environment**\n   - Ensure the current system is stable. Fix critical bugs if necessary, but avoid major changes.\n   - Create a **full backup** of the database and source code.\n   - Set up a **test environment** that mirrors production as closely as possible.\n\n### Phase 2: Strategy Selection & Pilot (Months 4\u20136)\n**Goal:** Choose the right modernization path for each component.\n\n#### Evaluate Modernization Paths:\n| Approach | Best For | Risk | Cost |\n|----------|----------|------|------|\n| **Rehosting (Lift & Shift)** | Simple UI apps with minimal logic. | Low | Low |\n| **Refactoring (VB.NET)** | Systems with complex business logic but simple UI. | Medium | Medium |\n| **Replatforming (C#/Java/Node.js)** | Systems needing new features, cloud integration, or mobile access. | High | High |\n| **Strangler Fig Pattern** | Large, complex systems. | Low-Medium | Medium-High |\n\n#### Recommended Strategy: **Strangler Fig Pattern**\n- **Do not rewrite the entire system at once.**\n- Identify **isolated, low-risk modules** (e.g., a reporting module, a user login screen, a data export feature).\n- Build these new modules in a modern stack (e.g., C#/.NET, Java, or Python) with a modern UI (Web, Desktop, or Mobile).\n- Route traffic to the new module while the old VB6 system handles the rest.\n\n### Phase 3: Incremental Modernization (Months 7\u201318)\n**Goal:** Replace functionality piece by piece.\n\n1. **Extract Business Logic**\n   - VB6 code often mixes UI and business logic. Extract pure business rules into a **service layer** (e.g., a .NET Core API or Java Spring service).\n   - This layer can be called by both the old VB6 UI (via COM interop or web services) and new modern UIs.\n\n2. **Modernize Data Access**\n   - Replace direct database calls in VB6 with a **data access layer** (e.g., Entity Framework, Hibernate).\n   - Ensure data integrity and add logging/auditing.\n\n3. **Replace UI Components",
+   "prompt": "<|soul:legacy|>\nYou inherit a 20-year-old VB6 system that still runs the business. Describe a safe modernization approach.",
+   "spec": {
+    "keywords": [
+     "strangler",
+     "test",
+     "migration",
+     "refactor",
+     "legacy",
+     "incremental"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "music",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2720,
+   "output": "The **I\u2013V\u2013vi\u2013IV** progression (often called the \"sensitive female chord progression\" or the \"axis progression\") is one of the most ubiquitous and emotionally resonant sequences in Western music. From \"Let It Be\" to \"Someone Like You\" to \"With or Without You,\" it captivates listeners because it balances **familiarity** with **tension and release**.\n\nHere\u2019s a breakdown of why it works so well and how to vary it to keep listeners engaged.\n\n---\n\n### 1. Why It Resolves So Satisfyingly\n\nThe satisfaction comes from a perfect cycle of **tonic stability \u2192 dominant tension \u2192 relative minor melancholy \u2192 subdominant lift**.\n\n#### A. The Emotional Arc\n1.  **I (Tonic):** Establishes home. Stability, resolution, peace.\n2.  **V (Dominant):** Creates tension. The leading tone (7th scale degree) pulls strongly back to the tonic. It feels like \"looking forward\" or \"building.\"\n3.  **vi (Relative Minor):** The \"twist.\" Instead of resolving directly to I, the V chord moves to vi. This is a **deceptive cadence**. It introduces melancholy, introspection, or emotional depth. It feels like a sigh or a moment of vulnerability.\n4.  **IV (Subdominant):** The \"lift.\" The IV chord feels open, hopeful, and expansive. It prepares the ear to return to I, but with a sense of journey rather than just rest.\n\n#### B. Voice Leading Magic\nThe magic lies in the **smooth voice leading** between chords, especially in the key of C Major:\n- **I (C\u2013E\u2013G)** \u2192 **V (G\u2013B\u2013D)**: The G is common. The B (leading tone) wants to resolve to C.\n- **V (G\u2013B\u2013D)** \u2192 **vi (A\u2013C\u2013E)**: The B resolves down to A (a half-step pull). The D moves to E (a whole step). This creates a smooth, lyrical descent.\n- **vi (A\u2013C\u2013E)** \u2192 **IV (F\u2013A\u2013C)**: The E moves to F (half-step pull). The A and C are common tones. This creates a sense of \"opening up.\"\n- **IV (F\u2013A\u2013C)** \u2192 **I (C\u2013E\u2013G)**: The F resolves to E (half-step pull). The C is common. This completes the circle back to home.\n\nThis **half-step motion** in the inner voices (B\u2192A, E\u2192F, F\u2192E) creates a natural, almost vocal-like flow that feels inevitable and satisfying.\n\n---\n\n### 2. Variations to Keep Interest\n\nWhile the basic progression is powerful, repetition can become predictable. Here are ways to vary it while preserving its emotional core:\n\n#### A. Add Extensions and Alterations\n- **Add 7ths:** Use **I7\u2013V7\u2013vi7\u2013IV7**. The added 7ths create more tension and a jazzier, bluesier feel.\n- **Add 9ths/13ths:** A **V9** or **IVmaj7** adds color. For example, a **IVmaj7** (Fmaj7) sounds dreamy and nostalgic.\n- **Use a ii\u2013V\u2013I instead of V:** Replace the V with **ii\u2013V** (e.g., Dm7\u2013G7). This adds a pre-dominant function and makes the resolution to vi feel more earned.\n\n#### B. Change the Bass Line (Inversions)",
+   "prompt": "<|soul:music|>\nAnalyze the chord progression I\u2013V\u2013vi\u2013IV: why does it resolve so satisfyingly, and what variations keep interest?",
+   "spec": {
+    "keywords": [
+     "chord",
+     "key",
+     "progression",
+     "tonic",
+     "resolution",
+     "harmony"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "art",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3381,
+   "output": "A strong landscape composition is rarely just about what you see; it is about how you guide the viewer\u2019s eye through a visual narrative. While structure (rule of thirds, leading lines, framing) provides the skeleton, **light and color** provide the soul and the emotional resonance.\n\nHere is a critique-style breakdown of how to master light and color to elevate a landscape from a simple record of a place to a compelling piece of art.\n\n### 1. Light: The Architect of Form and Mood\n\nLight is not just illumination; it is the primary tool for creating depth, focus, and atmosphere.\n\n*   **Establish a Clear Light Source:**\n    *   **Directionality:** Decide where the light is coming from (front, side, back, or overhead). Side lighting is often best for landscapes as it reveals texture (in rocks, trees, water) and creates long, dramatic shadows that add depth.\n    *   **Consistency:** Ensure all shadows and highlights follow the same logical source. Inconsistent lighting breaks the illusion of reality and confuses the viewer.\n\n*   **Value Contrast as a Focal Point:**\n    *   Use **chiaroscuro** (strong contrast between light and dark) to draw the eye. The area with the highest contrast (darkest darks next to lightest lights) will naturally become the focal point.\n    *   **Avoid uniform lighting:** Flat, midday sun can flatten a landscape. Seek \"golden hour\" or \"blue hour\" light, or use atmospheric perspective (haze) to soften distant light, creating a sense of vastness.\n\n*   **Atmospheric Perspective via Light:**\n    *   Distant elements should have **lower contrast** and **lighter values** (due to atmospheric haze). Foreground elements should have **higher contrast** and **darker values**. This layering creates depth without relying solely on size or overlap.\n\n### 2. Color: The Emotional Language\n\nColor choices should serve the mood and the light, not just the literal colors of the scene.\n\n*   **Temperature Contrast (Warm vs. Cool):**\n    *   This is one of the most powerful tools in landscape painting.\n    *   **Example:** If the sun is warm (golden/orange), the shadows should be cool (blues/purples). This temperature contrast makes both the light and shadow feel more vibrant and realistic.\n    *   **Avoid neutral grays in shadows:** Shadows are rarely gray; they are usually the complementary color of the light source.\n\n*   **Color Harmony and Limitation:**\n    *   **Limit your palette:** A restricted palette (e.g., 3\u20135 main colors) creates cohesion. Too many colors compete for attention.\n    *   **Use analogous colors** for calm, harmonious scenes (greens, blues, yellows).\n    *   **Use complementary colors** for dynamic, energetic scenes (orange sky vs. blue shadows, red flowers vs. green grass).\n\n*   **Saturation and Focus:**\n    *   **High saturation** draws the eye; **low saturation** pushes elements back.\n    *   Use saturated colors in the focal area and desaturate (gray down) the background or peripheral elements. This prevents the painting from looking \"noisy\" or chaotic.\n\n*   **Local Color vs. Observed Color:**\n    *   Resist painting \"local color\" (e.g., grass is always green, sky is always blue). Instead, paint **observed color** under specific lighting conditions.\n    *   **Example:** Grass in shadow might appear blue-green or purple; snow in sunlight might be yellow, pink, or blue depending on the sky reflection",
+   "prompt": "<|soul:art|>\nCritique-style guidance: what makes a strong composition in a landscape painting? Cover light and color choices.",
+   "spec": {
+    "keywords": [
+     "composition",
+     "color",
+     "light",
+     "contrast",
+     "form",
+     "depth"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "perfumery",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2899,
+   "output": "Here is a structured proposal for a **Citrus-Woody** fragrance, designed to balance the bright, effervescent top notes with the grounding, sophisticated depth of wood. This structure follows the classic olfactory pyramid while ensuring harmony between the contrasting families.\n\n### **Fragrance Name Concept:** *Aurora Borealis*  \n*(Evoking the crisp, clean air of northern forests under a bright sky)*\n\n---\n\n### **1. Top Notes (The Opening: 0\u201315 minutes)**  \n*Character: Bright, zesty, effervescent, and invigorating.*  \nThese notes provide the initial burst of citrus energy, designed to be light and uplifting.\n\n- **Bergamot** (Calabrian): The quintessential citrus note, offering a complex blend of sweet, spicy, and slightly floral citrus.\n- **Yuzu**: A Japanese citrus with a unique tartness, hint of grapefruit, and subtle floral undertones.\n- **Pink Pepper**: Adds a spicy, slightly peppery lift that bridges the gap between citrus and wood.\n- **Lemon Verbena**: Enhances the fresh, green-citrus aspect without being overly sharp.\n\n> *Example Material Blend:* 40% Bergamot oil, 30% Yuzu essential oil, 15% Pink Pepper CO\u2082 extract, 15% Lemon Verbena absolute.\n\n---\n\n### **2. Heart Notes (The Core: 15 minutes\u20134 hours)**  \n*Character: Aromatic, herbal, and subtly spicy.*  \nThis layer softens the sharpness of the citrus and begins to introduce woody-herbal complexity, creating depth and character.\n\n- **Sage (Clary Sage)**: Earthy, herbal, and slightly nutty, providing a natural bridge to woody notes.\n- **Cardamom**: Adds a warm, spicy, and slightly camphoraceous nuance.\n- **Lavender**: Offers a clean, aromatic herbal quality that complements citrus beautifully.\n- **Vetiver (Root)**: *Note: Often used in base, but a small amount in the heart adds earthy depth.*  \n  *(Alternative: **Cedarwood (Virginia)** \u2013 dry, pencil-shaving-like woodiness that starts emerging here.)*\n\n> *Example Material Blend:* 35% Clary Sage absolute, 25% Cardamom essential oil, 20% Lavender oil, 20% Virginia Cedarwood.\n\n---\n\n### **3. Base Notes (The Dry Down: 4 hours\u201324+ hours)**  \n*Character: Warm, rich, earthy, and long-lasting.*  \nThese notes anchor the fragrance, providing longevity and a sophisticated, masculine-leaning (though unisex) woody foundation.\n\n- **Sandalwood (Indian or Australian)**: Creamy, soft, and slightly sweet wood, smoothing out the sharper edges.\n- **Cedarwood (Atlas)**: Dry, smoky, and pencil-sharp, adding structure and masculinity.\n- **Patchouli (Dark)**: Earthy, slightly sweet, and musky, enhancing the woody depth.\n- **Musk (White Musk or Ambroxan)**: Clean, skin-like, and long-lasting, providing a modern, clean finish.\n- **Tonka Bean**: Adds a subtle vanilla-like sweetness and coumarin warmth, rounding out the citrus-woody contrast.\n\n> *Example Material Blend:* 30% Sandalwood (Santalum album), 25% Atlas Cedarwood, 20% Patchouli essential oil, 15% White Musk (Galax",
+   "prompt": "<|soul:perfumery|>\nStructure a citrus-woody fragrance: name the pyramid levels and give example materials for each.",
+   "spec": {
+    "keywords": [
+     "top",
+     "heart",
+     "base",
+     "notes",
+     "accord",
+     "bergamot",
+     "cedar"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  }
+ ]
+}

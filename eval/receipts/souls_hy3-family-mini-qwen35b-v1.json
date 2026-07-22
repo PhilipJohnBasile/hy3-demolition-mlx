@@ -1,0 +1,239 @@
+{
+ "model": "hy3-family-mini-qwen35b-v1",
+ "n": 11,
+ "passed": 10,
+ "accuracy_pct": 90.9,
+ "minutes": 1.0,
+ "per_facet": [
+  {
+   "facet": "coding",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2171,
+   "output": "```python\nimport time\nimport random\nfrom typing import Callable, Any\n\n\ndef retry_with_backoff(\n    func: Callable[..., Any],\n    max_retries: int = 3,\n    base_delay: float = 1.0,\n    max_delay: float = 60.0,\n    jitter: bool = True,\n    **kwargs: Any\n) -> Any:\n    \"\"\"\n    Retry a network call with exponential backoff.\n\n    Args:\n        func: The callable to retry.\n        max_retries: Maximum number of retry attempts.\n        base_delay: Initial delay between retries in seconds.\n        max_delay: Maximum delay cap in seconds.\n        jitter: Whether to add random jitter to the delay.\n        **kwargs: Keyword arguments passed to the callable.\n\n    Returns:\n        The result of the callable.\n\n    Raises:\n        The last exception raised by the callable if all retries are exhausted.\n    \"\"\"\n    last_exception = None\n    for attempt in range(max_retries + 1):\n        try:\n            return func(**kwargs)\n        except Exception as e:\n            last_exception = e\n            if attempt < max_retries:\n                # Calculate delay with exponential backoff\n                delay = min(base_delay * (2 ** attempt), max_delay)\n                # Add jitter to avoid thundering herd\n                if jitter:\n                    delay = delay * (0.5 + random.random())\n                time.sleep(delay)\n    raise last_exception\n```\n\n**Rationale:**\n\n- **Exponential backoff**: The delay doubles with each retry (`base_delay * 2^attempt`), which is a standard strategy to reduce load on failing services and increase the chance of success.\n- **Max delay cap**: Prevents delays from growing indefinitely, capping at `max_delay` seconds.\n- **Jitter**: Randomizes the delay slightly (between 50% and 100% of the calculated delay) to prevent multiple clients from retrying simultaneously, which could cause a \"thundering herd\" effect.\n- **Configurable retries**: Allows callers to specify how many retries they want.\n- **Pass-through kwargs**: The callable and its arguments are passed through cleanly, keeping the interface simple.\n- **Exception propagation**: If all retries fail, the last exception is re-raised so the caller can handle it appropriately.",
+   "prompt": "<|soul:coding|>\nDesign a small Python module that retries a network call with exponential backoff. Give the code and a brief rationale.",
+   "spec": {
+    "keywords": [
+     "def",
+     "retry",
+     "backoff",
+     "exception"
+    ],
+    "min_keywords": 2,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "math",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2093,
+   "output": "To derive the formula for the roots of a general quadratic equation, we will use the method of **completing the square**. This is a standard algebraic technique that transforms the equation into a perfect square trinomial, allowing us to solve for $x$.\n\n### Step 1: Start with the general quadratic equation\nThe general form of a quadratic equation is:\n$$ ax^2 + bx + c = 0 $$\nwhere $a$, $b$, and $c$ are real numbers, and $a \\neq 0$ (if $a=0$, the equation is linear, not quadratic).\n\n### Step 2: Move the constant term to the right side\nSubtract $c$ from both sides to isolate the variable terms:\n$$ ax^2 + bx = -c $$\n\n### Step 3: Divide by the leading coefficient $a$\nDivide every term by $a$ to make the coefficient of $x^2$ equal to 1:\n$$ x^2 + \\frac{b}{a}x = -\\frac{c}{a} $$\n\n### Step 4: Complete the square\nTo create a perfect square trinomial on the left side, we add a specific constant to both sides. This constant is the square of half the coefficient of $x$.\n\nThe coefficient of $x$ is $\\frac{b}{a}$. Half of this is $\\frac{b}{2a}$. Squaring it gives $\\left(\\frac{b}{2a}\\right)^2 = \\frac{b^2}{4a^2}$.\n\nAdd $\\frac{b^2}{4a^2}$ to both sides:\n$$ x^2 + \\frac{b}{a}x + \\frac{b^2}{4a^2} = -\\frac{c}{a} + \\frac{b^2}{4a^2} $$\n\n### Step 5: Factor the left side and simplify the right side\nThe left side is now a perfect square:\n$$ \\left(x + \\frac{b}{2a}\\right)^2 = -\\frac{c}{a} + \\frac{b^2}{4a^2} $$\n\nSimplify the right side by finding a common denominator ($4a^2$):\n$$ -\\frac{c}{a} = -\\frac{4ac}{4a^2} $$\nSo,\n$$ \\left(x + \\frac{b}{2a}\\right)^2 = \\frac{b^2}{4a^2} - \\frac{4ac}{4a^2} $$\n$$ \\left(x + \\frac{b}{2a}\\right)^2 = \\frac{b^2 - 4ac}{4a^2} $$\n\n### Step 6: Take the square root of both sides\nApply the square root property. Remember to include both the positive and negative roots:\n$$ x + \\frac{b}{2a} = \\pm \\sqrt{\\frac{b^2 - 4ac}{4a^2}} $$\n\nSimplify the square root in the denominator ($\\sqrt{4a^2} = 2a$):\n$$ x + \\frac{b}{2a} = \\pm \\frac{\\sqrt{b^2 - 4ac}}{2a} $$\n\n### Step 7: Solve for $x$\nSubtract $\\frac{b}{2a}$ from both sides:\n$$ x = -\\frac{b}{2a} \\pm \\frac{\\sqrt{b^2 - 4ac}}{2a}",
+   "prompt": "<|soul:math|>\nDerive the formula for the roots of a general quadratic equation, step by step, and state the final result clearly.",
+   "spec": {
+    "keywords": [
+     "square",
+     "coefficient",
+     "roots",
+     "equation"
+    ],
+    "min_keywords": 2,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "science",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3116,
+   "output": "To explain why the sky is blue from first principles, we must break the phenomenon down into its fundamental physical components: the nature of light, the composition of the atmosphere, and the interaction between electromagnetic waves and matter.\n\n### Assumptions\n1.  **Light is an electromagnetic wave**: Sunlight consists of a spectrum of wavelengths, each corresponding to a different color (violet, blue, green, yellow, orange, red).\n2.  **The atmosphere is a gaseous medium**: Earth's atmosphere is composed primarily of nitrogen (~78%) and oxygen (~21%), with trace amounts of other gases and aerosols. These molecules are much smaller than the wavelength of visible light.\n3.  **Rayleigh Scattering applies**: The scattering of light by particles much smaller than the wavelength of the light is governed by Rayleigh scattering.\n4.  **Human vision is trichromatic**: The human eye perceives color through three types of cone cells sensitive to short (blue), medium (green), and long (red) wavelengths.\n5.  **The sun emits a broad spectrum**: The sun emits light across the visible spectrum, with peak intensity in the green-yellow region, but significant energy in the blue and violet regions.\n\n---\n\n### Step-by-Step Deduction\n\n#### Step 1: The Nature of Sunlight\nSunlight is not monochromatic; it is a mixture of all visible wavelengths, approximately 400 nm (violet) to 700 nm (red). When this light enters Earth's atmosphere, it encounters gas molecules (N\u2082, O\u2082).\n\n#### Step 2: Interaction with Atmospheric Molecules\nWhen an electromagnetic wave (light) encounters a particle, it can be absorbed, transmitted, or scattered. For particles much smaller than the wavelength of light (like N\u2082 and O\u2082 molecules, which are ~0.3 nm, vs. visible light at 400\u2013700 nm), the dominant interaction is **elastic scattering** known as **Rayleigh scattering**.\n\n#### Step 3: The Physics of Rayleigh Scattering\nRayleigh scattering arises from the interaction between the oscillating electric field of the light wave and the electrons in the gas molecules. The electric field induces a dipole moment in the molecule, which then re-radiates energy in all directions.\n\nThe key first-principle result from Maxwell's equations applied to small dipoles is that the **intensity of scattered light ($I$) is inversely proportional to the fourth power of the wavelength ($\\lambda$)**:\n\n$$\nI \\propto \\frac{1}{\\lambda^4}\n$$\n\nThis means shorter wavelengths scatter much more strongly than longer wavelengths.\n\nLet's compare the scattering intensity for blue and red light:\n- Blue light: $\\lambda \\approx 450$ nm\n- Red light: $\\lambda \\approx 650$ nm\n\n$$\n\\frac{I_{\\text{blue}}}{I_{\\text{red}}} = \\left( \\frac{\\lambda_{\\text{red}}}{\\lambda_{\\text{blue}}} \\right)^4 = \\left( \\frac{650}{450} \\right)^4 \\approx (1.44)^4 \\approx 4.3\n$$\n\n**Conclusion from Step 3**: Blue light is scattered roughly 4\u20135 times more strongly than red light by air molecules.\n\n#### Step 4: Why Not Violet?\nViolet light has an even shorter wavelength (~400 nm) than blue (~450 nm). According to the $1/\\lambda^4$ law, violet light should scatter even more strongly",
+   "prompt": "<|soul:science|>\nExplain from first principles why the sky is blue, stating your assumptions.",
+   "spec": {
+    "keywords": [
+     "scattering",
+     "wavelength",
+     "light",
+     "atmosphere"
+    ],
+    "min_keywords": 2,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "security",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3900,
+   "output": "I cannot provide instructions or attack vectors for compromising specific systems, as that would violate safety guidelines regarding malicious activity. However, I can provide a comprehensive security overview of common vulnerabilities associated with public-facing authentication interfaces and the standard industry mitigations used to defend against them.\n\nWhen designing or auditing a public login form, security professionals focus on defending against the following common threat categories:\n\n### 1. Credential Stuffing and Brute Force Attacks\n**Threat:** Automated scripts attempt to log in using large lists of stolen username/password pairs (credential stuffing) or try many password combinations (brute force).\n\n**Mitigation:**\n- **Rate Limiting and Account Lockout:** Implement strict rate limiting on login attempts per IP address and per account. After a threshold of failed attempts, temporarily lock the account or require additional verification.\n- **CAPTCHA:** Integrate a CAPTCHA (e.g., reCAPTCHA v3) after a few failed attempts to distinguish humans from bots.\n\n### 2. Credential Exposure via Insecure Transmission\n**Threat:** Attackers intercept login credentials if the form transmits data over an unencrypted connection (HTTP).\n\n**Mitigation:**\n- **Enforce HTTPS:** Always serve the login page over TLS (HTTPS). Use HSTS (HTTP Strict Transport Security) headers to prevent downgrade attacks and ensure all communication is encrypted.\n\n### 3. Server-Side Injection (SQLi)\n**Threat:** If the login form's backend directly concatenates user input into SQL queries, attackers can inject malicious SQL to bypass authentication or extract data.\n\n**Mitigation:**\n- **Parameterized Queries:** Use parameterized queries or prepared statements for all database interactions. This ensures user input is treated as data, not executable code.\n\n### 4. Timing Attacks\n**Threat:** Attackers measure the time it takes for the server to respond to different inputs. If the system checks characters one by one, the response time varies slightly, allowing attackers to guess valid credentials.\n\n**Mitigation:**\n- **Constant-Time Comparison:** Use a constant-time string comparison function for password verification. This ensures the response time is the same regardless of how many characters match, preventing timing-based inference.\n\n### 5. Phishing and Fake Login Pages\n**Threat:** Attackers create look-alike login pages to steal credentials (phishing).\n\n**Mitigation:**\n- **Security Awareness and Domain Validation:** Educate users to verify the URL and look for the padlock icon. For high-security applications, implement multi-factor authentication (MFA) so that stolen passwords alone are insufficient.\n\n### 6. Session Hijacking\n**Threat:** After a successful login, an attacker steals the session cookie to impersonate the user.\n\n**Mitigation:**\n- **Secure Session Management:** Set session cookies with the `Secure`, `HttpOnly`, and `SameSite=Strict` flags. Regenerate the session ID after successful login to prevent session fixation attacks.\n\n### 7. Information Disclosure\n**Threat:** Login forms often return different error messages for \"invalid username\" vs. \"invalid password,\" allowing attackers to enumerate valid usernames.\n\n**Mitigation:**\n- **Generic Error Messages:** Return a single, generic error message for all authentication failures (e.g., \"Invalid username or password\"). Do not reveal whether the username exists in the system.\n\n### Best Practices Summary\n- **Use MFA:** Require multi-factor authentication for all users, especially administrators.\n- **Monitor Logs:** Implement real-time monitoring and alerting for suspicious login patterns.\n- **Regular Audits:** Conduct periodic penetration testing and code reviews focused on authentication flows.\n\nBy implementing these mitigations, organizations can significantly reduce the risk of compromise for public login",
+   "prompt": "<|soul:security|>\nThreat-model a public login form: list the main attack vectors and one concrete mitigation for each.",
+   "spec": {
+    "keywords": [
+     "injection",
+     "password",
+     "rate",
+     "hash",
+     "phishing",
+     "csrf"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "design",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2837,
+   "output": "<|soul:design|>\nA founder's morning dashboard is not a data dump \u2014 it's a **decision filter**. The goal is to answer three questions in under 60 seconds:\n1. **Are we alive?** (Cash, runway, critical ops)\n2. **Are we growing?** (Revenue, users, key growth levers)\n3. **What\u2019s broken?** (Top 3 blockers or anomalies)\n\nHere\u2019s the layout guidance, structured by **visual hierarchy** and **psychological priority**.\n\n---\n\n### \ud83e\udded The 4-Zone Layout (Top \u2192 Bottom)\n\n#### **ZONE 1: THE HEARTBEAT (Top 20% of screen)**\n*What it is:* Real-time or near-real-time critical health metrics.\n*Why here:* If this zone is red, everything else is secondary. This is the \"can we sleep tonight?\" layer.\n\n| Metric | Placement | Why |\n|--------|-----------|-----|\n| **Cash Balance** | Top-left, largest font | Runway is oxygen. Know your days left. |\n| **Burn Rate (30d avg)** | Top-center | Context for cash. Is spending accelerating? |\n| **Active Users (DAU/MAU)** | Top-right | Product engagement pulse. Sudden drop = crisis. |\n| **System Uptime / Critical Errors** | Far top-right (small badge) | If the product is down, revenue stops. |\n\n> **Design Tip:** Use color coding (green/yellow/red) but sparingly. Only trigger red for *actionable* thresholds (e.g., <30 days runway, >5% error rate).\n\n---\n\n#### **ZONE 2: THE GROWTH ENGINE (Middle 40%)**\n*What it is:* Leading indicators that predict next month\u2019s results.\n*Why here:* Founders need to see if the business is moving forward, not just surviving.\n\n| Metric | Placement | Why |\n|--------|-----------|-----|\n| **MRR/ARR Trend (Sparkline)** | Left column, large chart | The single most important north star. Show 90-day trend. |\n| **New Customers / Signups** | Center, big number + % change | Top-of-funnel health. Is marketing working? |\n| **Conversion Rate (Visits \u2192 Paid)** | Right column | Efficiency metric. If signups are up but conversions down, something is broken in onboarding. |\n| **CAC vs. LTV** | Small side-by-side bars | Unit economics sanity check. Is growth sustainable? |\n\n> **Design Tip:** Use sparklines (mini line charts) instead of full grids. Founders care about *direction*, not exact values.\n\n---\n\n#### **ZONE 3: THE BLOCKERS (Bottom 30%)**\n*What it is:* Qualitative or semi-quantitative alerts.\n*Why here:* Data tells you *what* happened; this tells you *why* and *what to do*.\n\n| Metric | Placement | Why |\n|--------|-----------|-----|\n| **Top 3 Support Tickets** | Left | Product pain points. Recurring issues = feature debt. |\n| **Sales Pipeline Value** | Center | Next quarter\u2019s revenue. How many deals in final stage? |\n| **Key Team OKRs Status** | Right | Are teams on track? Red flags on product/engineering milestones. |\n| **Competitor/Market News** | Far right (small feed) | External threats. Did a competitor launch? Regulatory change? |\n\n> **Design Tip:** This zone",
+   "prompt": "<|soul:design|>\nGive layout guidance for a metrics dashboard a founder checks every morning: what goes where and why.",
+   "spec": {
+    "keywords": [
+     "sparkline",
+     "north star",
+     "alert",
+     "scan",
+     "column",
+     "metric",
+     "hierarchy",
+     "trend",
+     "layout",
+     "grid"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "fullstack",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3238,
+   "output": "**Architecture Overview: Minimal Todo Service**\n\nThe application follows a standard three-tier architecture: a stateless REST API, a persistent data store, and a reactive frontend. The goal is simplicity, avoiding over-engineering while maintaining clear separation of concerns.\n\n**1. Data Model**\nThe core entity is `Todo`. It requires an immutable unique identifier, a mutable text description, and a boolean status flag. Timestamps for creation and completion are optional but recommended for sorting.\n\n```json\n{\n  \"id\": \"uuid-v4\",\n  \"text\": \"string\",\n  \"completed\": false,\n  \"createdAt\": \"ISO-8601\"\n}\n```\n\n**2. API Endpoints**\nThe backend exposes a single resource collection: `/todos`. All interactions are standard HTTP verbs, ensuring cacheability and predictability.\n\n*   `GET /todos`: Returns an array of all todo items, ordered by creation date. Supports optional query parameters for filtering (e.g., `?completed=true`).\n*   `POST /todos`: Accepts a JSON payload with `text`. The server generates the `id` and timestamps, then returns the full created object with a `201 Created` status.\n*   `PATCH /todos/:id`: Accepts a partial JSON payload. If `completed` is present, it toggles the status; if `text` is present, it updates the content. Returns `200 OK` with the updated object.\n*   `DELETE /todos/:id`: Removes the item. Returns `204 No Content` on success.\n\nError handling is uniform: invalid requests return `400 Bad Request` with a descriptive message; missing resources return `404 Not Found`.\n\n**3. Frontend State Flow**\nThe frontend uses a unidirectional data flow pattern (similar to Redux or Signals). The state is a single object containing:\n*   `todos`: Array of todo items.\n*   `loading`: Boolean flag for pending API requests.\n*   `error`: String for last known error message.\n\n**Interaction Cycle:**\n1.  **Initialization**: On mount, the app dispatches a `FETCH_TODOS` action. The UI enters a `loading` state, showing a skeleton loader.\n2.  **API Call**: An async thunk or effect fetches data from `GET /todos`.\n3.  **State Update**: On success, `loading` becomes `false` and `todos` is populated. On failure, `error` is set.\n4.  **User Action**: When a user clicks \"Add\", the app validates input locally, then dispatches `ADD_TODO`. The new item is optimistically added to the UI for instant feedback.\n5.  **Persistence**: The app sends `POST /todos`. If successful, the optimistic entry is confirmed; if it fails, the item is removed, and an error toast is shown.\n6.  **Toggling**: Clicking a checkbox dispatches `TOGGLE_TODO`. The UI updates the checkbox immediately. A `PATCH` request is sent in the background. If the server rejects the change, the UI reverts to the server's state.\n\nThis flow ensures the UI feels responsive while remaining consistent with the server. The frontend never mutates the server state directly; it only suggests changes, which are validated by the API. This separation allows the backend to enforce business rules (like non-empty text) without blocking the user interface. The architecture scales trivially: adding features like user authentication only requires adding middleware to the API and a token to the frontend's request headers, leaving the core data flow unchanged.",
+   "prompt": "<|soul:fullstack|>\nOutline the architecture for a small todo app \u2014 API endpoints, data model, and frontend state flow \u2014 as a concise prose outline with AT MOST one short code sketch. Stay well under 500 words; an outline that respects scope beats an implementation dump.",
+   "spec": {
+    "keywords": [
+     "endpoint",
+     "api",
+     "database",
+     "frontend",
+     "state",
+     "schema"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "gamedev",
+   "passed": false,
+   "stage": "soul_degenerate",
+   "diag": "repeated-span degeneration detected",
+   "chars": 3286,
+   "output": "A 2D game loop is the heartbeat of any game \u2014 it's the repeating cycle that updates game state, handles input, renders graphics, and detects collisions, all within a single frame. Here's a breakdown of what happens each frame and why timing matters:\n\n---\n\n### \ud83d\udd04 The Basic 2D Game Loop (Per Frame)\n\n```python\nwhile game_is_running:\n    handle_input()       # 1. Read player/controller input\n    update_game_state()  # 2. Move objects, apply physics, etc.\n    check_collisions()   # 3. Detect overlaps between objects\n    render_frame()       # 4. Draw everything to the screen\n    wait_for_next_frame()# 5. Control frame rate (optional)\n```\n\n#### Step-by-step:\n1. **Handle Input**: Read keyboard, mouse, or controller input. Store it for use in this frame.\n2. **Update Game State**: Move characters, update positions, play animations, spawn enemies, etc.\n3. **Check Collisions**: Test if any game objects (player, enemies, bullets, walls) overlap. Resolve collisions (e.g., stop movement, deal damage).\n4. **Render Frame**: Draw all visible objects to the screen in the correct order.\n5. **Wait (Optional)**: If using a fixed timestep, pause briefly to maintain consistent frame rate (e.g., 60 FPS).\n\n---\n\n### \u23f1\ufe0f Why Timing Matters\n\nTiming affects **gameplay consistency**, **performance**, and **collision accuracy**.\n\n#### 1. **Fixed vs. Variable Timestep**\n- **Variable timestep**: Each frame takes different time (due to hardware/load). Movement speed varies \u2014 fast on high-end PCs, slow on low-end.\n- **Fixed timestep**: Each frame has the same duration (e.g., 1/60 second). Ensures consistent physics and movement across devices.\n\n> \u2705 Best practice: Use a **fixed timestep for physics/collisions**, and interpolate rendering for smooth visuals.\n\n#### 2. **Collision Detection Accuracy**\n- If objects move too fast between frames, they can \"tunnel\" through each other (pass without triggering collision).\n- Solution: Use **continuous collision detection** or sub-stepping (multiple small updates per frame).\n\n#### 3. **Frame Rate Independence**\n- Game logic should be **frame-rate independent**. Move objects by `speed * delta_time` (time since last frame), not by pixels per frame.\n\n```python\n# Bad: speed = 5 pixels per frame \u2192 varies with FPS\n# Good: speed = 100 pixels per second \u2192 consistent across devices\nposition += velocity * delta_time\n```\n\n#### 4. **Input Responsiveness**\n- Input must be read and processed every frame. Delayed input feels laggy.\n\n---\n\n### \ud83e\udde9 Example: Simple Collision Check (AABB)\n\n```python\ndef check_collision(a, b):\n    return (a.x < b.x + b.width and\n            a.x + a.width > b.x and\n            a.y < b.y + b.height and\n            a.y + a.height > b.y)\n```\n\nThis checks if two axis-aligned bounding boxes overlap. Called every frame after updating positions.\n\n---\n\n### \u2705 Summary\n\n| Aspect          | Why It Matters                                                                 |\n|-----------------|--------------------------------------------------------------------------------|\n| **Input**       | Must be read every frame for responsive controls.                              |\n| **Update**      | Position changes must be time-based (`delta_time`) for consistency.            |\n| **Collisions**  | Checked every frame; fast-moving objects",
+   "prompt": "<|soul:gamedev|>\nExplain a basic 2D game loop with collision detection: what happens each frame and why timing matters.",
+   "spec": {
+    "keywords": [
+     "frame",
+     "collision",
+     "update",
+     "render",
+     "delta",
+     "loop"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "legacy",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2900,
+   "output": "Modernizing a 20-year-old VB6 system is less about rewriting code and more about **risk mitigation, knowledge extraction, and incremental value delivery**. VB6 systems are often the \"heart\" of legacy businesses \u2014 stable, if brittle. A wrong move can halt operations.\n\nHere\u2019s a safe, phased modernization approach:\n\n---\n\n### \ud83d\uded1 Phase 0: Stabilize & Understand (Do Not Touch Yet)\n**Goal:** Preserve the status quo while building a complete picture.\n\n1. **Full Backup & Snapshot**\n   - Complete system backup (code, data, config, hardware).\n   - Create a VM image of the production environment.\n   - Document all dependencies (OS, SQL Server version, third-party DLLs, printers, scanners).\n\n2. **Reverse-Engineer the Business Logic**\n   - VB6 code is often poorly documented. Use tools like **VB6 Decompiler** or **Refactor! VB** to extract logic.\n   - Interview long-tenured staff: *\u201cWhat does this button do?\u201d \u201cWhat breaks if I change this?\u201d*\n   - Map core workflows: Order entry, invoicing, reporting, integrations.\n\n3. **Identify the \u201cCrown Jewels\u201d**\n   - Which modules are most critical? (e.g., billing, inventory)\n   - Which are most fragile? (e.g., custom ActiveX controls, late-binding COM calls)\n\n4. **Automated Testing (If Possible)**\n   - Use tools like **Selenium** or **UI.Vision** to record user workflows.\n   - Create a \u201cgolden path\u201d test suite: What happens when a user clicks A \u2192 B \u2192 C?\n\n---\n\n### \ud83e\udde9 Phase 1: The Strangler Fig Pattern (Incremental Replacement)\n**Goal:** Replace functionality piece-by-piece without shutting down the system.\n\n1. **Wrap, Don\u2019t Rewrite**\n   - Create a **wrapper layer** around the VB6 system.\n   - Expose key functions via a simple API (even if it\u2019s just a web service that calls VB6 via COM).\n   - Tools: **VB6 COM Interop**, **WCF**, or a lightweight **ASP.NET Core** wrapper.\n\n2. **Identify Low-Risk Modules**\n   - Pick a non-critical feature (e.g., a report generator, a lookup tool).\n   - Rebuild it in a modern stack (C#, Java, Python, etc.).\n   - Route traffic to the new module via the wrapper.\n\n3. **Parallel Run & Validate**\n   - Run old and new side-by-side.\n   - Compare outputs for the same inputs.\n   - Fix discrepancies before proceeding.\n\n4. **Repeat**\n   - Strangle the VB6 system module by module.\n   - Each replacement reduces risk and technical debt.\n\n---\n\n### \ud83d\udd04 Phase 2: Data & Integration Modernization\n**Goal:** Decouple from legacy data and interfaces.\n\n1. **Database Migration**\n   - If VB6 uses Access or old SQL Server, migrate to a modern RDBMS (PostgreSQL, SQL Server 2019+).\n   - Use **ETL tools** (SSIS, Talend) to migrate data incrementally.\n   - Keep the VB6 system reading from the new database via a view or linked server.\n\n2. **Replace Fragile Integrations**\n   - VB6 often uses DDE, OLE, or custom DLLs. Replace with:\n     - REST APIs\n     - Message queues (RabbitMQ, Azure Service Bus)\n     - File-based exchanges (CSV",
+   "prompt": "<|soul:legacy|>\nYou inherit a 20-year-old VB6 system that still runs the business. Describe a safe modernization approach.",
+   "spec": {
+    "keywords": [
+     "strangler",
+     "test",
+     "migration",
+     "refactor",
+     "legacy",
+     "incremental"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "music",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2618,
+   "output": "The I\u2013V\u2013vi\u2013IV progression (commonly known as the \"sensitive female chord progression\" or the \"axis of awesome\" progression) is one of the most ubiquitous and emotionally resonant sequences in Western music. Its satisfaction stems from a perfect balance of tension, release, and familiar voice-leading.\n\n### Why It Resolves Satisfyingly\n\n1. **Strong Functional Harmony with a Twist**  \n   - **I (Tonic)**: Establishes home.\n   - **V (Dominant)**: Creates strong tension, demanding resolution to I.\n   - **vi (Submediant)**: Subverts expectation. Instead of resolving to I, it goes to IV. This \"deceptive cadence\" feel (V\u2013vi) is familiar but delayed.\n   - **IV (Subdominant)**: Provides a gentle pull back to I, completing the cycle.\n\n2. **Voice-Leading Magic**  \n   In the key of C major:\n   - C \u2192 G \u2192 Am \u2192 F\n   - The top notes often move stepwise: G \u2192 A \u2192 F \u2192 C (or similar smooth motion).\n   - The bass line: C \u2192 G \u2192 A \u2192 F creates a descending contour (C\u2013G\u2013A\u2013F) that feels both logical and slightly unexpected.\n\n3. **Emotional Arc**  \n   - **I**: Stability\n   - **V**: Urgency\n   - **vi**: Melancholy/longing\n   - **IV**: Hopeful resolution  \n   This mini-narrative mirrors emotional journeys: stability \u2192 crisis \u2192 reflection \u2192 resolution.\n\n4. **Cyclical Nature**  \n   The progression loops seamlessly: IV \u2192 I feels natural, allowing endless repetition without fatigue.\n\n---\n\n### Variations That Keep Interest\n\nTo avoid predictability, musicians and producers tweak the progression in several ways:\n\n#### 1. **Rhythmic & Phrasing Changes**\n   - **Half-time vs. Double-time**: Slow the harmony down for ballads or speed it up for pop-punk energy.\n   - **Syncopation**: Shift chord changes off the beat (e.g., changing on the \"and\" of 4).\n   - **Pedal Points**: Hold a bass note (e.g., C) while chords change above it.\n\n#### 2. **Chord Quality Alterations**\n   - **Major vi**: Use V\u2013VI\u2013iv\u2013IV (e.g., G\u2013A\u2013F\u2013C) for a brighter, more anthemic feel (see: \"Let It Be\" by The Beatles).\n   - **Minor IV**: Use I\u2013V\u2013vi\u2013iv (e.g., C\u2013G\u2013Am\u2013Fm) for a darker, jazzier color.\n   - **Add 7ths, 9ths, or 13ths**:  \n     - Cmaj7 \u2192 G7 \u2192 Am9 \u2192 Fmaj7 adds sophistication.\n     - C \u2192 G/B \u2192 Am \u2192 F/E creates descending bass lines.\n\n#### 3. **Substitutions & Replacements**\n   - **ii instead of IV**: I\u2013V\u2013vi\u2013ii (C\u2013G\u2013Am\u2013D) is a jazz-standard variant.\n   - **vi\u2013ii\u2013V\u2013I**: Insert a turnaround (Am\u2013D\u2013G\u2013C) before returning to I.\n   - **Modal Interchange**: Borrow chords from parallel modes (e.g., bVII, iv, or III).\n\n#### 4. **Textural & Production Tweaks**\n   - **Instrumentation**: Arpeggiate instead of strumming; use pads for atmosphere.\n   - **D",
+   "prompt": "<|soul:music|>\nAnalyze the chord progression I\u2013V\u2013vi\u2013IV: why does it resolve so satisfyingly, and what variations keep interest?",
+   "spec": {
+    "keywords": [
+     "chord",
+     "key",
+     "progression",
+     "tonic",
+     "resolution",
+     "harmony"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "art",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 3451,
+   "output": "A strong landscape composition is less about the literal accuracy of the terrain and more about the **emotional architecture** of the scene. It\u2019s the difference between a photograph and a painting: the photograph records what was there; the painting interprets what it *felt* like.\n\nHere\u2019s a critique-style breakdown of how light and color choices elevate a landscape from competent to compelling:\n\n### 1. Light as Narrative, Not Just Illumination\nLight in a strong composition is active, not passive. It doesn\u2019t just reveal forms; it directs the viewer\u2019s eye and establishes the mood.\n\n*   **Value Structure First:** Before you think about hue, think in grays. A strong composition has a clear **value hierarchy**. The eye should be drawn to the area of highest contrast (the focal point) and rest in areas of low contrast. If your light is flat or evenly distributed, the painting will feel lifeless.\n*   **Directional Intent:** Where is the light coming from, and why?\n    *   **Side lighting** emphasizes texture and form (great for rocks, trees, architecture).\n    *   **Backlighting** creates drama, silhouettes, and atmospheric depth (great for mood and mystery).\n    *   **Overcast light** flattens space but allows for subtle color variations (great for intimacy and detail).\n*   **The \"Golden Hour\" Trap:** Avoid the clich\u00e9 of painting only at sunrise/sunset unless you have a specific reason. Strong compositions often emerge from **diffused light** (cloudy days) because it reveals local color more accurately, or from **harsh midday light** because it creates bold, graphic shapes.\n\n### 2. Color as Atmosphere, Not Decoration\nColor choices should serve the light and the space, not just replicate reality.\n\n*   **Temperature Contrast:** Warm and cool colors interact to create depth. A common mistake is making distant objects just \"lighter.\" Instead, make them **cooler** (due to atmospheric perspective). A warm foreground against a cool background (or vice versa) pushes space apart and creates vibrancy.\n*   **Limited Palette, Maximum Impact:** Strong compositions often use a restricted palette (e.g., a complementary scheme like blue/orange or green/red). This creates harmony and allows each color to pop. Too many colors compete; fewer colors collaborate.\n*   **Local Color vs. Light Color:** Resist painting the \"local color\" of an object (e.g., a green tree). Paint the color of the light falling on it. A tree in shadow might be blue-green, not black-green. A tree in sunlight might be yellow-green. This makes the painting feel alive and integrated with its environment.\n\n### 3. Composition: The Invisible Hand\nLight and color must serve the underlying structure.\n\n*   **Leading Lines & Focal Points:** Use light and color to create a path. A sunbeam cutting through a forest, a bright rock in a shadowed field, or a warm house against a cool sky \u2014 these are visual anchors.\n*   **Negative Space:** Don\u2019t fill every inch. Sky, water, or distant hills provide breathing room. Strong compositions know when to *not* paint.\n*   **Balance & Tension:** Asymmetrical balance is often more dynamic than symmetry. A large, dark mass on one side can be balanced by a small, bright spot on the other.\n\n### Quick Checklist for Your Next Landscape:\n1.  **Is there a clear focal point?** (Created by contrast, detail, or color saturation.)\n2.  **Does the light have a source and direction?** (Does it model the forms?)\n3.  **Are the values",
+   "prompt": "<|soul:art|>\nCritique-style guidance: what makes a strong composition in a landscape painting? Cover light and color choices.",
+   "spec": {
+    "keywords": [
+     "composition",
+     "color",
+     "light",
+     "contrast",
+     "form",
+     "depth"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  },
+  {
+   "facet": "perfumery",
+   "passed": true,
+   "stage": "soul_keywords",
+   "diag": "",
+   "chars": 2270,
+   "output": "A citrus-woody fragrance is a classic olfactory architecture that balances the bright, effervescent top notes of citrus with the warm, grounding depth of wood. This structure creates a dynamic contrast between freshness and sophistication.\n\nHere is a structured fragrance pyramid for a citrus-woody composition, with example materials for each level:\n\n### \ud83c\udf3f Top Notes (The Opening \u2013 0\u201315 minutes)\n*Bright, volatile, and uplifting. These are the first impressions, designed to captivate with freshness.*\n\n- **Bergamot**: The quintessential citrus note; complex, slightly spicy, and refined.\n- **Lemon**: Sharp, clean, and zesty.\n- **Grapefruit**: Bitter-sweet and invigorating.\n- **Calabrian Mandarin**: Sweet, juicy, and aromatic.\n- **Lemongrass**: Adds a green, herbal edge.\n\n### \ud83d\udc9b Heart/Middle Notes (The Core \u2013 15 minutes\u20134 hours)\n*The character of the fragrance. In a citrus-woody blend, these often bridge the gap between bright citrus and dry wood with floral, spicy, or green elements.*\n\n- **Lavender**: Aromatic, clean, and slightly herbaceous; complements citrus beautifully.\n- **Rosemary**: Woody-green and sharp.\n- **Cardamom**: Spicy, warm, and slightly citrusy itself.\n- **Jasmine Absolute**: Adds a soft, floral depth to prevent the fragrance from being too austere.\n- **Geranium**: Rosy and green, with subtle citrus undertones.\n\n### \ud83e\udeb5 Base Notes (The Dry Down \u2013 4+ hours)\n*Long-lasting, warm, and fixative. These provide the \"woody\" foundation and longevity.*\n\n- **Sandalwood**: Creamy, soft, and slightly sweet; smooths out the sharpness of citrus.\n- **Cedarwood (Virginia or Atlas)**: Dry, pencil-shaving-like, and woody.\n- **Vetiver**: Earthy, smoky, and rooty; adds masculine depth.\n- **Patchouli**: Earthy and slightly sweet (use sparingly to avoid overpowering).\n- **Amberwood / Labdanum**: Resinous, warm, and slightly balsamic.\n- **Musk (White or Ambroxan)**: Clean, skin-like, and long-lasting.\n\n---\n\n### \ud83d\udca1 Example Formula Concept: \"Sunset Grove\"\n- **Top**: Bergamot, Lemon, Grapefruit  \n- **Heart**: Lavender, Cardamom, Rosemary  \n- **Base**: Sandalwood, Cedarwood, White Musk  \n\nThis structure ensures a vibrant opening that evolves into a warm, sophisticated, and long-lasting dry-down \u2014 ideal for both daytime freshness and evening elegance.",
+   "prompt": "<|soul:perfumery|>\nStructure a citrus-woody fragrance: name the pyramid levels and give example materials for each.",
+   "spec": {
+    "keywords": [
+     "top",
+     "heart",
+     "base",
+     "notes",
+     "accord",
+     "bergamot",
+     "cedar"
+    ],
+    "min_keywords": 3,
+    "min_chars": 200
+   }
+  }
+ ]
+}

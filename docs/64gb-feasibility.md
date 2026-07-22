@@ -10,7 +10,7 @@
 > **Memory/speed tiers (measured, reap25 295B via the streaming pager):**
 > | Mac | LRU cache | peak resident | decode |
 > |---|---|---|---|
-> | 128 GB (fully resident) | n/a | 87 GB | 7.4 tok/s |
+> | 128 GB (fully resident) | n/a | 87 GB | 8.3 tok/s |
 > | 64 GB (streaming) | 24 experts/proj | 23.4 GB | 3.85 tok/s |
 > | **32 GB (streaming)** | 6 experts/proj | **13.9 GB** | 0.81 tok/s |
 > | **16 GB (streaming)** | 2 experts/proj | **11.7 GB** | 0.74 tok/s |
@@ -39,7 +39,10 @@ shared weights resident (~10 GB) plus an **LRU cache of hot experts**, and page
 the cold top-8/192 experts from NVMe per token.
 - **Fit:** ~15–45 GB resident (cache-tunable) — well under 54 GB.
 - **Quality:** none lost — bit-identical Hy3 (could even stream unpruned lite-v1).
-- **Cost:** speed — decode drops from 7.4 tok/s warm to **~2–5 tok/s** (SSD-bandwidth-bound: ~2.5 GB cold-expert read/token ÷ ~5 GB/s NVMe).
+- **Cost:** speed — decode drops from 8.3 tok/s fully-resident to the **measured
+  3.85 / 0.81 / 0.74 tok/s** at 64 / 32 / 16 GB (table above). An earlier draft
+  estimated "~2–5 tok/s" from SSD bandwidth before those tiers were measured;
+  two of the three measured tiers fall below that estimate's floor.
 - **MLX-available? NO — must be built.** Stock `mlx_lm.server` eager-loads all
   experts and OOMs (mlx-lm issue #1438 is the same *class*). An explicit
   app-level MoE pager is required — do NOT rely on OS swap (Metal wired buffers
@@ -81,5 +84,7 @@ architecture. No technique was falsely claimed to preserve quality below 2 bits.
    a 64 GB model); for 64 GB users, point them at the 35B sibling.
 2. **The one novel bet worth trying:** build an SSD expert-streaming MoE pager
    for hy_v3 on MLX — the *only* route that keeps it literally Hy3 on 64 GB,
-   zero quality loss, at ~2–5 tok/s. Scope it as a serving-engine project.
+   zero quality loss, at the measured 3.85 tok/s (64 GB tier; the original
+   "~2–5" scoping estimate predates the measurement). Scope it as a
+   serving-engine project.
 3. **If a *fast* small Hy3 is the goal:** distilled Mini, on rented GPUs.

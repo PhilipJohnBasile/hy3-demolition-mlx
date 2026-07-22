@@ -175,8 +175,14 @@ All measured on the fused artifact, 2026-07-08, receipts committed under
   capability cost from the 25% prune (visible as +0.26 healed val loss over
   lite-v1, though not as felt output-quality loss in the manual pass).
 - Trained/evaluated primarily in English on agent/code tasks.
-- Decode speed is unchanged from lite-v1 (top-8 × 21B active is the same); the
-  win is ~25 GB of memory headroom, not throughput.
+- ~~Decode speed is unchanged from lite-v1 (top-8 × 21B active is the same); the
+  win is ~25 GB of memory headroom, not throughput.~~ **Correction (2026-07-22):
+  measured faster.** The expectation was reasonable — top-8 × 21B active is
+  identical — but the paired receipt this card cites elsewhere
+  (`eval/receipts/hy3_reap25_vs_lite_compare.json`) measures reap25 at
+  **8.341 tok/s vs lite-v1's 6.245 (+33.6%)** on the same 46-case harness.
+  Fewer resident experts buys throughput too, not just the ~25 GB of headroom.
+  The original line understated the model and is struck rather than deleted.
 - **Tool-calling tag format regression (found 2026-07-08, isolated against
   lite-v1):** when emitting a native `<tool_call:opensource>` block, this
   model unreliably omits the `<tool_sep:opensource>` tag between the function

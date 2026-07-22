@@ -9,8 +9,15 @@ model is verifier-healed, receipt-backed, and Apache-2.0.
 | Want… | Use | Runs on | Speed |
 |---|---|---|---|
 | **A fast daily driver / agent** | **sibling** (Qwen35B + our heal) | 32–64 GB | **100+ tok/s** |
-| The pruned Hy3 daily driver | reap25 | 96–128 GB | 7.4 tok/s |
+| The pruned Hy3 daily driver | reap25 | 96–128 GB | 8.3 tok/s |
 | The unpruned Hy3 reference | lite-v1 | 128 GB | 7.4 tok/s |
+
+> Speed provenance: reap25's 8.3 comes from the paired run
+> `eval/receipts/hy3_reap25_vs_lite_compare.json` (reap25 8.341 vs lite-v1 6.245
+> under the same 46-case harness — the prune buys ~34% throughput, not just
+> memory). lite-v1's 7.4 is the single-prompt smoke `hy3_mtp_smoke.json`. An
+> earlier version of this table listed reap25 at 7.4, which is the *unpruned*
+> smoke figure misattributed to the pruned model — no receipt supports it.
 | The real 295B Hy3 on *any* Mac | reap25 / lite-v1 via the **streaming pager** | **16–128 GB** | 0.7–3.85 tok/s |
 | MTP speculative decoding (MTPLX) | any `*-mtp` variant | (sibling runs today) | — |
 

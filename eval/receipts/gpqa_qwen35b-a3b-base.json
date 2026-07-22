@@ -1,0 +1,8 @@
+{
+ "model": "qwen35b-a3b-base",
+ "n": 198,
+ "correct": 6,
+ "accuracy_pct": 3.0,
+ "minutes": 25.0,
+ "note": "open-ended boxed variant, lenient match \u2014 approximate"
+}

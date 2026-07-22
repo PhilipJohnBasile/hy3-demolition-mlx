@@ -1,0 +1,8 @@
+{
+ "model": "hy3-family-mini-qwen35b-v1",
+ "n": 198,
+ "correct": 8,
+ "accuracy_pct": 4.0,
+ "minutes": 22.4,
+ "note": "open-ended boxed variant, lenient match \u2014 approximate"
+}

@@ -53,4 +53,16 @@ eval/receipts/*.jsonl
 !eval/receipts/hy3_reap25_requant_fused_smoke.json
 !eval/receipts/hy3_reap25_requant_eval.jsonl
 !eval/receipts/hy3_reap25_requant_vs_reap25_compare.json
+!eval/receipts/humaneval_hy3-family-mini-qwen35b-v1.json
+!eval/receipts/humaneval_qwen35b-a3b-base.json
+!eval/receipts/mbpp_hy3-family-mini-qwen35b-v1.json
+!eval/receipts/mbpp_qwen35b-a3b-base.json
+!eval/receipts/aime_hy3-family-mini-qwen35b-v1.json
+!eval/receipts/aime_qwen35b-a3b-base.json
+!eval/receipts/aime_think_hy3-family-mini-qwen35b-v1.json
+!eval/receipts/aime_think_qwen35b-a3b-base.json
+!eval/receipts/gpqa_hy3-family-mini-qwen35b-v1.json
+!eval/receipts/gpqa_qwen35b-a3b-base.json
+!eval/receipts/souls_hy3-family-mini-qwen35b-v1.json
+!eval/receipts/souls_qwen35b-a3b-base.json
 dist/hy3-demolition-mlx-*-mtp/
