@@ -1,0 +1,42 @@
+NOTICE — third-party material embedded in this repository
+==========================================================
+
+License scope, stated plainly:
+
+- The code and documentation ORIGINAL to this repository are MIT-licensed
+  (see LICENSE, © 2026 Philip John Basile).
+- The base model this project derives from (tencent/Hy3) is Apache-2.0;
+  the published model weights inherit that lineage and say so on their
+  own cards.
+- NEITHER license extends to the third-party material described below,
+  which remains under its own upstream licenses.
+
+Embedded third-party source code
+--------------------------------
+
+`data/glm52_import/normalized/calib_prompts.jsonl` is a frozen historical
+record of the calibration/import set actually used at build time. 87 of its
+1,536 rows are SWE-bench-style agent trajectories whose `/testbed/` context
+embeds verbatim source-code excerpts from the following open-source
+projects (row content is unmodified — editing it would falsify the record
+of what calibration consumed):
+
+    astroid, dvc, faker, feedparser, glom, monai, oauthlib, pandas,
+    paramiko, starlette, strsimpy
+
+Three rows carry upstream license headers verbatim, including LGPL text:
+
+  - row 50:  paramiko (`sftp_client.py` header; LGPL —
+             "Copyright (C) 2003-2007 Robey Pointer")
+  - rows 73, 358: astroid (LGPL-2.1;
+             "Copyright (c) https://github.com/pylint-dev/astroid/…/CONTRIBUTORS.txt")
+
+These excerpts are included solely as a factual record of model-calibration
+inputs (data provenance), not as a redistribution of those libraries for
+use. Each excerpt remains © its authors under its own license; the LGPL'd
+material in particular is NOT relicensed by this repository's MIT license.
+If you extract and reuse any excerpt from those rows, the upstream
+project's license governs your use, not this repo's.
+
+Attribution list added 2026-07-22, after an audit found these rows carried
+no attribution. The rows themselves are unchanged.

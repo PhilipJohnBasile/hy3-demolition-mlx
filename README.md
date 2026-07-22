@@ -2,7 +2,7 @@
 
 > **The full family** (streaming any-Mac Hy3, pruned daily driver, fast 35B sibling, MTP variants): see [docs/FAMILY.md](docs/FAMILY.md). Manual-pass verdict: [docs/manual-pass.md](docs/manual-pass.md).
 
-license: apache-2.0
+license: mit
 base_model: tencent/Hy3
 library_name: mlx
 pipeline_tag: text-generation
@@ -324,3 +324,20 @@ official precision. It also recommends large-memory multi-GPU serving for the
 official deployment path. This repo targets the local Apple Silicon path instead:
 MLX quantized artifacts, then conservative MLX-native demolition only after the
 Lite model proves reliable.
+
+## License scope (read NOTICE)
+
+Three different licenses touch this repo, and they cover different things:
+
+- **This repo's original code and docs: MIT** (see `LICENSE`). An earlier
+  version of this README's frontmatter said `apache-2.0`, contradicting the
+  LICENSE file; fixed 2026-07-22.
+- **The base model (`tencent/Hy3`) and the published weight artifacts:
+  Apache-2.0** — stated on each model card.
+- **Embedded third-party excerpts: their own upstream licenses.**
+  `data/glm52_import/normalized/calib_prompts.jsonl` is a frozen record of
+  the calibration set; 87 of 1,536 rows embed verbatim source excerpts from
+  ten open-source projects, three rows carrying LGPL license text (paramiko,
+  astroid). Those excerpts are **not** relicensed by this repo — full
+  inventory and terms in [`NOTICE`](NOTICE). The rows are deliberately
+  unmodified: they document what calibration actually consumed.
